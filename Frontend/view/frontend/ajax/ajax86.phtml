@@ -1,0 +1,257 @@
+<div class="s-imgreview-1<?php echo $this->params['type'] == 'video' ? ' video':''; ?>">
+    <div class="row row-flex">
+        <div class="col-12 col-md-8">
+            <?php if($this->params['type'] == 'video') { ?>
+                <?php foreach ($this->commentList as $value) { if($value['video']) { ?>
+                    <div class="s_box<?php echo $this->params['id'] == $value['id'] ? ' active':''; ?>" id="review-<?php echo $value['id']; ?>">
+                        <div class="s_video">
+                            <video width="100%" height="370" controls <?php echo $this->params['id'] == $value['id'] ? ' autoplay':''; ?>>
+                                <source src="<?php echo PUBLIC_PATH.UPLOAD_FILES.$value['video']; ?>" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="s_content">
+                            <p><?php echo $value['comment']; ?></p>
+                            <div class="s_flex">
+                                <h3>
+                                    <?php
+                                        if($value['thumbnail']) {
+                                            if((file_exists(ROOT_PUBLIC.'/'.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/autox30-'.$value['thumbnail']) && is_file(ROOT_PUBLIC.'/'.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/autox30-'.$value['thumbnail']))) {
+                                                echo '<img src="'.PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/autox30-'.$value['thumbnail'].'" alt="'.$value['fullname'].'">';
+                                            } else {
+                                                echo '<img src="'.PUBLIC_PATH.'images/noimage.png" alt="'.$value['fullname'].'">';
+                                            }
+                                        } else {
+                                            echo '<i class="fa fa-user-circle-o" aria-hidden="true"></i>';
+                                        }
+                                        $star = $value['star'] ?? 0;
+                                        $remainStar = 5 - $star;
+                                    ?>
+                                    <?php echo $value['fullname']; ?>
+                                </h3>
+                                <div class="b-star-2">
+                                    <div class="b_star">
+                                        <span>
+                                            <?php
+                                                for ($i = 0; $i < $star; $i++) {
+                                                    echo '<i class="fa fa-star" aria-hidden="true"></i>';
+                                                }
+                                                for ($i = 0; $i < $remainStar; $i++) {
+                                                    echo '<i class="fa fa-star-o" aria-hidden="true"></i>';
+                                                }
+                                            ?>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php }} ?>
+            <?php } else { ?>
+                <div class="s_box_big">
+                    <?php foreach ($this->commentList as $value) { if($value['multi_image']) {
+                        $multi = json_decode($value['multi_image'], true);
+                    ?>
+                        <div class="s_box<?php echo $this->params['id'] == $value['id'] ? ' active':''; ?>" id="review-<?php echo $value['id']; ?>">
+                            <div class="s_img">
+                                <div class="b-sslide-default">
+                                    <div class="slick-slider">
+                                        <?php foreach ($multi as $img) {
+                                            echo '<div class="ht-ratio--50"><img src="'.PUBLIC_PATH.UPLOAD_FILES.$img.'" alt="'.$value['fullname'].'" class="ht-ratio__img" /></div>';
+                                        } ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="s_content">
+                                <p><?php echo $value['comment']; ?></p>
+                                <div class="s_flex">
+                                    <h3>
+                                        <?php
+                                            if($value['thumbnail']) {
+                                                if((file_exists(ROOT_PUBLIC.'/'.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/autox30-'.$value['thumbnail']) && is_file(ROOT_PUBLIC.'/'.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/autox30-'.$value['thumbnail']))) {
+                                                    echo '<img src="'.PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/autox30-'.$value['thumbnail'].'" alt="'.$value['fullname'].'">';
+                                                } else {
+                                                    echo '<img src="'.PUBLIC_PATH.'images/noimage.png" alt="'.$value['fullname'].'">';
+                                                }
+                                            } else {
+                                                echo '<i class="fa fa-user-circle-o" aria-hidden="true"></i>';
+                                            }
+                                            $star = $value['star'] ?? 0;
+                                            $remainStar = 5 - $star;
+                                        ?>
+                                        <?php echo $value['fullname']; ?>
+                                    </h3>
+                                    <div class="b-star-2">
+                                        <div class="b_star">
+                                            <span>
+                                                <?php
+                                                    for ($i = 0; $i < $star; $i++) {
+                                                        echo '<i class="fa fa-star" aria-hidden="true"></i>';
+                                                    }
+                                                    for ($i = 0; $i < $remainStar; $i++) {
+                                                        echo '<i class="fa fa-star-o" aria-hidden="true"></i>';
+                                                    }
+                                                ?>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <?php }} ?>
+                </div>
+            <?php } if($this->combo) { ?>
+                <div class="s-tab-9 review">
+                    <ul class="s_content">
+                        <?php foreach ($this->combo as $i => $value) { ?>
+                            <li id="combo-<?php echo ($i + 1); ?>">
+                                <div class="s_sale">
+                                    <div class="s_flex">
+                                        <h3 class="mtitle"><i class="fa fa-bell" aria-hidden="true"></i> <?php echo $value['name']; ?></h3>
+                                        <a href="<?php echo PUBLIC_PATH.'combo/'.$value['slug']; ?>" class="s_more">Xem chi tiết <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+                                    </div>
+                                    <div class="b-sslide-default">
+                                        <div class="slick-slider">
+                                            <?php foreach ($value['listItem'] as $item) { if($item['id']) { ?>
+                                                <div class="item">
+                                                    <a href="<?php echo PUBLIC_PATH.$item['rootSlug'].'/'.$item['slug']; ?>" class="b-card-59">
+                                                        <div class="b_thumb ht-ratio--100">
+                                                            <img src="<?php echo PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$item['thumbnail'])[0]).'/800x800-'.$item['thumbnail'].WEBP_EXT; ?>" alt="<?php echo $item['name']; ?>" class="ht-ratio__img" />
+                                                        </div>
+                                                        <div class="b_content">
+                                                            <h3 class="b_title"><?php echo $item['name']; ?></h3>
+                                                            <div class="b_price">
+                                                                <span class="discount">
+                                                                    <?php echo ($item['price'] > 0 && $item['price_market'] > 0) ? ''.number_format($item['price'],0,0,'.').'đ':'Liên hệ'; ?>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            <?php }} ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        <?php } ?>
+                    </ul>
+                    <ul class="s_menu">
+                        <?php foreach ($this->combo as $i => $value) {
+                            echo '<li'.($i == 0 ? ' class="is-active"':'').'><a href="#combo-'.($i + 1).'">Combo 0'.($i + 1).'</a></li>';
+                        } ?>
+                    </ul>
+                </div>
+                <script type="text/javascript">
+                    $(document).ready(function() {
+                        $('.s-tab-9.review .slick-slider').slick({
+                            slidesToShow: 3,
+                            slidesToScroll: 1,
+                            autoplay: false,
+                            infinite: false,
+                            arrows: true,
+                            dots: false,
+                            responsive: [{
+                                breakpoint: 992,
+                                settings: { slidesToShow: 2 }
+                            }, {
+                                breakpoint: 400,
+                                settings: { slidesToShow: 1 }
+                            }]
+                        });
+                    });
+                </script>
+            <?php } if($this->p_other) { ?>
+                <div class="s_other">
+                    <h3 class="mtitle"><?php echo $this->info['headline']['slug-22']; ?></h3>
+                    <div class="b-sslide-default">
+                        <div class="slick-slider">
+                            <?php foreach ($this->p_other as $value) { ?>
+                                <div class="item">
+                                    <a href="<?php echo PUBLIC_PATH.$value['rootSlug'].'/'.$value['slug']; ?>">
+                                        <img src="<?php echo PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/100x100-'.$value['thumbnail'].WEBP_EXT; ?>" alt="<?php echo $value['name']; ?>">
+                                        <div>
+                                            <h3><?php echo $value['name']; ?></h3>
+                                            <p><?php echo ($value['price'] > 0 && $value['price_market'] > 0) ? ''.number_format($value['price'],0,0,'.').'đ':'Liên hệ'; ?></p>
+                                        </div>
+                                    </a>
+                                </div>
+                            <?php } ?>
+                        </div>
+                    </div>
+                </div>
+                <script type="text/javascript">
+                    $(document).ready(function() {
+                        $('.s-imgreview-1 .s_other .slick-slider').slick({
+                            slidesToShow: 2,
+                            slidesToScroll: 1,
+                            autoplay: false,
+                            responsive: [{
+                                breakpoint: 992,
+                                settings: { slidesToShow: 2 }
+                            }, {
+                                breakpoint: 400,
+                                settings: { slidesToShow: 1 }
+                            }]
+                        });
+                    });
+                </script>
+            <?php } ?>
+        </div>
+        <div class="col-12 col-md-4 displaynone">
+            <div class="s_list">
+                <h3 class="s_title"><?php echo $this->info['headline']['slug-31']; ?></h3>
+                <ul>
+                    <?php foreach ($this->commentList as $value) {
+                        if($this->params['type'] == 'video' && $value['video']) {
+                            echo '<li'.($this->params['id'] == $value['id'] ? ' class="active"':'').'>
+                                <a href="#review-'.$value['id'].'" data-video="true">
+                                    <div class="ht-ratio--50">
+                                        <span class="ht-ratio__img"><video src="'.PUBLIC_PATH.UPLOAD_FILES.$value['video'].'"></video></span>
+                                        <div class="icon"><i class="fa fa-play-circle-o" aria-hidden="true"></i></div>
+                                    </div>
+                                    <div>
+                                        <h3>'.$value['comment'].'</h3>
+                                        <p>'.$value['fullname'].'</p>
+                                    </div>
+                                </a>
+                            </li>';
+                        } else {
+                            if($value['multi_image']) {
+                                $multiImg = json_decode($value['multi_image'], true);
+                                echo '<li'.($this->params['id'] == $value['id'] ? ' class="active"':'').'>
+                                    <a href="#review-'.$value['id'].'">
+                                        <div class="ht-ratio--50"><span class="ht-ratio__img"><img src="'.PUBLIC_PATH.UPLOAD_FILES.$multiImg[0].'" alt="'.$value['fullname'].'" /></span></div>
+                                        <div>
+                                            <h3>'.$value['comment'].'</h3>
+                                            <p>'.$value['fullname'].'</p>
+                                        </div>
+                                    </a>
+                                </li>';
+                            }}
+                        }
+                    ?>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.s-imgreview-1 .s_box .s_img .slick-slider').slick();
+        $('.s-imgreview-1 .s_list ul li a').click(function(e) {
+            e.preventDefault();
+            $id = $(this).attr('href');
+            $(this).parent().addClass('active');
+            $(this).parent().siblings().removeClass('active');
+            $('.s-imgreview-1').find($id).addClass('active');
+            $('.s-imgreview-1').find($id).siblings().removeClass('active');
+
+            if($(this).closest('.s-imgreview-1').hasClass('video')) {
+                $('.s-imgreview-1.video ' + $id).find('video').trigger('play');
+                $('.s-imgreview-1.video ' + $id).siblings().find('video').trigger('pause');
+            } else {
+                $('.s-imgreview-1 .s_box .slick-slider').slick('refresh');
+            }
+        });
+    });
+</script>

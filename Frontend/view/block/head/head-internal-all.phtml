@@ -1,0 +1,21 @@
+<?php
+    $action = ($this->head[$this->data['position']][$this->data['action']]) ? $this->head[$this->data['position']][$this->data['action']] : array();
+    $global = ($this->head[$this->data['position']]['global']) ? $this->head[$this->data['position']]['global'] : array();
+    $styles = array_merge_recursive($global, $action);
+
+    foreach ($styles as $type => $files) {
+        $i = 0;
+        foreach ($files as $key => $file) {
+            $filename = is_string($key) ? $key : $file;
+            $path = file(ROOT_PUBLIC.'/template/frontend/dist/'.$type.'/'.$filename)[0];
+            if ($type == 'css') {
+                echo '<style type="text/css" media="screen">'.$path.'</style>'."\n";
+            }
+            if ($type == 'js') {
+                $i++;
+                $attrs = is_string($key) ? array($file => $file) : '';
+                $this->headScript()->offsetSetScript(($i-20), $path, 'text/javascript', $attrs);
+            }
+        }
+    }
+?>

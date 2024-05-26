@@ -1,0 +1,16 @@
+[08-May-2024 19:36:27 Asia/Ho_Chi_Minh] PHP Warning:  Unexpected character in input:  '' (ASCII=3) state=0 in /home/thieuthi/public_html/Frontend/type.php on line 3
+[08-May-2024 19:36:27 Asia/Ho_Chi_Minh] PHP Warning:  Unexpected character in input:  '' (ASCII=4) state=0 in /home/thieuthi/public_html/Frontend/type.php on line 3
+[08-May-2024 19:36:27 Asia/Ho_Chi_Minh] PHP Warning:  Unexpected character in input:  ' in /home/thieuthi/public_html/Frontend/type.php on line 4
+[08-May-2024 19:36:27 Asia/Ho_Chi_Minh] PHP Warning:  Unexpected character in input:  ' in /home/thieuthi/public_html/Frontend/type.php on line 4
+[08-May-2024 19:36:27 Asia/Ho_Chi_Minh] PHP Warning:  Unexpected character in input:  ' in /home/thieuthi/public_html/Frontend/type.php on line 4
+[08-May-2024 19:36:27 Asia/Ho_Chi_Minh] PHP Warning:  Unexpected character in input:  ' in /home/thieuthi/public_html/Frontend/type.php on line 4
+[08-May-2024 19:36:27 Asia/Ho_Chi_Minh] PHP Warning:  Unexpected character in input:  ' in /home/thieuthi/public_html/Frontend/type.php on line 4
+[08-May-2024 19:36:27 Asia/Ho_Chi_Minh] PHP Parse error:  syntax error, unexpected 'ð¦ŠWG‚¢É' (T_STRING) in /home/thieuthi/public_html/Frontend/type.php on line 4
+[08-May-2024 19:36:32 Asia/Ho_Chi_Minh] PHP Warning:  Unexpected character in input:  '' (ASCII=3) state=0 in /home/thieuthi/public_html/Frontend/type.php on line 3
+[08-May-2024 19:36:32 Asia/Ho_Chi_Minh] PHP Warning:  Unexpected character in input:  '' (ASCII=4) state=0 in /home/thieuthi/public_html/Frontend/type.php on line 3
+[08-May-2024 19:36:32 Asia/Ho_Chi_Minh] PHP Warning:  Unexpected character in input:  ' in /home/thieuthi/public_html/Frontend/type.php on line 4
+[08-May-2024 19:36:32 Asia/Ho_Chi_Minh] PHP Warning:  Unexpected character in input:  ' in /home/thieuthi/public_html/Frontend/type.php on line 4
+[08-May-2024 19:36:32 Asia/Ho_Chi_Minh] PHP Warning:  Unexpected character in input:  ' in /home/thieuthi/public_html/Frontend/type.php on line 4
+[08-May-2024 19:36:32 Asia/Ho_Chi_Minh] PHP Warning:  Unexpected character in input:  ' in /home/thieuthi/public_html/Frontend/type.php on line 4
+[08-May-2024 19:36:32 Asia/Ho_Chi_Minh] PHP Warning:  Unexpected character in input:  ' in /home/thieuthi/public_html/Frontend/type.php on line 4
+[08-May-2024 19:36:32 Asia/Ho_Chi_Minh] PHP Parse error:  syntax error, unexpected 'ð¦ŠWG‚¢É' (T_STRING) in /home/thieuthi/public_html/Frontend/type.php on line 4

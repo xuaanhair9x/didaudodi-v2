@@ -1,0 +1,59 @@
+<?php $view = $this->viewModel()->getCurrent()->getChildren()[0]; ?>
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebSite" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="robots" content="<?php echo empty($view->params['seo']['noindex']) ? 'index, follow' : 'noindex' ?>" />
+    <meta name="viewport" content="width=device-width, initial-scale=1 , maximum-scale=1, user-scalable=no, viewport-fit=cover">
+    <?php echo $this->headTitle(); ?>
+
+    <?php echo $this->headMeta(); ?>
+
+    <?php
+        $REQUEST_URI = preg_replace('/-pg[0-9]+/', '', PROTOCOL.DOMAIN.$_SERVER['REQUEST_URI']);
+        $parts = parse_url($REQUEST_URI);
+        $url = $parts['scheme'] . '://' . $parts['host'] . $parts['path'];
+        echo '<link rel="canonical" href="'.$url.'" />';
+    ?>
+
+    <link rel="preload" href="<?php echo PUBLIC_PATH; ?>template/frontend/fonts/font-awesome/fontawesome-webfont.woff2?v=4.7.0" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/opensans/v34/memvYaGs126MiZpBA-UvWbX2vVnXBbObj2OVTS-muw.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/opensans/v34/memvYaGs126MiZpBA-UvWbX2vVnXBbObj2OVTSGmu1aB.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/opensans/v34/memvYaGs126MiZpBA-UvWbX2vVnXBbObj2OVTSCmu1aB.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/russoone/v14/Z9XUDmZRWg6M1LvRYsHOwcmJrrg.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/russoone/v14/Z9XUDmZRWg6M1LvRYsHOz8mJ.woff2" as="font" type="font/woff2" crossorigin>
+
+    <link rel="icon" href="<?php echo PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$view->info['favicon'])[0]).'/16x16-'.$view->info['favicon']; ?>">
+    <link rel="icon" href="<?php echo PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$view->info['favicon'])[0]).'/32x32-'.$view->info['favicon']; ?>" />
+    <link rel="apple-touch-icon" sizes="180x180" href="<?php echo PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$view->info['favicon'])[0]).'/180x180-'.$view->info['favicon']; ?>">
+
+    <?php echo '<script> var URL_ROOT = \''.URL.'\'</script>';
+        $this->head($view->action,'top'); // CSS, JS
+        echo $this->headStyle()."\n"; // CSS internal theo trang
+        $this->headScript()->setAllowArbitraryAttributes(true);
+        echo $this->headScript(); // JS theo trang
+        $this->headScript()->exchangeArray(array()); // clear
+
+        foreach ($view->info['embed'] as $value) { echo ($value['position'] == 'head') ? html_entity_decode($value['embed']) : ''; }
+    ?>
+
+</head>
+<body>
+    <?php
+        if ($view->info['display'] == 1) {
+            foreach ($view->info['embed'] as $value) { echo ($value['position'] == 'btop') ? html_entity_decode($value['embed']) : ''; }
+            $this->header($view);
+            echo $this->content;
+            $this->footer($view);
+            $this->head($view->action,'bot'); // CSS, JS
+            echo "\n".$this->headScript(). // js theo trang
+                "\n".$this->inlineScript(); // js internal theo trang
+            foreach ($view->info['embed'] as $value) { echo ($value['position'] == 'bbot') ? html_entity_decode($value['embed']) : ''; }
+
+        } else {
+            echo '<h1 style="height: 100vh;display: flex;align-items: center;justify-content: center;">'.$view->info['notification'].'</h1>';
+        }
+    ?>
+
+</body>
+</html>

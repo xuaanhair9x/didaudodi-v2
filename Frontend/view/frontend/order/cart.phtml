@@ -1,0 +1,261 @@
+<?php echo $this->bgHeader(array('item' => $this->menu[1])); ?>
+<div class="s-cart-1">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-md-8">
+                <?php if($this->cart) { ?>
+                    <div class="list-item">
+                        <?php $totalPrice = 0;
+                            foreach ($this->cart as $value) {
+                                $price = ($value['price'] * $value['quantity']);
+                                $totalPrice += $price; ?>
+                            <div class="cart-item" data-id="<?php echo $value['id']; ?>" data-search="<?php echo $value['search']; ?>">
+                                <div class="item_img">
+                                    <a href="<?php echo PUBLIC_PATH.($value['root_id'] == 16 ? 'combo/': $value['rootSlug'].'/').$value['slug']; ?>">
+                                        <img src="<?php echo PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/'.$value['thumbnail'].WEBP_EXT; ?>" alt="<?php echo $value['name']; ?>">
+                                    </a>
+                                </div>
+                                <div class="item_content">
+                                    <div class="content_top">
+                                        <div class="info">
+                                            <div class="title"><a href="<?php echo PUBLIC_PATH.($value['root_id'] == 16 ? 'combo/': $value['rootSlug'].'/').$value['slug']; ?>"><?php echo $value['name']; ?></a></div>
+                                            <?php
+                                                if($value['root_id'] == 16) {
+                                                    echo !empty($value['comboList']) ? '<div class="option">Lựa chọn:</div>':'';
+                                                    foreach ($value['comboList'] as $i => $combo) {
+                                                        echo '<div class="parent">'.($i + 1).'. '.$combo['parentName'].'</div>
+                                                            <p class="desc is-combo">'.$combo['name'].'</p>';
+                                                    }
+                                                } else {
+                                                    echo $value['package'] ? '<div class="option">Lựa chọn: <span class="desc">'.$value['package'].'</span></div>':'';
+                                                }
+                                            ?>
+                                            <div class="price">
+                                                <b style="margin-right: 7px;">Đơn giá: </b>
+                                                <?php
+                                                    echo '<span class="discount">'.number_format($value['price'],0,0,'.').'đ</span>';
+                                                    echo $value['price_discount'] > 0 ? '<span class="market">'.number_format($value['price_market'],0,0,'.').'đ</span>':'';
+                                                ?>
+                                            </div>
+                                        </div>
+                                        <div class="delete"><span ht-trigger="s-cart" ht-type="delete" href="javascript:;"><img src="<?php echo PUBLIC_PATH; ?>images/icons/delete.svg" alt="delete"></span></div>
+                                    </div>
+                                    <div class="content_bot">
+                                        <div class="left">
+                                            <b>Số lượng: </b>
+                                            <div class="quantity">
+                                                <span ht-trigger="s-cart" ht-type="minus"><i class="fa fa-minus" aria-hidden="true"></i></span>
+                                                <input ht-trigger="s-cart" ht-type="blur" type="text" name="quantity" value="<?php echo $value['quantity']; ?>" />
+                                                <span ht-trigger="s-cart" ht-type="plus"><i class="fa fa-plus" aria-hidden="true"></i></span>
+                                            </div>
+                                        </div>
+                                        <div class="price sum"><span><?php echo number_format($price,0,0,'.'); ?></span>đ</div>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php } ?>
+                    </div>
+                <?php } ?>
+                <div class="box" <?php echo $this->cart ? 'style="display: none;"':''; ?>>Giỏ hàng chưa có sản phẩm!!</div>
+                <?php if($this->combo) { ?>
+                    <div class="s-tab-9 desktop">
+                        <ul class="s_content">
+                            <?php foreach ($this->combo as $i => $value) { ?>
+                                <li id="combo-<?php echo ($i + 1); ?>">
+                                    <div class="s_sale">
+                                        <div class="s_flex">
+                                            <h3 class="mtitle"><i class="fa fa-bell" aria-hidden="true"></i> <?php echo $value['name']; ?></h3>
+                                            <a href="<?php echo PUBLIC_PATH.'combo/'.$value['slug']; ?>" class="s_more">Xem chi tiết <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+                                        </div>
+                                        <div class="b-sslide-default">
+                                            <div class="slick-slider">
+                                                <?php foreach ($value['listItem'] as $item) { ?>
+                                                    <div class="item">
+                                                        <a href="<?php echo PUBLIC_PATH.$item['rootSlug'].'/'.$item['slug']; ?>" class="b-card-59">
+                                                            <div class="b_thumb ht-ratio--100">
+                                                                <img src="<?php echo PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$item['thumbnail'])[0]).'/800x800-'.$item['thumbnail'].WEBP_EXT; ?>" alt="<?php echo $item['name']; ?>" class="ht-ratio__img" />
+                                                            </div>
+                                                            <div class="b_content">
+                                                                <h3 class="b_title"><?php echo $item['name']; ?></h3>
+                                                                <div class="b_price">
+                                                                    <span class="discount">
+                                                                        <?php echo ($item['price'] > 0 && $item['price_market'] > 0) ? ''.number_format($item['price'],0,0,'.').'đ':'Liên hệ'; ?>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                <?php } ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            <?php } ?>
+                        </ul>
+                        <ul class="s_menu">
+                            <?php foreach ($this->combo as $i => $value) {
+                                echo '<li'.($i == 0 ? ' class="is-active"':'').'><a href="#combo-'.($i + 1).'">Combo 0'.($i + 1).'</a></li>';
+                            } ?>
+                        </ul>
+                    </div>
+                <?php } ?>
+            </div>
+            <div class="col-12 col-md-4">
+                <?php if($this->banner) { ?>
+                    <div class="s_slick desktop">
+                        <div class="b-sslide-default">
+                            <div class="slick-slider">
+                                <?php foreach ($this->banner['multi_image']['banner'] as $value) {
+                                    echo '<div class="item">
+                                        <div class="ht-ratio--75">
+                                            <img src="'.PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/400x300-'.$value['thumbnail'].WEBP_EXT.'" alt="'.$value['name'].'" class="ht-ratio__img">
+                                        </div>
+                                    </div>';
+                                } ?>
+                            </div>
+                        </div>
+                    </div>
+                <?php } ?>
+                <div class="s_total" <?php echo !$this->cart ? 'style="display: none;"':''; ?>>
+                    <div class="title">Tóm tắt đơn hàng</div>
+                    <div class="info">
+                        <div>Tạm tính</div>
+                        <div class="sum"><span><?php echo number_format($totalPrice,0,0,'.'); ?></span>đ</div>
+                    </div>
+                    <div class="info">
+                        <div>Phí giao hàng</div>
+                        <div>Tính khi chọn hình thức giao hàng</div>
+                    </div>
+                    <?php
+                        // tính toán giá trị được giảm khi đạt giá trị đơn hàng
+                        $arrPrice = $this->discountListSuggestion;
+                        $extraDiscount = 0;
+                        foreach ($arrPrice as $i => $value) {
+                            if($totalPrice >= $value['min']) {
+                                $extraDiscount = $value['discount'];
+                                if($arrPrice[$i + 1] && $totalPrice < $arrPrice[$i + 1]['min']) {
+                                    break;
+                                }
+                            }
+                        }
+                    ?>
+                    <div id="discountItem" class="info" <?php echo $extraDiscount == 0 ? 'style="display: none;"':''; ?>>
+                        <div><?php echo $this->info['headline']['slug-34']; ?></div>
+                        <div class="discount"><span>- <?php echo number_format($extraDiscount,0,0,'.'); ?></span>đ</div>
+                    </div>
+                    <div class="info total">
+                        <div>Tổng cộng</div>
+                        <div class="totalRemain"><span><?php echo number_format($totalPrice - $extraDiscount,0,0,'.'); ?></span>đ</div>
+                    </div>
+                </div>
+                <?php if($this->discountListSuggestion) { ?>
+                    <div class="s_recommend" <?php echo !$this->cart ? 'style="display: none;"':''; ?>>
+                        <div class="b-sslide-default">
+                            <div class="slick-slider">
+                                <?php foreach ($arrPrice as $value) {
+                                    if($totalPrice < $value['min']) {
+                                        $buyMore = $value['min'] - $totalPrice;
+                                        echo '<div class="item">
+                                            <div class="recommend">
+                                                <div>Mua thêm <span>'.number_format($buyMore,0,0,'.').'đ</span></div>
+                                                <div>Để được giảm <span>'.number_format($value['discount'],0,0,'.').'đ</span></div>
+                                                <div>Cho đơn hàng từ <div>'.number_format($value['min'],0,0,'.').'đ</div></div>
+                                                <a href="'.($value['multi_input']['link'] ? $value['multi_input']['link'] : 'javascript:;').'">Mua thêm</a>
+                                            </div>
+                                        </div>';
+                                    }
+                                } ?>
+                            </div>
+                        </div>
+                    </div>
+                <?php } ?>
+                <a href="<?php echo $this->cart ? PUBLIC_PATH.'dat-hang-62.html' : ''; ?>" class="s_button" <?php echo !$this->cart ? 'style="display: none;"':''; ?>><i class="fa fa-shopping-cart" aria-hidden="true"></i> Đặt hàng</a>
+                <?php if($this->combo) { ?>
+                    <div class="s-tab-9 mobile">
+                        <ul class="s_content">
+                            <?php foreach ($this->combo as $i => $value) { ?>
+                                <li id="combo-<?php echo ($i + 1); ?>">
+                                    <div class="s_sale">
+                                        <div class="s_flex">
+                                            <h3 class="mtitle"><i class="fa fa-bell" aria-hidden="true"></i> <?php echo $value['name']; ?></h3>
+                                            <a href="<?php echo PUBLIC_PATH.'combo/'.$value['slug']; ?>" class="s_more">Xem chi tiết <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+                                        </div>
+                                        <div class="b-sslide-default">
+                                            <div class="slick-slider">
+                                                <?php foreach ($value['listItem'] as $item) { ?>
+                                                    <div class="item">
+                                                        <a href="<?php echo PUBLIC_PATH.$item['rootSlug'].'/'.$item['slug']; ?>" class="b-card-59">
+                                                            <div class="b_thumb ht-ratio--100">
+                                                                <img src="<?php echo PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$item['thumbnail'])[0]).'/800x800-'.$item['thumbnail'].WEBP_EXT; ?>" alt="<?php echo $item['name']; ?>" class="ht-ratio__img" />
+                                                            </div>
+                                                            <div class="b_content">
+                                                                <h3 class="b_title"><?php echo $item['name']; ?></h3>
+                                                                <div class="b_price">
+                                                                    <span class="discount">
+                                                                        <?php echo ($item['price'] > 0 && $item['price_market'] > 0) ? ''.number_format($item['price'],0,0,'.').'đ':'Liên hệ'; ?>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                <?php } ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            <?php } ?>
+                        </ul>
+                        <ul class="s_menu">
+                            <?php foreach ($this->combo as $i => $value) {
+                                echo '<li'.($i == 0 ? ' class="is-active"':'').'><a href="#combo-'.($i + 1).'">Combo 0'.($i + 1).'</a></li>';
+                            } ?>
+                        </ul>
+                    </div>
+                <?php } if($this->product) { ?>
+                    <div class="s-product-1 mobile">
+                        <div class="s_title"><?php echo $this->info['headline']['slug-33']; ?></div>
+                        <div class="b-sslide-default">
+                            <div class="slick-slider fix">
+                                <?php echo $this->block4(array('list' => $this->product, 'col' => 'item', 'action' => 'cart')); ?>
+                            </div>
+                        </div>
+                    </div>
+                <?php } if($this->camKet) { ?>
+                    <div class="s_item">
+                        <?php foreach ($this->camKet['multi_image']['cam-ket'] as $value) {
+                            echo '<a class="item" href="'.$value['link'].'" target="_blank">
+                                <img src="'.PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/'.$value['thumbnail'].WEBP_EXT.'" alt="'.$value['name'].'">
+                                <div class="title">'.$value['name'].'</div>
+                            </a>';
+                        } ?>
+                    </div>
+                <?php } ?>
+            </div>
+            <?php if($this->product) { ?>
+                <div class="col-12 desktop">
+                    <div class="s-product-1">
+                        <div class="s_title"><?php echo $this->info['headline']['slug-33']; ?></div>
+                        <div class="b-sslide-default">
+                            <div class="slick-slider fix">
+                                <?php echo $this->block4(array('list' => $this->product, 'col' => 'item', 'action' => 'cart')); ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php } ?>
+        </div>
+    </div>
+</div>
+<?php if($this->cart) { ?>
+    <script>
+    !function (w, d, t) {
+      w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var i="https://analytics.tiktok.com/i18n/pixel/events.js";ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=i,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};var o=document.createElement("script");o.type="text/javascript",o.async=!0,o.src=i+"?sdkid="+e+"&lib="+t;var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(o,a)};
+
+      ttq.load('CJ4TVMBC77U3K5NQL2U0');
+      ttq.page();
+    ttq.track('AddToCart')
+    ttq.track('ViewContent')
+    ttq.track('CompletePayment')
+    }(window, document, 'ttq');
+    </script>
+<?php } ?>

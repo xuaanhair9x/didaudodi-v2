@@ -1,0 +1,8 @@
+<?php $style = (file_exists(ROOT_PUBLIC.'/'.UPLOAD_IMAGES.date('Y/m',explode('-',$this->item['multi_image']['background'][0]['thumbnail'])[0]).'/1903x184-'.$this->item['multi_image']['background'][0]['thumbnail'].WEBP_EXT) && is_file(ROOT_PUBLIC.'/'.UPLOAD_IMAGES.date('Y/m',explode('-',$this->item['multi_image']['background'][0]['thumbnail'])[0]).'/1903x184-'.$this->item['multi_image']['background'][0]['thumbnail'].WEBP_EXT)) ? ' style="background-image: url('.PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$this->item['multi_image']['background'][0]['thumbnail'])[0]).'/1903x184-'.$this->item['multi_image']['background'][0]['thumbnail'].WEBP_EXT.');"':''; ?>
+<div class="s-banner-2"<?php echo $style; ?>>
+    <div class="container">
+        <div class="s_content">
+        	<?php echo $this->detail ? '<div class="title">'.$this->item['name'].'</div>':'<h1 class="title">'.$this->item['name'].'</h1>'; ?>
+        </div>
+    </div>
+</div>

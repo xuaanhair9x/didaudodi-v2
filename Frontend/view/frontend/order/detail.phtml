@@ -1,0 +1,125 @@
+<div class="s-detail-1">
+    <div class="container">
+        <div class="c-headline-2 h1"><h1 class="c_divider">Chi tiết đơn hàng</h1></div>
+        <div class="row">
+            <div class="col-md-7">
+                <div class="box-info order mobile">
+                    <div class="orderCode">Mã đơn hàng: <span>#<?php echo $this->detail['orderCode']; ?></span></div>
+                    <div class="date">Ngày đặt hàng: <span><?php echo date('d/m/Y - H:i', strtotime($this->detail['date_created'])); ?></span></div>
+                    <?php echo $this->detail['discount_id'] ? '<div class="orderCode">Mã giảm giá được áp dụng: <span>'.$this->detail['discountInfo']['discountCode'].'</span></div>':''; ?>
+                    <div class="status">Trạng thái đơn hàng: <span><?php echo $this->status[$this->detail['status']]; ?></span></div>
+                    <div class="paymentType">Phương thức thanh toán: <span><?php echo $this->detail['paymentType']; ?></span></div>
+                    <?php
+                        echo $this->detail['paymentStatus'] ? '<div class="paymentStatus">Trạng thái thanh toán: <span>'.$this->detail['paymentStatus'].'</span></div>':'';
+                        echo $this->detail['shippingType'] ? '<div class="shippingType">Hình thức giao hàng: <span>'.$this->detail['shippingType'].'</span></div>':'';
+                    ?>
+                    <div class="comment">Ghi chú: <span><?php echo $this->detail['comment'] ? $this->detail['comment'] : 'Không có ghi chú'; ?></span></div>
+                </div>
+                <div class="list-item">
+                    <?php foreach ($this->listProduct as $value) { $productMeta = json_decode($value['product_meta'], true); ?>
+                        <div class="cart-item">
+                            <div class="item_img">
+                                <a href="<?php echo PUBLIC_PATH.($productMeta['root_id'] == 16 ? 'combo/': $productMeta['rootSlug'].'/').$productMeta['slug']; ?>">
+                                    <img src="<?php echo PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$productMeta['thumbnail'])[0]).'/'.$productMeta['thumbnail'].WEBP_EXT; ?>" alt="<?php echo $productMeta['name']; ?>">
+                                </a>
+                            </div>
+                            <div class="item_content">
+                                <div class="content_top">
+                                    <div class="info">
+                                        <div class="title"><a href="<?php echo PUBLIC_PATH.($productMeta['root_id'] == 16 ? 'combo/': $productMeta['rootSlug'].'/').$productMeta['slug']; ?>"><?php echo $productMeta['name']; ?></a></div>
+                                        <?php
+                                            if($productMeta['root_id'] == 16) {
+                                                echo !empty($productMeta['comboList']) ? '<div class="option">Lựa chọn:</div>':'';
+                                                foreach ($productMeta['comboList'] as $i => $combo) {
+                                                    echo '<div class="parent">'.($i + 1).'. '.$combo['parentName'].'</div>
+                                                        <p class="desc is-combo">'.$combo['name'].'</p>';
+                                                }
+                                            } else {
+                                                echo $productMeta['package'] ? '<div class="option">Lựa chọn: <span class="desc">'.$productMeta['package'].'</span></div>':'';
+                                            }
+                                        ?>
+                                        <div class="price">
+                                            <b>Đơn giá: </b>
+                                            <?php
+                                                echo '<span class="discount">'.number_format($productMeta['price'],0,0,'.').'đ</span>';
+                                                echo $productMeta['price_discount'] > 0 ? '<span class="market">'.number_format($productMeta['price_market'],0,0,'.').'đ</span>':'';
+                                            ?>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="content_bot">
+                                    <div class="left">
+                                        <b>Số lượng: x<?php echo $productMeta['quantity']; ?></b>
+                                    </div>
+                                    <div class="price"><span><?php echo number_format($productMeta['price'] * $productMeta['quantity'],0,0,'.'); ?></span>đ</div>
+                                </div>
+                            </div>
+                        </div>
+                    <?php } ?>
+                </div>
+                <div class="box-info infoPrice">
+                    <div class="sum">
+                        <span class="name">Tạm tính:</span>
+                        <span class="price"><?php echo number_format($this->detail['total_sum'],0,0,'.'); ?>đ</span>
+                    </div>
+                    <div class="shipping">
+                        <span class="name">Phí giao hàng:</span>
+                        <span class="price"><?php echo number_format($this->detail['shipping_fee'],0,0,'.'); ?>đ</span>
+                    </div>
+                    <?php if($this->detail['extraDiscount']) { ?>
+                        <div class="extraDiscount discount">
+                            <span class="name">Được giảm thêm:</span>
+                            <span class="price">- <?php echo number_format($this->detail['extraDiscount'],0,0,'.'); ?>đ</span>
+                        </div>
+                    <?php } if($this->detail['discount_id']) { ?>
+                        <div class="discountCode discount">
+                            <span class="name">Áp dụng mã giảm giá:</span>
+                            <span class="price">- <?php echo number_format($this->detail['discountInfo']['value'],0,0,'.'); ?>đ</span>
+                        </div>
+                    <?php } ?>
+                    <div class="total">
+                        <span class="name">Tổng cộng:</span>
+                        <span class="price"><?php echo number_format($this->detail['total_price'],0,0,'.'); ?>đ</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="box-info order desktop">
+                    <div class="orderCode">Mã đơn hàng: <span>#<?php echo $this->detail['orderCode']; ?></span></div>
+                    <div class="date">Ngày đặt hàng: <span><?php echo date('d/m/Y - H:i', strtotime($this->detail['date_created'])); ?></span></div>
+                    <?php echo $this->detail['discount_id'] ? '<div class="orderCode">Mã giảm giá được áp dụng: <span>'.$this->detail['discountInfo']['discountCode'].'</span></div>':''; ?>
+                    <div class="status">Trạng thái đơn hàng: <span><?php echo $this->status[$this->detail['status']]; ?></span></div>
+                    <div class="paymentType">Phương thức thanh toán: <span><?php echo $this->detail['paymentType']; ?></span></div>
+                    <?php
+                        echo $this->detail['paymentStatus'] ? '<div class="paymentStatus">Trạng thái thanh toán: <span>'.$this->detail['paymentStatus'].'</span></div>':'';
+                        echo $this->detail['shippingType'] ? '<div class="shippingType">Hình thức giao hàng: <span>'.$this->detail['shippingType'].'</span></div>':'';
+                    ?>
+                    <div class="comment">Ghi chú: <span><?php echo $this->detail['comment'] ? $this->detail['comment'] : 'Không có ghi chú'; ?></span></div>
+                </div>
+                <div class="box-info">
+                    <div class="c-headline-3 h3">
+                        <h2 class="c_name">
+                            <i class="fa fa-info-circle" aria-hidden="true"></i>
+                            <span>THÔNG TIN ĐẶT HÀNG</span>
+                        </h2>
+                    </div>
+                    <p><i class="fa fa-user-circle-o fa-abs-top"></i><?php echo $this->detail['fullname']; ?></p>
+                    <p><i class="fa fa-phone-square"></i><?php echo $this->detail['phone']; ?></p>
+                    <p><i class="fa fa-map-marker fa-abs-top"></i><?php echo $this->detail['address']; ?></p>
+                </div>
+                <div class="box-info">
+                    <div class="c-headline-3 h3">
+                        <h2 class="c_name">
+                            <i class="fa fa-info-circle" aria-hidden="true"></i>
+                            <span>THÔNG TIN NHẬN HÀNG</span>
+                        </h2>
+                    </div>
+                    <p><i class="fa fa-user-circle-o fa-abs-top"></i><?php echo $this->recipient['fullname']; ?></p>
+                    <p><i class="fa fa-phone-square"></i><?php echo $this->recipient['phone']; ?></p>
+                    <p><i class="fa fa-map-marker fa-abs-top"></i><?php echo $this->recipient['address']; ?></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,114 @@
+<div class="container">
+    <div class="thank-box">
+        <?php if($this->ResponseCode == '00') { ?>
+            <div class="ht-format-detail"><?php echo $this->convertWebpEditor($this->thankyou['detail']); ?></div>
+        <?php } else { ?>
+            <h1 class="text-center"><?php echo $this->result; ?></h1>
+        <?php } ?>
+        <p class="order-heading text-center"> Thông tin đơn hàng </p>
+        <div class="box">
+            <div class="grid text-center">
+                <div class="grid__column three-twelfths mobile--one-whole"></div>
+                <div class="grid__column six-twelfths mobile--one-whole">
+                    <div class="order-title">ĐƠN HÀNG <span style="color: #f60; font-weight: bold;">#<?php echo $this->order['orderCode']; ?></span> </div>
+                </div>
+            </div>
+            <div class="table-reponsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Tên sản phẩm</th>
+                            <th width="120px">Đơn giá</th>
+                            <th width="80">Số lượng</th>
+                            <th width="50" class="text-right">Thành tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php $totalQty = 0;  ?>
+                        <?php foreach ($this->order['listProduct'] as $value) {
+                            $product_meta = json_decode($value['product_meta'], true);
+                        ?>
+                            <tr>
+                                <td>
+                                    <div class="name"><?php echo $product_meta['name']; ?></div>
+                                    <?php if($product_meta['root_id'] == 16) {
+                                        echo !empty($product_meta['comboList']) ? '<div class="option">Lựa chọn:</div>':'';
+                                        foreach ($product_meta['comboList'] as $i => $combo) {
+                                            echo '<div class="parent">'.($i + 1).'. '.$combo['parentName'].'</div>
+                                                <div class="desc is-combo">'.$combo['name'].'</div>';
+                                        }
+                                    } else { ?>
+                                        <div class="option">Lựa chọn: <span><?php echo $product_meta['package']; ?></span></div>
+                                    <?php } ?>
+                                </td>
+                                <td class="text-center">
+                                    <?php
+                                        echo number_format($product_meta['price'],0,0,'.').'đ';
+                                        echo $product_meta['price_discount'] > 0 ? '<del style="font-size: 12px;display: block;">'.number_format($product_meta['price_market'],0,0,'.').'đ</del>':'';
+                                    ?>
+                                 </td>
+                                <?php $totalQty = $totalQty + $product_meta['quantity'];  ?>
+                                <td class="text-center"><?php echo $product_meta['quantity']; ?></td>
+                                <td class="text-bold"><?php echo number_format($product_meta['price'] * $value['quantity'],0,0,'.'); ?>đ</td>
+                            </tr>
+                        <?php } ?>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3">Tạm tính</td>
+                            <td class="text-bold text-right"><?php echo number_format($this->order['total_sum'],0,0,'.'); ?>đ</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">Phí giao hàng</td>
+                            <td class="text-right"><?php echo number_format($this->order['shipping_fee'],0,0,'.'); ?>đ</td>
+                        </tr>
+                        <?php if($this->order['extraDiscount']) { ?>
+                            <tr>
+                                <td colspan="3"><?php echo $this->info['headline']['slug-34']; ?></td>
+                                <td class="text-discount text-right">- <?php echo number_format($this->order['extraDiscount'],0,0,'.'); ?>đ</td>
+                            </tr>
+                        <?php } if($this->order['discount_id']) { ?>
+                            <tr>
+                                <td colspan="3">Áp dụng mã giảm giá</td>
+                                <td class="text-discount text-right">- <?php echo number_format($this->order['discountInfo']['value'],0,0,'.'); ?>đ</td>
+                            </tr>
+                        <?php } ?>
+                        <tr class="total_payment">
+                            <td colspan="3">Tổng thanh toán</td>
+                            <td class="text-right"><?php echo number_format($this->order['total_price'],0,0,'.'); ?>đ</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="order-note">*Ghi chú: <i><?php echo $this->order['comment'] ? $this->order['comment'] : 'Không có ghi chú'; ?></i></div>
+        </div>
+        <p class="order-heading text-center">Thông tin đặt hàng</p>
+        <div class="box text-center">
+            <p>Họ và tên: <b><?php echo $this->order['recipient_data']['fullname']; ?></b></p>
+            <p>Email: <b><?php echo $this->order['member']['email']; ?></b></p>
+            <p>Số điện thoại: <b><?php echo $this->order['recipient_data']['phone']; ?></b></p>
+            <p>Phương thức thanh toán: <b><?php echo $this->order['paymentType']; ?></b></p>
+            <?php
+                echo $this->order['paymentStatus'] ? '<p>Trạng thái giao dịch: <b>'.$this->result.'</b></p>':'';
+                echo $this->order['shippingType'] ? '<p>Hình thức giao hàng: <b>'.$this->order['shippingType'].'</b></p>':'';
+            ?>
+            <p>Địa chỉ nhận hàng: <b><?php echo $this->order['recipient_data']['address']; ?></b></p>
+        </div>
+        <div class="ending-text text-center"><?php echo $this->info['headline']['slug-35']; ?></div>
+    </div>
+</div>
+<script>
+    !function (w, d, t) {
+        w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var i="https://analytics.tiktok.com/i18n/pixel/events.js";ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=i,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};var o=document.createElement("script");o.type="text/javascript",o.async=!0,o.src=i+"?sdkid="+e+"&lib="+t;var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(o,a)};
+
+        ttq.load('CJ572KRC77UFNS3Q1E90');
+        ttq.page();
+        ttq.track('CompletePayment', {
+            value:<?= $this->order['total_price'] ?>,
+            currency: 'VND',
+            content_id: <?= $this->order['orderCode'] ?>,
+            content_type: 'product',
+            quantity: <?= $totalQty ?>
+        }),
+    }(window, document, 'ttq');
+</script>

@@ -1,0 +1,29 @@
+<?php foreach ($this->list as $value) { ?>
+	<div class="<?php echo $this->col; ?>">
+        <div class="b-card-21 block-combo">
+            <div class="b_thumb">
+                <a href="<?php echo PUBLIC_PATH.'combo/'.$value['slug']; ?>" class="ht-ratio--100">
+                    <img loading="lazy" width="400" height="300" <?php echo $this->lazy ? 'src="'.PUBLIC_PATH.'images/blank.jpg" data-':''; ?>src="<?php echo PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/'.$value['thumbnail'].WEBP_EXT; ?>" alt="<?php echo $value['name']; ?>" class="ht-ratio__img<?php echo $this->lazy ? ' lazy':'' ?>">
+                </a>
+                <?php foreach ($value['listItem'] as $i => $item) { if($item['id']) { ?>
+                    <div class="b_icon" style="top: <?php echo $value['list_combo_item'][$i]['potitionTop']; ?>%; left:<?php echo $value['list_combo_item'][$i]['potitionLeft']; ?>%">
+                        <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                        <a href="<?php echo PUBLIC_PATH.$item['rootSlug'].'/'.$item['slug']; ?>" class="product">
+                            <img loading="lazy" width="400" height="300" <?php echo $this->lazy ? 'class="lazy" src="'.PUBLIC_PATH.'images/blank.jpg" data-':''; ?>src="<?php echo PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$item['thumbnail'])[0]).'/100x100-'.$item['thumbnail'].WEBP_EXT; ?>" alt="<?php echo $item['name']; ?>">
+                            <div>
+                                <p><?php echo $item['name']; ?></p>
+                                <div><?php echo number_format($item['price'],0,0,'.').'đ'; ?></div>
+                            </div>
+                        </a>
+                    </div>
+                <?php }} ?>
+            </div>
+            <div class="b_content">
+            	<a href="<?php echo PUBLIC_PATH.'combo/'.$value['slug']; ?>">
+	                <h3 class="b_title"><?php echo $value['name']; ?></h3>
+	                <span class="c-button-19"><span>Xem chi tiết</span></span>
+	            </a>
+            </div>
+        </div>
+    </div>
+<?php } ?>

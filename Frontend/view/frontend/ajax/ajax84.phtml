@@ -1,0 +1,10 @@
+<?php if($this->paginator) { if($this->paginator->getTotalItemCount() > 0) { ?>
+	<div class="row row-flex" data-items="<?php echo $this->paginator->getTotalItemCount(); ?>">
+		<?php echo $this->block4(array('list' => $this->list, 'col' => 'col-6 col-sm-4 col-md-3')); ?>
+    </div>
+    <?php if ($this->paginator->getTotalItemCount() > $this->paginator->getItemCountPerPage()) { ?>
+        <div class="s_more">
+            <a href="javascript:;" id="productList11X" class="c-button-4" onclick="showMore('<?php echo PUBLIC_PATH."pagination-81.html"; ?>','<?php echo htmlspecialchars(json_encode(array('page' => 2, 'limit' => $this->paginator->getItemCountPerPage(), 'id' => $this->params['id'], 'type' => 'productList11X', 'list_select_id' => $this->params['list_select_id'], 'brand_id' => $this->params['brand_id'], 'orderby' => $this->params['orderby'], 'special' => $this->params['special'], 'filter_price' => $this->params['filter_price'], 'filter_sale' => $this->params['filter_sale'], 'label_id' => $this->params['label_id'], 'keysearch' => $this->params['keysearch']), JSON_UNESCAPED_UNICODE)); ?>', '.b-card-58.block-product', '#productList11X');"><span class="fa fa-angle-down"> Xem thêm</span></a>
+        </div>
+    <?php } ?>
+<?php } else { echo '<div class="h3" style="text-transform: uppercase;margin: 30px 0;color: #03707d;">Không tìm thấy sản phẩm...</div>'; }} ?>

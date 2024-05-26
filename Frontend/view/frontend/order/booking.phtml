@@ -1,0 +1,177 @@
+<?php echo $this->bgHeader(array('item' => $this->menu[1])); ?>
+<div class="s-form-2">
+    <div class="container">
+        <div class="row row-flex flex">
+            <div class="col-12 col-md-7">
+                <div class="s_title">
+                    <div class="title">Thông tin đặt hàng</div>
+                    <?php if(!$this->member) { ?>
+                        <div>
+                            <span>Bạn đã có tài khoản?</span>
+                            <a href="javascript:;" ht-trigger="c-modal" ht-target="#s-sign-in-1">Đăng nhập ngay</a>
+                        </div>
+                    <?php } ?>
+                </div>
+                <form id="form_order" action="" method="POST" accept-charset="utf-8" enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group c-form-border">
+                                <input type="text" name="fullname" class="c_input" value="<?php echo $this->member['fullname']; ?>" placeholder="Họ và tên">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group c-form-border ">
+                                <input type="text" name="phone" class="c_input" value="<?php echo $this->member['phone']; ?>" placeholder="Số điện thoại">
+                            </div>
+                        </div>
+                        <?php if (!$this->member) { ?>
+                            <div class="col-md-12">
+                                <div class="form-group c-form-border ">
+                                    <input type="text" name="email" class="c_input" value="" placeholder="Email">
+                                </div>
+                            </div>
+                        <?php } ?>
+                        <div class="col-md-12">
+                            <div class="form-group c-form-border ">
+                                <input type="text" name="address" class="c_input" value="<?php echo $this->member['address']; ?>" placeholder="Địa chỉ, số nhà, tên đường (ví dụ: 103 Vạn Phúc, phường Vạn Phúc)">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="c-select c-form-border form-group">
+                                <div class="c_input text--icon" ht-trigger="c-select">Chọn khu vực giao hàng</div>
+                                <span class="c-icons"><i class="fa fa-angle-down" aria-hidden="true"></i></span>
+                                <div class="c_list">
+                                    <div class="form-group c-form-border c-form-border--icon is-focused search-area">
+                                        <input type="text" name="searchDistrict" class="c_input" value="" placeholder="Tìm khu vực">
+                                    </div>
+                                    <?php
+                                        foreach ($this->khuVuc as $value) {
+                                            echo '<div class="title">'.$value['name'].'</div>';
+                                            foreach ($value['list'] as $item) {
+                                                echo '<div class="c-radio"><label><input type="radio" name="district" value="'.$item['id'].'" data-ward="'.htmlspecialchars(json_encode(($item['multi_input']['phuong-xa']), JSON_UNESCAPED_UNICODE|JSON_HEX_APOS)).'"><span>'.$item['name'].'</span></label></div>';
+                                            }
+                                        }
+                                    ?>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="c-select c-form-border form-group">
+                                <div class="c_input text--icon" ht-trigger="c-select" ht-type="ward">Chọn Phường / Xã</div>
+                                <span class="c-icons"><i class="fa fa-angle-down" aria-hidden="true"></i></span>
+                                <div id="listWard"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group c-form-border">
+                                <input type="text" name="comment" class="c_input" value="" placeholder="Ghi chú thêm (ví dụ: Giao trong giờ hành chính)">
+                            </div>
+                        </div>
+                        <div class="col-md-12" id="shippingType"></div>
+                    </div>
+                    <div class="s_pay">
+                        <div class="s_title">
+                            <div class="title">Phương thanh toán</div>
+                        </div>
+                        <div class="form-group is-focused">
+                            <div class="c-radio"><label><input type="radio" name="payment" value="cod" checked><img src="images/icons/COD.svg" alt=""><div><span>COD</span><span>Thanh toán khi nhận hàng</span></div></label></div>
+                        </div>
+                        <!-- <div class="form-group">
+                            <div class="c-radio"><label><input type="radio" name="payment" value="momo" disabled="disabled"><img src="images/icons/momo.png" alt=""><div><span>Thanh toán qua ví điện tử MoMo (đang phát triển)</span></div></label></div>
+                        </div> -->
+                        <div class="form-group">
+                            <div class="c-radio"><label><input type="radio" name="payment" value="vnpay"><img src="images/icons/vnpay.png" alt=""><div><span>Thẻ ATM / Internet Banking</span><span>Thẻ tín dụng (Credit card) / Thẻ ghi nợ (Debit card)</span><span>VNPay QR</span></div></label></div>
+                        </div>
+                    </div>
+                    <input type="hidden" name="discount_id" value="">
+                    <button type="submit">Đặt hàng ngay</button>
+                </form>
+            </div>
+            <div class="col-12 col-md-5">
+                <div class="s_title">
+                    <div class="title">Sản phẩm của bạn</div>
+                </div>
+                <div class="list-item">
+                    <?php foreach ($this->cart as $value) { ?>
+                        <div class="cart-item">
+                            <div class="item_img">
+                                <img src="<?php echo PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/'.$value['thumbnail'].WEBP_EXT; ?>" alt="<?php echo $value['name']; ?>">
+                            </div>
+                            <div class="item_content">
+                                <div class="content_top">
+                                    <div class="info">
+                                        <div class="title"><?php echo $value['name']; ?></div>
+                                        <?php
+                                            if($value['root_id'] == 16) {
+                                                echo !empty($value['comboList']) ? '<div class="option">Lựa chọn:</div>':'';
+                                                foreach ($value['comboList'] as $i => $combo) {
+                                                    echo '<div class="parent">'.($i + 1).'. '.$combo['parentName'].'</div>
+                                                        <p class="desc is-combo">'.$combo['name'].'</p>';
+                                                }
+                                            } else {
+                                                echo $value['package'] ? '<div class="option">Lựa chọn: <span class="desc">'.$value['package'].'</span></div>':'';
+                                            }
+                                        ?>
+                                        <div class="price">
+                                            <b>Đơn giá: </b>
+                                            <?php
+                                                echo '<span class="discount">'.number_format($value['price'],0,0,'.').'đ</span>';
+                                                echo $value['price_discount'] > 0 ? '<span class="market">'.number_format($value['price_market'],0,0,'.').'đ</span>':'';
+                                            ?>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="content_bot">
+                                    <div class="left">
+                                        <b>Số lượng: x<?php echo $value['quantity']; ?></b>
+                                    </div>
+                                    <div class="price"><span><?php echo number_format($value['price'] * $value['quantity'],0,0,'.'); ?></span>đ</div>
+                                </div>
+                            </div>
+                        </div>
+                    <?php } ?>
+                </div>
+                <div class="discount-box">
+                    <input type="text" name="sku" value="" placeholder="Mã giảm giá"> <button id="btnDiscount">Áp dụng</button>
+                </div>
+                <div class="notifyDiscount"></div>
+                <div class="s-cart-1">
+                    <div class="s_total">
+                        <div class="title">Tóm tắt đơn hàng</div>
+                        <div class="info" id="sum">
+                            <div>Tạm tính</div>
+                            <div class="price"><?php echo number_format($this->totalPrice,0,0,'.'); ?>đ</div>
+                        </div>
+                        <div class="info" id="shippingTotal">
+                            <div>Phí giao hàng</div>
+                            <div class="price">0đ</div>
+                        </div>
+                        <?php if($this->extraDiscount > 0) { ?>
+                            <div class="info" id="discount">
+                                <div><?php echo $this->info['headline']['slug-34']; ?></div>
+                                <div class="price">- <?php echo number_format($this->extraDiscount,0,0,'.'); ?>đ</div>
+                            </div>
+                        <?php } ?>
+                        <div class="info hidden" id="reducedCash">
+                            <div>Áp dụng mã giảm giá</div>
+                            <div class="price">0đ</div>
+                        </div>
+                        <div class="info total" id="totalRemain">
+                            <div>Tổng cộng</div>
+                            <div class="price"><?php echo number_format($this->totalRemain,0,0,'.'); ?>đ</div>
+                            <input type="hidden" name="totalRemain" value="<?php echo $this->totalRemain; ?>">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<?php if ($this->discount) { ?>
+    <script>
+        $(document).ready(function() {
+            $('input[name="sku"]').val('<?php echo $this->discount["sku"]; ?>');
+            $('#btnDiscount').click();
+        });
+    </script>
+<?php } ?>

@@ -1,0 +1,15 @@
+<?php foreach ($this->list as $value) {
+	echo '<div class="'.$this->col.'">
+        <a href="'.PUBLIC_PATH.$value['rootSlug'].'/'.$value['slug'].'" class="b-card-53 block-news">
+            <div class="b_thumb ht-ratio--75">
+                <img loading="lazy" width="400" height="300" src="'.PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/800x600-'.$value['thumbnail'].WEBP_EXT.'" alt="'.$value['name'].'" class="ht-ratio__img" />
+                <div class="b_overlay"></div>
+            </div>
+            <div class="b_content">
+                <div class="b_date">'.date('d/m/Y', strtotime($value['date_published'])).' - '.$value['view'].' Lượt xem</div>
+                <'.($this->htmlTag ? $this->htmlTag : 'div').' class="b_title">'.$value['name'].'</'.($this->htmlTag ? $this->htmlTag : 'div').'>
+                <div class="b_desc">'.$value['desc_short'].'</div>
+            </div>
+        </a>
+    </div>';
+} ?>

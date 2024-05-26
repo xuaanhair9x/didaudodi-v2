@@ -1,0 +1,198 @@
+<div class="b-card-12">
+    <h1 class="b_name"><?php echo $this->translate("Thông tin tài khoản"); ?></h1>
+    <h2 class="b_price"><?php echo $this->member['fullname']; ?></h2>
+    <ul class="b_list">
+        <li>
+            <div class="avatar">
+                <div class="c-upload c-upload-image">
+                    <div class="c_thumb">
+                        <?php
+                            $thumbnail = PUBLIC_PATH.'images/noimage.png';
+                            if((file_exists(ROOT_PUBLIC.'/'.UPLOAD_IMAGES.date('Y/m',explode('-',$this->member['thumbnail'])[0]).'/autox30-'.$this->member['thumbnail']) && is_file(ROOT_PUBLIC.'/'.UPLOAD_IMAGES.date('Y/m',explode('-',$this->member['thumbnail'])[0]).'/autox30-'.$this->member['thumbnail']))) {
+                                $thumbnail = PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$this->member['thumbnail'])[0]).'/autox30-'.$this->member['thumbnail'];
+                            }
+                        ?>
+                        <div class="c_thumb-default"><img src="<?php echo $thumbnail; ?>" alt="<?php echo $this->member['fullname']; ?>"></div>
+                        <div class="c_thumb-preview"></div>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li><span class="fa fa-envelope fa-abs-top"><?php echo $this->member['email'] ? $this->member['email'] : 'Email chưa cập nhật'; ?></span></li>
+        <li><span class="fa fa-phone-square fa-abs-top"><?php echo $this->member['phone'] ? $this->member['phone'] : 'Điện thoại chưa cập nhật'; ?></span></li>
+        <li><span class="fa fa-map-marker fa-abs-top"><?php echo ($this->member['address']) ? $this->member['address'] : $this->translate("Địa chỉ chưa cập nhật"); ?></span></li>
+    </ul>
+    <form id="form_profile" class="b_form" action="" method="post" accept-charset="utf-8">
+        <div class="avatar">
+            <div class="c-upload c-upload-image">
+                <input type="file" name="thumbnail" onchange="readFile(this, false);">
+                <div class="c_thumb">
+                    <div class="c_thumb-default"><img src="<?php echo $thumbnail; ?>" alt="<?php echo $this->member['fullname']; ?>"></div>
+                    <div class="c_thumb-preview"></div>
+                    <div class="c_thumb-ovelay">
+                        <i class="fa fa-upload" aria-hidden="true"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group c-form-border c-form-border--label">
+            <label class="c_label"><?php echo $this->translate("Họ và tên"); ?> (*)</label>
+            <input type="text" name="fullname" class="c_input" value="<?php echo $this->member['fullname']; ?>">
+        </div>
+        <?php if(!$this->member['email']) { ?>
+            <div class="form-group c-form-border c-form-border--label">
+                <label class="c_label">Email đăng nhập (*)</label>
+                <input type="text" name="email" class="c_input" value="">
+            </div>
+        <?php } ?>
+        <div class="form-group c-form-border c-form-border--label">
+            <label class="c_label"><?php echo $this->translate("Điện thoại"); ?> (*)</label>
+            <input type="text" name="phone" class="c_input" value="<?php echo $this->member['phone']; ?>">
+        </div>
+        <div class="form-group c-form-border c-form-border--label">
+            <label class="c_label"><?php echo $this->translate("Địa chỉ"); ?> (*)</label>
+            <input type="text" name="address" class="c_input" value="<?php echo $this->member['address']; ?>">
+        </div>
+        <div class="b_footer">
+            <button type="submit" class="c-btn c-btn--sm c-btn--primary"><?php echo $this->translate("Cập nhật thông tin"); ?></button>
+            <button type="button" class="c-btn c-btn--sm c-btn--secondary"><?php echo $this->translate("Hủy"); ?></button>
+        </div>
+    </form>
+    <form id="form_password" class="b_form" action="" method="post" accept-charset="utf-8">
+        <div class="form-group c-form-border c-form-border--label">
+            <label class="c_label"><?php echo $this->translate("Mật khẩu mới"); ?> (*)</label>
+            <input type="password" name="password" class="c_input" value="">
+        </div>
+        <div class="form-group c-form-border c-form-border--label">
+            <label class="c_label"><?php echo $this->translate("Nhập lại mật khẩu mới"); ?> (*)</label>
+            <input type="password" name="password_confirm" class="c_input" value="">
+        </div>
+        <div class="b_footer">
+            <button type="submit" class="c-btn c-btn--sm c-btn--primary"><?php echo $this->translate("Đổi mật khẩu"); ?></button>
+            <button type="button" class="c-btn c-btn--sm c-btn--secondary"><?php echo $this->translate("Hủy"); ?></button>
+        </div>
+    </form>
+    <div class="b_footer">
+        <button type="button" class="c-btn c-btn--sm c-btn--primary" ht-target="form_profile"><?php echo $this->translate("Cập nhật thông tin"); ?></button>
+        <button type="button" class="c-btn c-btn--sm c-btn--secondary" ht-target="form_password"><?php echo $this->translate("Đổi mật khẩu"); ?></button>
+    </div>
+</div>
+<script>
+    /* BEGIN c-upload */
+    $(document).ready(function() {
+        $('body').on('click', '[ht-close="c-upload"]', function(e) {
+            e.preventDefault();
+            $(this).closest('.c-upload').removeClass('is-active');
+            $(this).closest('.c-upload').find('input[type=file]').val('');
+
+            var json = $(this).data('delete');
+            if(json.file) {
+                $(this).closest('.c-upload').find('#addon').html('<input type="hidden" name="'+ json.id +'" value="'+ json.file +'">');
+            } else {
+                $(this).closest('.c-upload').find('#addon').html('');
+            }
+        });
+    });
+
+    function readFile(obj, type) {
+        var $this = $(obj);
+        var imageTypes = [ 'jpg','jpeg','png','gif','bmp' ]; // khai báo mảng định dạng mở rộng của image
+        var fileTypes = [ 'doc','docx','xls','xlsx','ppt','pptx','pdf' ];// khai báo mảng định dạng mở rộng của file
+        if (obj.files && obj.files[0]) {
+            var extension = obj.files[0].name.split('.').pop().toLowerCase(), // Lấy phần mở rộng của file input
+            // Duyệt mảng so sánh, trả về true/false
+            isImage = imageTypes.indexOf(extension) > -1;
+            isFile = fileTypes.indexOf(extension) > -1;
+            if (isImage && !type) {
+                // FileReader() lớp của js, https://developer.mozilla.org/en-US/docs/Web/API/FileReader
+                var FR = new FileReader();
+                FR.onload = function(e) {
+                    var str = e.target.result;
+                    // Image() lớp của js, https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/Image
+                    var image = new Image();
+                    image.src = str;
+                    $this.closest('.c-upload').find('.c_thumb-preview').html(image);
+                    $this.closest('.c-upload').addClass('is-active');
+                };
+                FR.readAsDataURL(obj.files[0]);
+            }
+            else if(isFile && type) {
+                $this.closest('.c-upload').find('.c_file-filename').text(obj.files[0].name);
+                $this.closest('.c-upload').addClass('is-active');
+
+                var json = $this.closest('.c-upload').find('[ht-close="c-upload"]').data('delete');
+                if(json.file) {
+                    $this.closest('.c-upload').find('#addon').html('<input type="hidden" name="'+ json.id +'" value="'+ json.file +'">');
+                } else {
+                    $this.closest('.c-upload').find('#addon').html('');
+                }
+            } else {
+                obj.value = '';
+                var modal = 'upload-'+obj.getAttribute('name');
+                if ($('body').find('#' + modal).length == 0) {
+                    var notify = (type) ? 'Tập tin yêu cầu có định dạng thuộc .doc, .docx, .xls, .xlsx, .pptx, .pdf' : 'Hình ảnh yêu cầu có định dạng thuộc .jpg, .jpeg, .png, .gif';
+                    var html = '';
+                    html += '<a href="javascript:;" ht-trigger="c-modal" ht-target="#'+modal+'" style="display: none;"></a><div id="'+modal+'" class="c-modal"><div class="c-modal-box"><div class="c-modal-group" ht-skip="parent"><div class="c_body text-center"><div class="content-notify h4">'+notify+'</div></div><div class="c_footer text-center"><button class="c-btn--sm c-btn--primary" ht-close="c-modal" ht-target-close="#'+modal+'">OK</button></div></div></div></div>';
+                    $('body').append(html);
+                }
+                $('a[ht-target="#'+modal+'"]').click();
+            }
+        }
+    }
+    /* BEGIN c-upload */
+
+    $(document).ready(function() {
+        $('.b_footer button[type="button"]').click(function(event) {
+            $('.b_list').slideUp(400);
+            $(this).parent().slideUp(400);
+            switch($(this).attr('ht-target')) {
+                case 'form_profile':
+                    $('#form_profile').slideDown(400);
+                break;
+                case 'form_password':
+                    $('#form_password').slideDown(400);
+                break;
+                default:
+                    $('.b_list').slideDown(400);
+                    $('.b_footer').slideDown(400);
+                    $('#form_profile').slideUp(400);
+                    $('#form_password').slideUp(400);
+                break;
+            }
+        });
+
+        $('#form_profile').HTValidate({
+            rules: {
+                fullname: { required : '<?php echo $this->translate("Thông tin bắt buộc"); ?>' },
+                email: { required: '<?php echo $this->translate("Thông tin bắt buộc"); ?>', email: '<?php echo $this->translate("Email không hợp lệ"); ?>' },
+                phone: {
+                    required: '<?php echo $this->translate("Thông tin bắt buộc"); ?>',
+                    number: '<?php echo $this->translate("Vui lòng nhập số"); ?>'
+                },
+                address: { required : '<?php echo $this->translate("Thông tin bắt buộc"); ?>' },
+            },
+            ajax: {url: '<?php echo URL_LANG.$this->translate("cap-nhat-thong-tin-71.html"); ?>' },
+            setTemplate: {
+                modal: 'notify_profile',
+                notify: '<?php echo $this->translate("Cập nhật thông tin thành công."); ?>'
+            }
+        });
+        $('#form_password').HTValidate({
+            rules: {
+                password: { required : '<?php echo $this->translate("Thông tin bắt buộc"); ?>' },
+                password_confirm: {
+                    required : '<?php echo $this->translate("Thông tin bắt buộc"); ?>',
+                    confirm: {
+                        elem: 'password',
+                        messages: '<?php echo $this->translate("Mật khẩu không đúng"); ?>'
+                    }
+                }
+            },
+            ajax: { url: '<?php echo URL_LANG.$this->translate("thay-doi-mat-khau-75.html"); ?>' },
+            setTemplate: {
+                modal: 'notify_password',
+                notify: '<?php echo $this->translate("Thay đổi mật khẩu thành công."); ?>'
+            }
+        });
+    });
+</script>

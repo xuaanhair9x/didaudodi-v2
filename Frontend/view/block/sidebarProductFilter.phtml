@@ -1,0 +1,152 @@
+<?php if($this->catItem['list']) { ?>
+    <div class="s_filter cate">
+        <h3 class="title"><?php echo $this->catItem['name']; ?> <i class="fa fa-angle-down" aria-hidden="true"></i></h3>
+        <ul class="filter-price filter-list" <?php echo $this->params['menu_id'] ? ' style="display: none;"':''; ?>>
+            <?php foreach ($this->catItem['list'] as $value) {
+                $slugParent = ($this->params['menu_id'] || $this->params['action'] == 'search' ? '': $this->catItem['slug'].'-');
+                echo '<li'.($this->params['id'] == $value['id'] ? ' class="is-active"':'').'><div class="filter-click"><a href="'.PUBLIC_PATH.$slugParent.$value['slug'].'">'.$value['name'].'</a>';
+                if($value['child']) {
+                    echo '<i class="fa fa-angle-down" aria-hidden="true"></i></div><ul class="filter-sub">';
+                    foreach ($value['child'] as $item) {
+                        echo '<li><a href="'.PUBLIC_PATH.$value['slug'].'-'.$item['slug'].'">'.$item['name'].'</a></li>';
+                    }
+                    echo '</ul>';
+                }
+                echo '</li>';
+            } ?>
+        </ul>
+    </div>
+<?php } if($this->label) { ?>
+    <div class="s_filter cate">
+        <h3 class="title">Phân loại <i class="fa fa-angle-down" aria-hidden="true"></i></h3>
+        <ul class="filter-price filter-list" <?php echo $this->params['menu_id'] ? ' style="display: none;"':''; ?>>
+            <?php foreach ($this->label as $value) {
+                echo '<li'.($this->params['label_id'] == $value['id'] ? ' class="is-active"':'').'><div class="filter-click"><a href="'.PUBLIC_PATH.$this->catItem['slug'].'-'.$value['slug'].'">'.$value['name'].'</a></li>';
+            } ?>
+        </ul>
+    </div>
+<?php } if($this->brand) { ?>
+    <div class="s_filter">
+        <h3 class="title">Hãng sản xuất <i class="fa fa-angle-down" aria-hidden="true"></i></h3>
+        <ul class="filter-price">
+            <?php foreach ($this->brand as $value) {
+                echo '<li><div class="c-checkbox"><label><input type="checkbox" name="brand_id" value="'.$value['id'].'" onclick="sortFilter(this, \'filter\', \'checkbox\');"><span>'.$value['name'].'</span></label></div></li>';
+            } ?>
+        </ul>
+    </div>
+<?php } ?>
+<div class="s_filter_price">
+    <h3 class="title">Chọn mức giá</h3>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="slider-range<?php echo $this->type == 'mobile' ? '-2' : ''; ?>"></div>
+        </div>
+    </div>
+    <div class="row slider-labels ht-mrt15">
+        <div class="col-6 caption">
+            <span class="slider-range-value<?php echo $this->type == 'mobile' ? 3 : 1; ?>"></span> đ
+        </div>
+        <div class="col-6 text-right caption">
+            <span class="slider-range-value<?php echo $this->type == 'mobile' ? 4 : 2; ?>"></span> đ
+        </div>
+    </div>
+    <?php echo !$this->type ? '<input type="radio" name="filter_price" value="" onclick="sortFilter(this, \'filter\');">' : ''; ?>
+</div>
+<?php foreach ($this->filter as $value) { if($value['child']) { ?>
+    <div class="s_filter">
+        <h3 class="title"><?php echo $value['name']; ?> <i class="fa fa-angle-down" aria-hidden="true"></i></h3>
+        <ul class="filter-price">
+            <?php foreach ($value['child'] as $child) {
+                echo '<li><div class="c-checkbox"><label><input type="checkbox" name="list_select_id" data-slug="'.$value['slug'].'" value="'.$child['id'].'" onclick="sortFilter(this, \'filter\', \'checkbox\');"><span>'.$child['name'].'</span></label></div></li>';
+            } ?>
+        </ul>
+    </div>
+<?php }} ?><?php
+    $arrAjax = array(
+        'id' => $this->params['id'],
+        'slug' => $this->params['slug'],
+        'format' => $this->params['format'],
+        'limit' => $this->paginator->getItemCountPerPage(),
+        'action' => $this->params['action']
+    );
+
+    // Copy thêm nếu có "shortcut"
+    if ($this->params['shortcut']) {
+        $arrsShortcut = array('mn' => 'menu_id');
+        $arrAjax['shortcut'] = $this->params['shortcut'];
+        $arrAjax[$arrsShortcut[$this->params['shortcut']]] = $this->params[$arrsShortcut[$this->params['shortcut']]];
+    }
+
+    if($this->params['label_id']) {
+        $arrAjax['label_id'] = $this->params['label_id'];
+    }
+
+    if($this->params['action'] == 'search') {
+        $arrAjax['search'] = true;
+    }
+    if ($this->params['query_string']) {
+        $arrAjax['query_string'] = $this->params['query_string'];
+        $arrAjax['keysearch'] = \Frontend\View\Helper\Sqlinjection::string($this->params['keysearch']);
+    }
+?>
+
+<script type="text/javascript">
+    function sortFilter(obj, action, type) {
+        var datafiter = $.parseJSON('<?php echo json_encode($arrAjax); ?>');
+        switch(action) {
+            case 'sort':
+                datafiter.sort = obj.value;
+            break;
+            // case 'filter':
+            //     var filter_name = obj.getAttribute("name"),
+            //     filter_value = obj.value;
+            //     type = (typeof type !== 'undefined') ? type : 'radio';
+            //     if (type == 'checkbox') {
+            //         filter_value = [];
+            //         el_inputs = $('input[name='+filter_name+']');
+            //         for (var i = 0; i < el_inputs.length; i++) {
+            //             if (el_inputs[i].checked === true) { filter_value.push(el_inputs[i].value); }
+            //         }
+            //     }
+            //     datafiter.filter = filter_name;
+            //     datafiter.value = filter_value;
+            // break;
+            case 'filter':
+                var filter_name = obj.getAttribute("name"),
+                filter_value = obj.value,
+                filter_value_parent = {};
+                type = (typeof type !== 'undefined') ? type : 'radio';
+                if (type == 'checkbox') {
+                    filter_value = [];
+                    el_inputs = $('input[name='+filter_name+']');
+                    for (var i = 0; i < el_inputs.length; i++) {
+                        if (el_inputs[i].checked === true) {
+                            var slug = $(el_inputs[i]).data('slug');
+                            if (!filter_value_parent[slug]) {
+                                filter_value_parent[slug] = [];
+                            }
+                            filter_value_parent[slug].push(el_inputs[i].value);
+                            filter_value.push(el_inputs[i].value);
+                        }
+                    }
+                }
+                datafiter.filter = filter_name;
+                datafiter.value = filter_value;
+                datafiter.value_parent = filter_value_parent;
+            break;
+        }
+        window.setTimeout(function() {
+            $.ajax({
+                url: '<?php echo PUBLIC_PATH."sortFilter-84.html"; ?>',
+                type: 'POST',
+                data: datafiter,
+                beforeSend: function() { $("body").append('<div class="ht-loading-gif"><img loading="lazy" width="400" height="300" src="'+ URL_ROOT +'images/loading.svg" /></div>'); }
+            })
+            .done(function(data) {
+                $("body").find("div.ht-loading-gif").remove();
+                $('#listProduct').html(data);
+                $("html,body").animate({"scrollTop": $('#listProduct').offset().top - 120}, 500);
+            });
+        },200);
+    }
+</script>

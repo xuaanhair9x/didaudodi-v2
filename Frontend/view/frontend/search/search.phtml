@@ -1,0 +1,124 @@
+<?php echo $this->bgHeader(array('item' => $this->menu[1])); ?>
+<?php if($_GET['type'] == 'blog') { ?>
+    <?php echo $this->headLink()->prependStylesheet(PUBLIC_PATH.'template/frontend/src/css/page_news.css'); ?>
+    <div class="p-list-7 ht-mrt45">
+        <div class="ht-page">
+            <div class="container">
+                <?php echo $this->breadcrumb(array('menu' => $this->menu, 'breadcrumb' => $this->breadcrumb, 'class' => 'left')); ?>
+                <div class="ht-page__sidebar"><?php echo $this->sidebarNewsFilter(array('params' => $this->params, 'info' => $this->info)); ?></div>
+                <div class="ht-page__main" id="listNews">
+                    <div class="ht-mrb15"><?php echo $this->params['keysearch'] ? 'Từ khóa cần tìm: '.$this->params['keysearch'] : ''; ?></div>
+                    <?php if($this->paginator->getTotalItemCount() > 0) { ?>
+                        <div class="row row-flex" data-items="<?php echo $this->paginator->getTotalItemCount(); ?>">
+                            <?php echo $this->block3(array('list' => $this->list, 'col' => 'col-6 col-md-4')); ?>
+                        </div>
+                        <?php if ($this->paginator->getTotalItemCount() > $this->paginator->getItemCountPerPage()) { ?>
+                            <div class="p_more text-center ht-mrb30" style="margin-top: 0;">
+                                <a href="javascript:;" id="news21Y" class="c-button-4" onclick="showMore('<?php echo PUBLIC_PATH."pagination-81.html"; ?>','<?php echo htmlspecialchars(json_encode(array('page' => 2, 'limit' => $this->paginator->getItemCountPerPage(), 'id' => $this->params['root_id'], 'type' => 'news21Y', 'keysearch' => $this->params['keysearch']), JSON_UNESCAPED_UNICODE)); ?>', '.b-card-53.block-news', '#news21Y');"><span class="fa fa-angle-down"> Xem thêm</span></a>
+                            </div>
+                        <?php } ?>
+                    <?php } else { echo '<div class="h3" style="text-transform: uppercase;margin: 5px 0;color: #03707d;">Không tìm thấy bài viết...</div>'; } ?>
+                </div>
+                <?php $this->headStyle()->captureStart('',array('media' => '')); ?>
+                    @media screen and (min-width: 1260px){
+                        .ht-page__sidebar {
+                            width: 270px;
+                        }
+                        .ht-page__main {
+                            width: calc(100% - 300px);
+                        }
+                    }
+                <?php $this->headStyle()->captureEnd(); ?>
+            </div>
+        </div>
+    </div>
+    <style type="text/css">
+        .s-breadcrumb-1 {
+            margin-bottom: 30px;
+        }
+    </style>
+<?php } else { ?>
+    <div class="s-product-3 ht-mrt45">
+        <div class="container">
+            <?php echo $this->breadcrumb(array('menu' => $this->menu, 'breadcrumb' => $this->breadcrumb, 'class' => 'left')); ?>
+            <div class="ht-page">
+                <div class="ht-page__sidebar">
+                    <?php echo $this->sidebarProductFilter(array('params' => $this->params, 'info' => $this->info, 'paginator' => $this->paginator)); ?>
+                </div>
+                <div class="ht-page__main">
+                    <div class="s_flex">
+                        <div class="c-select c-form-border">
+                            <div class="c_input text--icon" ht-trigger="c-select">Sắp xếp</div>
+                            <span class="c-icons"><i class="fa fa-angle-down" aria-hidden="true"></i></span>
+                            <div class="c_list">
+                            	<?php foreach ($this->sort as $value) {
+                            		echo '<div class="c-radio"><label><input type="radio" name="sort" value="'.$value['orderby'].'" onclick="sortAjax(this, \'sort\');"><span>'.$value['name'].'</span></label></div>';
+                            	} ?>
+                            </div>
+                        </div>
+                        <div class="s-button-fillter"><i class="fa fa-filter" aria-hidden="true"></i> Lọc sản phẩm</div>
+                    </div>
+                    <div class="ht-mrb15"><?php echo $this->params['keysearch'] ? 'Từ khóa cần tìm: '.$this->params['keysearch'] : ''; ?></div>
+                    <div id="listProduct">
+                    	<?php if($this->paginator->getTotalItemCount() > 0) { ?>
+                    		<div class="row row-flex" data-items="<?php echo $this->paginator->getTotalItemCount(); ?>">
+                    			<?php echo $this->block4(array('list' => $this->list, 'col' => 'col-6 col-sm-4 col-md-3')); ?>
+                            </div>
+                            <?php if ($this->paginator->getTotalItemCount() > $this->paginator->getItemCountPerPage()) { ?>
+    				            <div class="s_more">
+    					            <a href="javascript:;" id="productList11X" class="c-button-4" onclick="showMore('<?php echo PUBLIC_PATH."pagination-81.html"; ?>','<?php echo htmlspecialchars(json_encode(array('page' => 2, 'limit' => $this->paginator->getItemCountPerPage(), 'id' => $this->params['root_id'], 'type' => 'productList11X', 'filter_sale' => $this->params['filter_sale'], 'keysearch' => $this->params['keysearch']), JSON_UNESCAPED_UNICODE)); ?>', '.b-card-58.block-product', '#productList11X');"><span class="fa fa-angle-down"> Xem thêm</span></a>
+    					        </div>
+    				        <?php } ?>
+                    	<?php } else { echo '<div class="h3" style="text-transform: uppercase;margin: 30px 0;color: #03707d;">Không tìm thấy sản phẩm...</div>'; } ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="s-popup-3 filter">
+        <div class="s_popup">
+            <div class="s_close"><i class="fa fa-times" aria-hidden="true"></i></div>
+            <div class="s_overflow">
+            	<?php echo $this->sidebarProductFilter(array('params' => $this->params, 'info' => $this->info, 'paginator' => $this->paginator, 'type' => 'mobile')); ?>
+            </div>
+        </div>
+    </div>
+    <?php
+    	$arrAjaxSort = array(
+            'id' => $this->params['id'],
+            'slug' => $this->params['slug'],
+            'format' => $this->params['format'],
+            'limit' => $this->paginator->getItemCountPerPage()
+        );
+
+    	if($this->params['action'] == 'search') {
+            $arrAjaxSort['search'] = true;
+        }
+        if ($this->params['query_string']) {
+            $arrAjaxSort['query_string'] = $this->params['query_string'];
+            $arrAjaxSort['keysearch'] = \Frontend\View\Helper\Sqlinjection::string($this->params['keysearch']);
+        }
+    ?>
+    <script type="text/javascript">
+    	function sortAjax(obj, action, type) {
+            var datafiter = $.parseJSON('<?php echo json_encode($arrAjaxSort); ?>');
+            switch(action) {
+                case 'sort':
+                    datafiter.sort = obj.value;
+                break;
+            }
+            window.setTimeout(function() {
+                $.ajax({
+                    url: '<?php echo PUBLIC_PATH."sortFilter-84.html"; ?>',
+                    type: 'POST',
+                    data: datafiter,
+                    beforeSend: function() { $("body").append('<div class="ht-loading-gif"><img src="images/loading.svg" /></div>'); }
+                }).done(function(data) {
+                    $("body").find("div.ht-loading-gif").remove();
+                    $('#listProduct').html(data);
+                    $("html,body").animate({"scrollTop": $('#listProduct').offset().top - 120}, 500);
+                });
+            },200);
+        }
+    </script>
+<?php } ?>

@@ -1,0 +1,33 @@
+<?php
+    $global = array();
+    if ($this->head[$this->data['position']]['global']['css'][0] == 'global.css') {
+        $css = str_replace(ROOT_PUBLIC.'/template/frontend/src/css/','',glob(ROOT_PUBLIC."/template/frontend/src/css/g-*.css"));
+        $gcss = $this->head[$this->data['position']]['global']['css'];
+        array_shift($gcss);
+        $global['css'] = array_merge($css, $gcss);
+    }
+    if ($this->head[$this->data['position']]['global']['js'][0] == 'global.js') {
+        $js = str_replace(ROOT_PUBLIC.'/template/frontend/src/js/','',glob(ROOT_PUBLIC."/template/frontend/src/js/g-*.js"));
+        $gjs = $this->head[$this->data['position']]['global']['js'];
+        array_shift($gjs);
+        $global['js'] = array_merge($js, $gjs);
+    }
+    $action = ($this->head[$this->data['position']][$this->data['action']]) ? $this->head[$this->data['position']][$this->data['action']] : array();
+    $styles = array_merge_recursive($global, $action);
+
+    foreach ($styles as $type => $files) {
+        $i = 0;
+        foreach ($files as $key => $file) {
+            $filename = is_string($key) ? $key : $file;
+            $path = PUBLIC_PATH.'template/frontend/src/'.$type.'/'.$filename;
+            if ($type == 'css') {
+                echo '<link type="text/css" rel="stylesheet" href="'.$path.'">'."\n";
+            }
+            if ($type == 'js') {
+                $i++;
+                $attrs = is_string($key) ? array($file => $file) : '';
+                $this->headScript()->offsetSetFile(($i-20),$path, 'text/javascript', $attrs);
+            }
+        }
+    }
+?>

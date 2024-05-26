@@ -1,0 +1,387 @@
+<div class="s-footer-7">
+    <?php if($this->camKet) { ?>
+        <div class="s_pre">
+            <div class="container">
+                <div class="s-commit-1">
+                    <div class="s_box">
+                        <div class="s_left">
+                            <div class="s_title"><?php echo $this->camKet['name']; ?></div>
+                        </div>
+                        <div class="s_right">
+                            <div class="s_item">
+                                <?php foreach ($this->camKet['multi_image']['cam-ket'] as $value) {
+                                    echo '<a class="item" href="'.$value['link'].'">
+                                        <img loading="lazy" width="400" height="300" src="'.PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/100x115-'.$value['thumbnail'].WEBP_EXT.'" alt="'.$value['name'].'">
+                                        <div class="title">'.$value['name'].'</div>
+                                    </a>';
+                                } ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <?php } ?>
+    <div class="s_top">
+        <div class="container">
+            <div class="row row-flex">
+                <?php foreach ($this->chinhSach as $value) { ?>
+                    <div class="col-12 col-sm-6 col-md-2-4 ht-mrt15">
+                        <div class="ft-box">
+                            <div class="ft-title"><?php echo $value['name']; ?> <i class="fa fa-angle-down" aria-hidden="true"></i></div>
+                            <ul class="ft-menu">
+                                <?php foreach ($value['child'] as $child) {
+                                    echo '<li class="line"><a href="'.PUBLIC_PATH.$child['slug'].'"><span>'.$child['name'].'</span></a></li>';
+                                } ?>
+                            </ul>
+                        </div>
+                    </div>
+                <?php } ?>
+                <div class="col-12 col-sm-6 col-md-2-4 ht-mrt15">
+                    <div class="s_social">
+                        <div class="ft-title"><?php echo $this->info['headline']['slug-2']; ?></div>
+                        <div class="s_flex">
+                            <?php
+                                echo $this->info['multi_input']['facebook'] ? '<a href="'.$this->info['multi_input']['facebook'].'" target="_blank" rel="nofollow" class="c-icon">
+                                    <img loading="lazy" width="40" height="40" src="'.PUBLIC_PATH.'images/icons/facebook.jpg" alt="facebook">
+                                </a>':'';
+                                echo $this->info['multi_input']['youtube'] ? '<a href="'.$this->info['multi_input']['youtube'].'" target="_blank" rel="nofollow" class="c-icon">
+                                    <img loading="lazy" width="40" height="40" src="'.PUBLIC_PATH.'images/icons/youtube.jpg" alt="youtube">
+                                </a>':'';
+                                echo $this->info['multi_input']['instagram'] ? '<a href="'.$this->info['multi_input']['instagram'].'" target="_blank" rel="nofollow" class="c-icon">
+                                    <img loading="lazy" width="40" height="40" src="'.PUBLIC_PATH.'images/icons/instagram.jpg" alt="instagram">
+                                </a>':'';
+                                echo $this->info['multi_input']['tiktok'] ? '<a href="'.$this->info['multi_input']['tiktok'].'" target="_blank" rel="nofollow" class="c-icon">
+                                    <img loading="lazy" width="40" height="40" src="'.PUBLIC_PATH.'images/icons/tiktok.jpg" alt="tiktok">
+                                </a>':'';
+                            ?>
+                        </div>
+                    </div>
+                    <div class="ft-bct">
+                        <?php
+                            echo $this->info['multi_input']['dmca'] ? '<a href="'.$this->info['multi_input']['dmca'].'" target="_blank" rel="nofollow"><img loading="lazy" width="400" height="300" src="'.PUBLIC_PATH.'images/footers/dmca.png" alt="dmca"></a>':'';
+                            echo $this->info['multi_input']['bo-cong-thuong'] ? '<a href="'.$this->info['multi_input']['bo-cong-thuong'].'" target="_blank" rel="nofollow"><img loading="lazy" width="400" height="300" src="'.PUBLIC_PATH.'images/bo-cong-thuong.png" alt="bo cong thuong"></a>':'';
+                        ?>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-10">
+                    <div class="s_pay">
+                        <div class="s_info">
+                            <img loading="lazy" width="400" height="300" src="<?php echo PUBLIC_PATH; ?>images/icons/protect.svg" alt="<?php echo $this->info['headline']['slug-3']; ?>">
+                            <div>
+                                <p><?php echo $this->info['headline']['slug-3']; ?></p>
+                                <p><?php echo $this->info['headline']['slug-4']; ?></p>
+                            </div>
+                        </div>
+                        <div class="s_icon">
+                            <?php foreach ($this->info['multi_image']['logo-thanh-toan'] as $value) {
+                                echo '<img loading="lazy" width="400" height="300" src="'.PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/56x36-'.$value['thumbnail'].'" alt="logo thanh toán">';
+                            } ?>
+                        </div>
+                        <div class="s_hotline">
+                            <?php
+                                echo $this->info['multi_input']['hotline-mua-hang'] ? '<span>'.$this->info['headline']['slug-5'].': <span onclick="window.location.href=\'tel:'.$this->info['multi_input']['hotline-mua-hang'].'\';">'.$this->info['multi_input']['hotline-mua-hang'].'</span></span>':'';
+                                echo $this->info['multi_input']['hotline-ho-tro'] ? '<span>'.$this->info['headline']['slug-6'].': <span onclick="window.location.href=\'tel:'.$this->info['multi_input']['hotline-ho-tro'].'\';">'.$this->info['multi_input']['hotline-ho-tro'].'</span></span>':'';
+                            ?>
+                        </div>
+                        <div class="fanpage mobile-fb">
+                            <?php echo $this->info['multi_input']['facebook'] ? '<iframe class="ifb" data-src="https://www.facebook.com/plugins/page.php?href='.urlencode($this->info['multi_input']['facebook']).'&tabs&width=283&height=280&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId=495388449398729" scrolling="no" frameborder="0" allowTransparency="true" style="border:none;overflow:hidden;width: 100% !important;"></iframe>':''; ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="s_bot">
+        <div class="container">
+            <div class="slogan"><?php echo $this->info['multi_input']['slogan']['name']; ?></div>
+            <div class="name"><?php echo $this->info['multi_input']['slogan']['desc_short']; ?> <img loading="lazy" width="400" height="300" src="<?php echo PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$this->info['multi_image']['anh-dong-footer'][0]['thumbnail'])[0]).'/'.$this->info['multi_image']['anh-dong-footer'][0]['thumbnail']; ?>" alt="gif"></div>
+            <div class="row row-flex">
+                <div class="col-12 col-md-3 fanpage desktop-fb">
+                    <?php echo $this->info['multi_input']['facebook'] ? '<iframe class="ifb" data-src="https://www.facebook.com/plugins/page.php?href='.urlencode($this->info['multi_input']['facebook']).'&tabs&width=283&height=280&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId=495388449398729" scrolling="no" frameborder="0" allowTransparency="true" style="border:none;overflow:hidden;width: 100% !important;"></iframe>':''; ?>
+                </div>
+                <div class="col-12 col-md-7 col-lg-6">
+                    <div class="ht-format-detail">
+                        <?php echo $this->convertWebpEditor($this->info['multi_detail']['content']); ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="s_backtop">
+        <a href="javascript:;" class="ft-backtop" ht-trigger="backtop"><i class="fa fa-angle-up text--primary"></i></a>
+    </div>
+</div>
+
+<div class="s-call-1">
+    <div class="s_call"><div></div></div>
+    <div class="s_wheel">
+        <a href="https://zalo.me/<?php echo $this->info['multi_input']['chat-zalo']; ?>" target="_blank" rel="nofollow"><span>Chat trên zalo</span><div><em></em></div></a>
+        <!-- <a href="<?php echo $this->info['multi_input']['messenger']; ?>" target="_blank" rel="nofollow"><span>Chat ngay</span><div><img loading="lazy" width="400" height="300" src="<?php echo PUBLIC_PATH; ?>images/icons/icon-mes.png" alt="messenger"></div></a> -->
+        <a href="<?php echo $this->info['multi_input']['map']; ?>" target="_blank" rel="nofollow"><span>Tìm cửa hàng</span><div><em></em></div></a>
+        <a href="javascript:;" onclick="window.location.href='tel:<?php echo $this->info['multi_input']['hotline-ho-tro'] ? $this->info['multi_input']['hotline-ho-tro'] : $this->info['multi_input']['hotline-mua-hang']; ?>';" target="_blank" rel="nofollow"><span>Gọi ngay</span><div><em></em></div></a>
+    </div>
+</div>
+
+<?php if($this->popup) {
+    $checkImg = false;
+    if((file_exists(ROOT_PUBLIC.'/'.UPLOAD_IMAGES.date('Y/m',explode('-',$this->popup['multi_image']['anh-popup'][0]['thumbnail'])[0]).'/600x600-'.$this->popup['multi_image']['anh-popup'][0]['thumbnail'].WEBP_EXT) && is_file(ROOT_PUBLIC.'/'.UPLOAD_IMAGES.date('Y/m',explode('-',$this->popup['multi_image']['anh-popup'][0]['thumbnail'])[0]).'/600x600-'.$this->popup['multi_image']['anh-popup'][0]['thumbnail'].WEBP_EXT))) {
+        $checkImg = true;
+    }
+?>
+    <div class="s-popup-1" <?php echo !$this->popup['detail'] ? ' style="display: none;"':''; ?>>
+        <div class="s_left" ht-trigger="c-modal" ht-target="#formRegister"><div class="title"><?php echo $this->popup['name']; ?></div></div>
+        <div class="s_right">
+            <div class="ht-format-detail"><?php echo $this->convertWebpEditor($this->popup['detail']); ?></div>
+        </div>
+    </div>
+    <div class="s-popup-3" <?php echo !$this->popup['detail'] ? ' style="display: block;"':''; ?>>
+        <div class="s_left" ht-trigger="c-modal" ht-target="#formRegister">
+            <div class="title"><?php echo $this->popup['name']; ?></div>
+        </div>
+    </div>
+    <button id="click3" style="display: none" ht-trigger="c-modal" ht-target="#formRegister"></button>
+    <div id="formRegister" class="c-modal c-register">
+        <div class="c-modal-box">
+            <div class="c-modal-group" ht-skip="parent">
+                <div class="c_close text--white" ht-close="c-modal"><i class="fa fa-times" aria-hidden="true"></i></div>
+                <div class="c_body">
+                    <div class="row row-flex">
+                        <div class="col-12 col-md-<?php echo $checkImg ? 6 : 12 ?>">
+                            <div class="s_form">
+                                <div class="s_contact">
+                                    <div class="title"><?php echo $this->popup['multi_input']['popup']['name']; ?></div>
+                                    <p><?php echo $this->popup['multi_input']['popup']['desc_short']; ?></p>
+                                </div>
+                                <form id="form_form-2" action="" method="POST" accept-charset="utf-8" enctype="multipart/form-data">
+                                    <div class="s_box">
+                                        <div class="form-group c-form-border ">
+                                            <input type="text" name="fullname" class="c_input" value="" placeholder="Họ và tên (*)">
+                                        </div>
+                                    </div>
+                                    <div class="s_box">
+                                        <div class="form-group c-form-border ">
+                                            <input type="text" name="phone" class="c_input" value="" placeholder="Số điện thoại (*)">
+                                        </div>
+                                    </div>
+                                    <div class="form-group text-center"><button type="submit" class="c-btn--primary">Nhận ngay</button></div>
+                                </form>
+                            </div>
+                        </div>
+                        <?php if($checkImg) { ?>
+                            <div class="col-12 col-md-6">
+                                <div class="s_img">
+                                    <div class="ht-ratio--100"><img loading="lazy" width="400" height="300" src="<?php echo PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$this->popup['multi_image']['anh-popup'][0]['thumbnail'])[0]).'/600x600-'.$this->popup['multi_image']['anh-popup'][0]['thumbnail'].WEBP_EXT; ?>" alt="<?php echo $this->popup['multi_input']['popup']['name']; ?>" class="ht-ratio__img"></div>
+                                </div>
+                            </div>
+                        <?php } ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php } ?>
+
+<button class="hide" ht-trigger="c-modal" ht-target="#formProduct"></button>
+<div id="formProduct" class="c-modal c-product">
+    <div class="c-modal-box">
+        <div class="c-modal-group" ht-skip="parent">
+            <div class="c_close text--white" ht-close="c-modal"><i class="fa fa-times" aria-hidden="true"></i></div>
+            <div id="detail"></div>
+        </div>
+    </div>
+</div>
+
+<div class="s-popup-2">
+    <div class="s_title">Đã thêm vào giỏ hàng!</div>
+    <span class="s_close"><i class="fa fa-times" aria-hidden="true"></i></span>
+    <div class="s_product" id="infoItemCart"></div>
+    <a href="javascript:;" class="s_button" onclick="window.location.href='<?php echo PUBLIC_PATH.$this->translate("gio-hang-61.html"); ?>';">Xem giỏ hàng</a>
+</div>
+<div id="myVideo" class="c-modal myVideo">
+    <div class="c-modal-box" id="modal">
+        <div class="c-modal-group" ht-skip="parent">
+            <div class="c_close text--white" ht-close="c-modal"><i class="fa fa-times close" aria-hidden="true"></i></div>
+            <div class="c_body ht-ratio--55"></div>
+        </div>
+    </div>
+</div>
+<button id="btnError" class="hide" ht-trigger="c-modal" ht-target="#modalError"></button>
+<div id="modalError" class="c-modal" ht-close="c-modal">
+    <div class="c-modal-box">
+        <div class="c-modal-group" ht-skip="parent">
+            <div class="c_body text-center"><div class="content-notify h4">Đã xảy ra lỗi. <br> Vui lòng thử lại sau!!!</div></div>
+            <div class="c_footer text-center">
+                <button class="c-btn--sm c-btn--primary" ht-close="c-modal" ht-target-close="#modalError" ht-reload="true" ht-redirect="false">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php if(!$this->logged) { ?>
+    <!-- Style đăng nhập -->
+    <div id="s-sign-in-1" class="c-modal s-sign-in-1 s-sign">
+        <div class="c-modal-box">
+            <div class="c-modal-group" ht-skip="parent">
+                <div class="c_close text--white" ht-close="c-modal"><i class="fa fa-times" aria-hidden="true"></i></div>
+                <div class="c_body">
+                    <div class="s_title">Đăng nhập</div>
+                    <p class="s_desc">Nếu đã từng mua hàng trên Website trước đây, bạn có thể dùng tính năng <a href="javascript:;" ht-trigger="c-modal" ht-target="#s-sign-password" ht-target-close="#s-sign-in-1">"Quên mật khẩu"</a> để có thể truy cập vào tài khoản bằng email nhé.</p>
+                    <form id="form_s-sign-in-1" action="" method="POST" accept-charset="utf-8">
+                        <div class="form-group c-form-border">
+                            <input type="text" name="email" class="c_input" value="" placeholder="Email">
+                        </div>
+                        <div class="form-group c-form-border">
+                            <input type="password" name="password" class="c_input" value="" placeholder="Mật khẩu">
+                        </div>
+                        <div class="form-group text-center"><button type="submit" class="c-btn--primary">Đăng nhập</button></div>
+                    </form>
+                    <div class="s_divider"><span>Hoặc</span></div>
+                    <div class="s_social">
+                        <a class="btn-google" rel="nofollow" href="<?php echo $this->linkGoogle; ?>">
+                            <div class="google-content">
+                                <div class="logo">
+                                    <img loading="lazy" width="400" height="300" src="<?php echo PUBLIC_PATH; ?>images/icons/google.svg" alt="google" alt="login google" />
+                                </div>
+                                <p>Đăng nhập với Google</p>
+                            </div>
+                        </a>
+                        <a class="btn-fb" rel="nofollow" href="https://www.facebook.com/dialog/oauth?client_id=<?php echo $this->info['multi_input']['id-fb']; ?>&redirect_uri=<?php echo URL; ?>dang-nhap-55.html&scope=email">
+                            <div class="fb-content">
+                                <div class="logo">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" version="1">
+                                        <path fill="#FFFFFF" d="M32 30a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h28a2 2 0 0 1 2 2v28z"></path>
+                                        <path fill="#4267b2" d="M22 32V20h4l1-5h-5v-2c0-2 1.002-3 3-3h2V5h-4c-3.675 0-6 2.881-6 7v3h-4v5h4v12h5z"></path>
+                                    </svg>
+                                </div>
+                                <p>Đăng nhập với Facebook</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="s_flex">
+                        <a href="javascript:;" ht-trigger="c-modal" ht-target="#s-sign-up-1" ht-target-close="#s-sign-in-1" class="text--hypertext">Đăng ký tài khoản mới</a>
+                        <a href="javascript:;" ht-trigger="c-modal" ht-target="#s-sign-password" ht-target-close="#s-sign-in-1" class="text--hypertext">Quên mật khẩu?</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Style đăng ký -->
+    <div id="s-sign-up-1" class="c-modal s-sign-up-1 s-sign">
+        <div class="c-modal-box">
+            <div class="c-modal-group" ht-skip="parent">
+                <div class="c_close text--white" ht-close="c-modal"><i class="fa fa-times" aria-hidden="true"></i></div>
+                <div class="c_body">
+                    <div class="s_title">Đăng ký tài khoản</div>
+                    <p class="s_desc">Nếu đã từng mua hàng trên Website trước đây, bạn có thể dùng tính năng <a href="javascript:;" ht-trigger="c-modal" ht-target="#s-sign-password" ht-target-close="#s-sign-up-1">"Quên mật khẩu"</a> để có thể truy cập vào tài khoản bằng email nhé.</p>
+                    <form id="form_s-sign-in-2" action="" method="POST" accept-charset="utf-8">
+                        <div class="form-group c-form-border">
+                            <input type="text" name="fullname" class="c_input" value="" placeholder="Tên của bạn">
+                        </div>
+                        <div class="form-group c-form-border">
+                            <input type="text" name="phone" class="c_input" value="" placeholder="SĐT của bạn">
+                        </div>
+                        <div class="form-group c-form-border">
+                            <input type="text" name="email" class="c_input" value="" placeholder="Email của bạn">
+                        </div>
+                        <div class="form-group c-form-border">
+                            <input type="password" name="password" class="c_input" value="" placeholder="Mật khẩu">
+                        </div>
+                        <div class="form-group c-form-border">
+                            <input type="password" name="password_confirm" class="c_input" value="" placeholder="Nhập lại mật khẩu">
+                        </div>
+                        <div class="form-group text-center"><button type="submit" class="c-btn--primary">Đăng ký</button></div>
+                    </form>
+                    <div class="s_divider"><span>Hoặc</span></div>
+                    <div class="s_social">
+                        <a class="btn-google" rel="nofollow" href="<?php echo $this->linkGoogle; ?>">
+                            <div class="google-content">
+                                <div class="logo">
+                                    <img loading="lazy" width="400" height="300" src="<?php echo PUBLIC_PATH; ?>images/icons/google.svg" alt="google" />
+                                </div>
+                                <p>Đăng nhập với Google</p>
+                            </div>
+                        </a>
+                        <a class="btn-fb" rel="nofollow" href="https://www.facebook.com/dialog/oauth?client_id=<?php echo $this->info['multi_input']['id-fb']; ?>&redirect_uri=<?php echo URL; ?>dang-nhap-55.html&scope=email">
+                        <div class="fb-content">
+                            <div class="logo">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" version="1">
+                                    <path fill="#FFFFFF" d="M32 30a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h28a2 2 0 0 1 2 2v28z"></path>
+                                    <path fill="#4267b2" d="M22 32V20h4l1-5h-5v-2c0-2 1.002-3 3-3h2V5h-4c-3.675 0-6 2.881-6 7v3h-4v5h4v12h5z"></path>
+                                </svg>
+                            </div>
+                            <p>Đăng nhập với Facebook</p>
+                        </div>
+                    </a>
+                    </div>
+                    <div class="s_flex" style="justify-content: center;">
+                        <a href="javascript:;" ht-trigger="c-modal" ht-target="#s-sign-in-1" ht-target-close="#s-sign-up-1" class="text--hypertext">Đăng nhập</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Style quên mật khẩu -->
+    <div id="s-sign-password" class="c-modal s-sign">
+        <div class="c-modal-box">
+            <div class="c-modal-group" ht-skip="parent">
+                <div class="c_close" ht-close="c-modal"><i class="fa fa-times" aria-hidden="true"></i></div>
+                <div class="c_body">
+                    <div class="s_title">Cấp lại mật khẩu</div>
+                     <form id="form_s-sign-in-3" action="" method="POST" accept-charset="utf-8">
+                        <div class="form-group c-form-border">
+                            <input type="text" name="email" class="c_input" value="" placeholder="Email của bạn">
+                        </div>
+                        <div class="form-group text-center"><button type="submit" class="c-btn--primary">Kiểm tra</button></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php } ?>
+<style type="text/css">
+    @media (max-width: 1260px) {
+        .fanpage.desktop-fb iframe {
+            margin-top: -20px;
+        }
+    }
+    @media (min-width: 992px) {
+        .mobile-fb {
+            display: none;
+        }
+        .s-footer-7 .s_bot {
+            padding-bottom: 20px;
+        }
+    }
+    @media (max-width: 991px) {
+        .desktop-fb {
+            display: none;
+        }
+        .fanpage.mobile-fb {
+            margin-top: 20px;
+        }
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function() {
+        if (window.innerWidth > 991) {
+            $('.mobile-fb .ifb').remove();
+            if($('.desktop-fb .ifb').length > 0) {
+                var w = 'width=' + $('.desktop-fb .ifb').innerWidth().toFixed(0),
+                src = $('.desktop-fb .ifb').attr('data-src');
+                src = src.replace('width=283', w);
+                $('.desktop-fb .ifb').attr('src', src);
+            }
+        } else {
+            $('.desktop-fb .ifb').remove();
+            if($('.mobile-fb .ifb').length > 0) {
+                var w = 'width=' + $('.mobile-fb .ifb').innerWidth().toFixed(0),
+                src = $('.mobile-fb .ifb').attr('data-src');
+                src = src.replace('width=283', w);
+                $('.mobile-fb .ifb').attr('src', src);
+            }
+        }
+    });
+</script>

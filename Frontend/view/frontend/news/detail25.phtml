@@ -1,0 +1,117 @@
+<?php echo $this->bgHeader(array('item' => $this->menu[1], 'detail' => true)); ?>
+<div class="p-list-7">
+    <div class="ht-page">
+        <div class="container"><?php echo $this->blockSlideCate(array('class' => 'mr', 'catID' => $this->catParentID['id'])); ?></div>
+    </div>
+</div>
+<div class="p-detail-11">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3 sticky">
+                <div class="s-sidebar-4 desktop">
+                    <div class="s_heading"><?php echo $this->info['headline']['slug-13']; ?> <i class="fa fa-angle-double-up" aria-hidden="true"></i></div>
+                    <div class="s_list"></div>
+                </div>
+            </div>
+            <div class="col-md-<?php echo $this->banner['multi_image']['banner-sidebar-detail'] ? 6 : 9; ?>">
+                <?php echo $this->breadcrumb(array('menu' => $this->menu, 'breadcrumb' => $this->breadcrumb, 'class' => 'left')); ?>
+                <div class="p_box">
+                    <h1 class="p_title"><?php echo $this->detail['name']; ?></h1>
+                    <div class="p_flex">
+                        <div class="p_date"><?php echo $this->detail['author']; ?> - <?php echo date('d/m/Y', strtotime($this->detail['multi_input']['date'] ? $this->detail['multi_input']['date'] : $this->detail['date_published'])); ?></div>
+                        <div class="b-star-2" id="scrollTo">
+                            <div class="b_star">
+                                <span>
+                                    <?php
+                                        $starAvg = !is_nan($this->avgStar) ? round($this->avgStar) : 0;
+                                        $remainStarAvg = 5 - $starAvg;
+                                        for ($i = 0; $i < $starAvg; $i++) {
+                                            echo '<i class="fa fa-star" aria-hidden="true"></i>';
+                                        }
+                                        for ($i = 0; $i < $remainStarAvg; $i++) {
+                                            echo '<i class="fa fa-star-o" aria-hidden="true"></i>';
+                                        }
+                                    ?>
+                                </span>
+                            </div>
+                            <span>(<?php echo count($this->commentList); ?> Đánh giá)</span>
+                        </div>
+                    </div>
+                    <div class="s-sidebar-4 mobile">
+                        <div class="s_heading"><?php echo $this->info['headline']['slug-13']; ?> <i class="fa fa-angle-double-up" aria-hidden="true"></i></div>
+                        <div class="s_list"></div>
+                    </div>
+                    <div class="p_desc"><?php echo $this->detail['desc_short']; ?></div>
+                    <div class="ht-format-detail"><?php echo $this->convertWebpEditor($this->detail['detail']); ?></div>
+                    <div class="p_other ht-mrt45"></div>
+                </div>
+                <?php echo $this->commentNormal(array('id' => $this->detail['id'], 'name' => $this->detail['name'], 'link' => PROTOCOL.DOMAIN.$_SERVER['REQUEST_URI'], 'type' => 'news_tb', 'info' => $this->info)); ?>
+            </div>
+            <?php if($this->banner['multi_image']['banner-sidebar-detail']) { ?>
+	            <div class="col-md-3 sticky">
+	            	<?php foreach ($this->banner['multi_image']['banner-sidebar-detail'] as $value) {
+	            		echo '<div class="s-sidebar-1">
+		                    <a href="'.$value['link'].'" target="_blank" rel="nofollow"><img loading="lazy" width="400" height="300" src="'.PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/'.$value['thumbnail'].WEBP_EXT.'" alt="'.$value['name'].'"></a>
+		                </div>';
+	            	} ?>
+	            </div>
+	        <?php } ?>
+        </div>
+        <?php if($this->n_other) { ?>
+	        <div class="p_other">
+	            <h2 class="title"><?php echo $this->info['headline']['slug-12']; ?></h2>
+	            <div class="b-sslide-default">
+	                <div class="slick-slider">
+	                	<?php echo $this->block3(array('list' => $this->n_other, 'col' => 'item')); ?>
+	                </div>
+	            </div>
+	        </div>
+	    <?php } ?>
+    </div>
+</div>
+<?php $this->headStyle()->captureStart('',array('media' => '')); ?>
+    .p-detail-11 .p_box {
+        width: 100%;
+    }
+<?php $this->headStyle()->captureEnd(); ?>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#scrollTo').click(function(e) {
+            $('html,body').animate({
+                scrollTop: $('.s-review-1').offset().top - 30
+            }, 'slow');
+        });
+
+        $('.p-detail-11 .s_list').contentify({
+            headingSelectors: ['.ht-format-detail h2','.ht-format-detail h3'],
+            scrollDuration: 'slow'
+        });
+
+        $('.p_other .slick-slider').slick({
+            slidesToShow: 4,
+            slidesToScroll: 1,
+            responsive: [{
+                breakpoint: 992,
+                settings: { slidesToShow: 2 }
+            }]
+        });
+
+        $('.s-sidebar-4 .s_heading').click(function() {
+            $(this).parent().find('.s_list').slideToggle(400);
+            $(this).toggleClass('is-active');
+        });
+
+        $('.p-list-7 .p_link .slick-slider').slick({
+            slidesToShow: 6,
+            slidesToScroll: 1,
+            autoplay: false,
+            responsive: [{
+                breakpoint: 992,
+                settings: { slidesToShow: 4 }
+            },{
+                breakpoint: 479,
+                settings: { slidesToShow: 3 }
+            }]
+        });
+    });
+</script>

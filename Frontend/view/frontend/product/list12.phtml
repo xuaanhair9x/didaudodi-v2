@@ -1,0 +1,16 @@
+<?php echo $this->bgHeader(array('item' => $this->menu[1])); ?>
+<div class="s-combo-2">
+    <div class="container">
+        <?php echo $this->breadcrumb(array('menu' => $this->menu, 'breadcrumb' => $this->breadcrumb, 'class' => 'left')); ?>
+        <?php if($this->paginator->getTotalItemCount() > 0) { ?>
+        	<div class="row row-flex" data-items="<?php echo $this->paginator->getTotalItemCount(); ?>">
+	            <?php echo $this->block5(array('list' => $this->list, 'col' => 'col-6 col-md-3')); ?>
+	        </div>
+	        <?php if ($this->paginator->getTotalItemCount() > $this->paginator->getItemCountPerPage()) { ?>
+	            <div class="s_more">
+		            <a href="javascript:;" id="productCombo12X" class="c-button-4" onclick="showMore('<?php echo PUBLIC_PATH."pagination-81.html"; ?>','<?php echo htmlspecialchars(json_encode(array('page' => 2, 'limit' => $this->paginator->getItemCountPerPage(), 'id' => $this->params['id'], 'type' => 'productCombo12X'), JSON_UNESCAPED_UNICODE)); ?>', '.b-card-21.block-combo', '#productCombo12X');"><span class="fa fa-angle-down"> Xem thêm</span></a>
+		        </div>
+	        <?php } ?>
+        <?php } else { echo '<div class="h3" style="text-transform: uppercase;margin-bottom: 30px;color: #03707d;">'.$this->menu[1]['name'].' Đang cập nhật...</div>'; } ?>
+    </div>
+</div>

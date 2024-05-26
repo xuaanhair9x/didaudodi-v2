@@ -1,0 +1,83 @@
+<div class="ht-mrb30">
+    <?php if($this->catItem['list']) { ?>
+        <div class="s_filter <?php echo $this->params['action'] == 'search' ? 'is-active':''; ?>">
+            <h3 class="title"><?php echo $this->catItem['name']; ?> <i class="fa fa-angle-up" aria-hidden="true"></i></h3>
+            <ul class="filter-price filter-list" <?php echo $this->params['action'] == 'search' ? 'style="display: block;"':''; ?>>
+                <?php foreach ($this->catItem['list'] as $value) {
+                    echo '<li>
+                        <a href="'.PUBLIC_PATH.$value['slug'].'"><div class="c-checkbox'.($this->params['id'] == $value['id'] ? ' is-active':'').'"><label><span class="c_tick"><span class="check"></span></span><span>'.$value['name'].'</span></label></div></a>
+                    </li>';
+                } ?>
+            </ul>
+        </div>
+    <?php } if($this->label) { ?>
+        <div class="s_filter <?php echo $this->params['action'] == 'search' ? 'is-active':''; ?>">
+            <h3 class="title">Loại bài <i class="fa fa-angle-up" aria-hidden="true"></i></h3>
+            <ul class="filter-price" <?php echo $this->params['action'] == 'search' ? 'style="display: block;"':''; ?>>
+                <?php foreach ($this->label as $item) {
+                    echo '<li><div class="c-checkbox"><label><input type="checkbox" name="list_label_id" value="'.$item['id'].'" onclick="sortFilter(this, \'filter\', \'checkbox\');"><span>'.$item['name'].'</span></label></div></li>';
+                } ?>
+            </ul>
+        </div>
+    <?php } foreach ($this->filter as $value) { if($value['list']) { ?>
+        <div class="s_filter <?php echo $this->params['action'] == 'search' ? 'is-active':''; ?>">
+            <h3 class="title"><?php echo $value['name']; ?> <i class="fa fa-angle-up" aria-hidden="true"></i></h3>
+            <ul class="filter-price" <?php echo $this->params['action'] == 'search' ? 'style="display: block;"':''; ?>>
+                <?php foreach ($value['list'] as $item) {
+                    echo '<li><div class="c-checkbox"><label><input type="checkbox" name="list_select_id" value="'.$item['id'].'" onclick="sortFilter(this, \'filter\', \'checkbox\');"><span>'.$item['name'].'</span></label></div></li>';
+                } ?>
+            </ul>
+        </div>
+    <?php }} ?>
+</div>
+
+<?php
+    $arrAjax = array(
+        'id' => $this->params['root_id'],
+        'slug' => $this->params['slug'],
+        'format' => $this->params['format'],
+        'limit' => $this->params['limit']
+    );
+
+    if($this->params['keysearch']) {
+        $arrAjax['keysearch'] = $this->params['keysearch'];
+    }
+?>
+
+<script type="text/javascript">
+    function sortFilter(obj, action, type) {
+        var datafiter = $.parseJSON('<?php echo json_encode($arrAjax); ?>');
+        switch(action) {
+            case 'sort':
+                datafiter.sort = obj.value;
+            break;
+            case 'filter':
+                var filter_name = obj.getAttribute("name"),
+                filter_value = obj.value;
+                type = (typeof type !== 'undefined') ? type : 'radio';
+                if (type == 'checkbox') {
+                    filter_value = [];
+                    el_inputs = $('input[name='+filter_name+']');
+                    for (var i = 0; i < el_inputs.length; i++) {
+                        if (el_inputs[i].checked === true) { filter_value.push(el_inputs[i].value); }
+                    }
+                }
+                datafiter.filter = filter_name;
+                datafiter.value = filter_value;
+            break;
+        }
+        window.setTimeout(function() {
+            $.ajax({
+                url: '<?php echo PUBLIC_PATH."filter-82.html"; ?>',
+                type: 'POST',
+                data: datafiter,
+                beforeSend: function() { $("body").append('<div class="ht-loading-gif"><img loading="lazy" width="400" height="300" src="images/loading.svg" /></div>'); }
+            })
+            .done(function(data) {
+                $("body").find("div.ht-loading-gif").remove();
+                $('#listNews').html(data);
+                $("html,body").animate({"scrollTop": $('#listNews').offset().top - 120},500);
+            });
+        },200);
+    }
+</script>

@@ -1,0 +1,228 @@
+<h1 class="text-hide"><?php echo $this->menu['title']; ?></h1>
+<?php if ($this->slide['multi_image']['desktop']) { ?>
+    <div class="s-slide-13">
+        <div class="b-sslide-default slick-slider">
+            <?php foreach ($this->slide['multi_image']['desktop'] as $value) {
+                echo '<a href="'.$value['link'].'" rel="nofollow" class="slick-slide ht-ratio--30">
+                    <img width="400" height="300" src="'.PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/'.$value['thumbnail'].WEBP_EXT.'" alt="'.$value['name'].'" class="ht-ratio__img" />
+                </a>';
+            } ?>
+        </div>
+    </div>
+<?php } if ($this->slide['multi_image']['mobile']) {  ?>
+    <div class="s-slide-14">
+        <div class="b-sslide-default slick-slider">
+            <?php foreach ($this->slide['multi_image']['mobile'] as $value) {
+                echo '<a href="'.$value['link'].'" rel="nofollow" class="item ht-ratio--80">
+                    <img loading="lazy" width="400" height="300" src="'.PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/'.$value['thumbnail'].WEBP_EXT.'" alt="'.$value['name'].'" class="ht-ratio__img" />
+                </a>';
+            } ?>
+        </div>
+    </div>
+<?php } ?>
+<?php echo $this->slogan['desc_short'] ? '<div class="s-quote-1">
+    <div class="container">
+        <h2 class="title">'.$this->slogan['desc_short'].'</h2>
+    </div>
+</div>':''; ?>
+<?php if ($this->cate) { ?>
+    <div class="s-cate-1">
+        <div class="container">
+            <div class="row row-flex">
+                <?php foreach ($this->cate as $i => $value) {
+                    echo '<div class="col-6 col-sm-4 col-md-3 wow fadeInDown" data-wow-delay="0.'.$i.'s">
+                        <a href="'.PUBLIC_PATH.$value['slug'].'" class="b-card-6">
+                            <div class="b_thumb ht-ratio--100"><img loading="lazy" width="400" height="300" src="'.PUBLIC_PATH.'images/blank.jpg" data-src="'.PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/'.$value['thumbnail'].WEBP_EXT.'" alt="'.$value['name'].'" class="ht-ratio__img lazy" /></div>
+                            <h3 class="b_title">'.$value['name'].'</h3>
+                        </a>
+                    </div>';
+                } ?>
+            </div>
+        </div>
+    </div>
+<?php } if ($this->spTieuBieu) { ?>
+    <?php $style = (file_exists(ROOT_PUBLIC.'/'.UPLOAD_IMAGES.date('Y/m',explode('-',$this->background['multi_image']['background-1'][0]['thumbnail'])[0]).'/'.$this->background['multi_image']['background-1'][0]['thumbnail'].WEBP_EXT) && is_file(ROOT_PUBLIC.'/'.UPLOAD_IMAGES.date('Y/m',explode('-',$this->background['multi_image']['background-1'][0]['thumbnail'])[0]).'/'.$this->background['multi_image']['background-1'][0]['thumbnail'].WEBP_EXT)) ? ' style="background-image: url('.PUBLIC_PATH.'images/blank.jpg);" data-src="'.PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$this->background['multi_image']['background-1'][0]['thumbnail'])[0]).'/'.$this->background['multi_image']['background-1'][0]['thumbnail'].WEBP_EXT.'"':''; ?>
+    <div class="s-section-3">
+        <div class="container">
+            <div class="s_title wow fadeIn" data-wow-delay="0.1s"><?php echo $this->info['headline']['slug-36']; ?></div>
+            <div class="b-sslide-default wow fadeIn" data-wow-delay="0.3s">
+                <div class="slick-slider lazyBg" <?php echo $style; ?>>
+                    <?php foreach ($this->spTieuBieu as $value) { ?>
+                        <div class="item">
+                            <a href="<?php echo PUBLIC_PATH.$value['rootSlug'].'/'.$value['slug']; ?>" class="b-card-77">
+                                <div class="row">
+                                    <div class="col-12 col-sm-6 col-md-5">
+                                        <div class="b_thumb ht-ratio--100">
+                                            <img loading="lazy" width="400" height="300"  src="<?php echo PUBLIC_PATH; ?>images/blank.jpg" data-src="<?php echo PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/'.$value['thumbnail'].WEBP_EXT; ?>" alt="<?php echo $value['name']; ?>" class="ht-ratio__img lazy">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-md-7">
+                                        <div class="b_content">
+                                            <h3 class="b_title"><?php echo $value['name']; ?></h3>
+                                            <div class="b-star-2">
+                                                <div class="b_star">
+                                                    <span>
+                                                        <?php
+                                                            $starAvg = !is_nan($value['avgStar']) ? round($value['avgStar']) : 0;
+                                                            $remainStarAvg = 5 - $starAvg;
+                                                            for ($i = 0; $i < $starAvg; $i++) {
+                                                                echo '<i class="fa fa-star" aria-hidden="true"></i>';
+                                                            }
+                                                            for ($i = 0; $i < $remainStarAvg; $i++) {
+                                                                echo '<i class="fa fa-star-o" aria-hidden="true"></i>';
+                                                            }
+                                                        ?>
+                                                    </span>
+                                                </div>
+                                                <span>(<?php echo $value['countComment']; ?> đánh giá)</span>
+                                            </div>
+                                            <?php if($value['comment']) { ?>
+                                                <div class="b_comment">
+                                                    <div class="b_name"><?php echo $value['comment']['fullname']; ?></div>
+                                                    <p><?php echo $value['comment']['comment']; ?></p>
+                                                </div>
+                                            <?php } ?>
+                                            <div style="margin-top: 10px;">
+                                                <div class="b_more">Xem chi tiết <i class="fa fa-long-arrow-right" aria-hidden="true"></i></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    <?php } ?>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php } if ($this->spSale) { ?>
+    <div class="s-product-1">
+        <div class="container">
+            <div class="c-headline-9 wow fadeIn" data-wow-delay="0.1s">
+                <div class="c_name"><?php echo $this->info['headline']['slug-37']; ?></div>
+            </div>
+            <div class="b-sslide-default wow fadeIn" data-wow-delay="0.3s">
+                <div class="slick-slider">
+                    <?php echo $this->block4(array('list' => $this->spSale, 'col' => 'item', 'lazy' => true)); ?>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php } if ($this->combo['list']) { ?>
+    <?php $style = (file_exists(ROOT_PUBLIC.'/'.UPLOAD_IMAGES.date('Y/m',explode('-',$this->background['multi_image']['background-2'][0]['thumbnail'])[0]).'/'.$this->background['multi_image']['background-2'][0]['thumbnail'].WEBP_EXT) && is_file(ROOT_PUBLIC.'/'.UPLOAD_IMAGES.date('Y/m',explode('-',$this->background['multi_image']['background-2'][0]['thumbnail'])[0]).'/'.$this->background['multi_image']['background-2'][0]['thumbnail'].WEBP_EXT)) ? ' style="background-image: url('.PUBLIC_PATH.'images/blank.jpg);" data-src="'.PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$this->background['multi_image']['background-2'][0]['thumbnail'])[0]).'/'.$this->background['multi_image']['background-2'][0]['thumbnail'].WEBP_EXT.'"':''; ?>
+    <div class="s-combo-1 lazyBg" <?php echo $style; ?>>
+        <div class="container">
+            <div class="s_flex wow fadeIn" data-wow-delay="0.1s">
+                <div class="title"><?php echo $this->info['headline']['slug-38']; ?></div>
+                <a href="<?php echo PUBLIC_PATH.end(explode(',', $this->combo['link'])); ?>">Xem tất cả combo >></a>
+            </div>
+            <div class="b-sslide-default wow fadeIn" data-wow-delay="0.3s">
+                <div class="slick-slider">
+                    <?php echo $this->block5(array('list' => $this->combo['list'], 'col' => 'item', 'lazy' => true)); ?>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php } if ($this->traiNghiem) { ?>
+    <div class="s-commit-2">
+        <div class="container">
+            <div class="s_box">
+                <div class="row row-flex">
+                    <div class="col-6 wow fadeInLeft" data-wow-delay="0.1s">
+                        <div class="s_slick">
+                            <div class="b-sslide-default">
+                                <div class="slick-slider">
+                                    <?php foreach ($this->traiNghiem['multi_image']['slide'] as $value) {
+                                        echo '<div class="item lazyBg" style="background-image: url('.PUBLIC_PATH.'images/blank.jpg);" data-src="'.PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/'.$value['thumbnail'].WEBP_EXT.'"></div>';
+                                    } ?>
+                                </div>
+                            </div>
+                            <?php echo $this->traiNghiem['multi_input']['link']['desc_short'] ? '<a href="'.$this->traiNghiem['multi_input']['link']['desc_short'].'" target="_blank" rel="nofollow" class="s_more">'.$this->traiNghiem['multi_input']['link']['name'].'</a>':''; ?>
+                        </div>
+                    </div>
+                    <div class="col-6 wow fadeInRight" data-wow-delay="0.1s">
+                        <div class="s_content">
+                            <div class="s_title"><?php echo $this->traiNghiem['name']; ?></div>
+                            <div class="ht-format-detail text--white ht-mrb15"><?php echo $this->convertWebpEditor($this->traiNghiem['detail']); ?></div>
+                            <a href="<?php echo PUBLIC_PATH.end(explode(',', $this->camket['link'])); ?>" class="c-button-19"><span><?php echo $this->info['headline']['slug-40']; ?></span></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php } if($this->video['desc_short']) {
+    $style = (file_exists(ROOT_PUBLIC.'/'.UPLOAD_IMAGES.date('Y/m',explode('-',$this->video['multi_image']['background'][0]['thumbnail'])[0]).'/'.$this->video['multi_image']['background'][0]['thumbnail'].WEBP_EXT) && is_file(ROOT_PUBLIC.'/'.UPLOAD_IMAGES.date('Y/m',explode('-',$this->video['multi_image']['background'][0]['thumbnail'])[0]).'/'.$this->video['multi_image']['background'][0]['thumbnail'].WEBP_EXT)) ? ' style="background-image: url('.PUBLIC_PATH.'images/blank.jpg);" data-src="'.PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$this->video['multi_image']['background'][0]['thumbnail'])[0]).'/'.$this->video['multi_image']['background'][0]['thumbnail'].WEBP_EXT.'"':''; ?>
+    <div class="s-video-1">
+        <div class="container">
+            <div class="s_box lazyBg wow fadeIn" data-wow-delay="0.1s" <?php echo $style; ?>>
+                <div class="s_title"><?php echo $this->video['name']; ?></div>
+                <div ht-trigger="c-modal" ht-target="#myVideo" datasrc="<?php echo $this->getYT($this->video['desc_short']); ?>" class="s_overlay">
+                    <div class="icon">
+                        <i class="fa fa-play" aria-hidden="true"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php } if($this->blog) { ?>
+    <div class="s-news-1">
+        <div class="container">
+            <div class="c-headline-9">
+                <div class="c_name"><?php echo $this->info['headline']['slug-39']; ?></div>
+            </div>
+            <div class="b-sslide-default wow fadeIn" data-wow-delay="0.1s">
+                <div class="slick-slider">
+                    <?php foreach ($this->blog as $value) { ?>
+                        <div class="item">
+                            <a href="<?php echo PUBLIC_PATH.$value['rootSlug'].'/'.$value['slug']; ?>" class="b-card-61">
+                                <div class="ht-ratio--75">
+                                    <img loading="lazy" width="400" height="300" src="<?php echo PUBLIC_PATH; ?>images/blank.jpg" data-src="<?php echo PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/'.$value['thumbnail'].WEBP_EXT; ?>" alt="<?php echo $value['name']; ?>" class="ht-ratio__img lazy">
+                                </div>
+                                <div class="b_content">
+                                    <div class="b_flex">
+                                        <div class="view"><?php echo $value['view']; ?> Lượt xem</div>
+                                        <div class="b-star-2">
+                                            <div class="b_star">
+                                                <span>
+                                                    <?php
+                                                        $starAvg = !is_nan($value['avgStar']) ? round($value['avgStar']) : 0;
+                                                        $remainStarAvg = 5 - $starAvg;
+                                                        for ($i = 0; $i < $starAvg; $i++) {
+                                                            echo '<i class="fa fa-star" aria-hidden="true"></i>';
+                                                        }
+                                                        for ($i = 0; $i < $remainStarAvg; $i++) {
+                                                            echo '<i class="fa fa-star-o" aria-hidden="true"></i>';
+                                                        }
+                                                    ?>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h3 class="b_title"><?php echo $value['name']; ?></h3>
+                                    <div class="b_desc"><?php echo $value['desc_short']; ?></div>
+                                </div>
+                                <div class="b_overlay align-items--center">
+                                    <span>+</span>
+                                </div>
+                            </a>
+                        </div>
+                    <?php } ?>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php } ?>
+<div class="s-banner-1 wow fadeIn" data-wow-delay="0.1s">
+    <div class="container">
+        <?php
+            if((file_exists(ROOT_PUBLIC.'/'.UPLOAD_IMAGES.date('Y/m',explode('-',$this->banner['multi_image']['banner-home'][0]['thumbnail'])[0]).'/'.$this->banner['multi_image']['banner-home'][0]['thumbnail'].WEBP_EXT) && is_file(ROOT_PUBLIC.'/'.UPLOAD_IMAGES.date('Y/m',explode('-',$this->banner['multi_image']['banner-home'][0]['thumbnail'])[0]).'/'.$this->banner['multi_image']['banner-home'][0]['thumbnail'].WEBP_EXT))) {
+                echo '<a class="desktop" target="_blank" rel="nofollow" href="'.$this->banner['multi_image']['banner-home'][0]['link'].'"><img loading="lazy" width="400" height="300" class="lazy" src="'.PUBLIC_PATH.'images/blank.jpg" data-src="'.PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$this->banner['multi_image']['banner-home'][0]['thumbnail'])[0]).'/'.$this->banner['multi_image']['banner-home'][0]['thumbnail'].WEBP_EXT.'" alt="'.$this->banner['multi_image']['banner-home'][0]['name'].'"></a>';
+            }
+
+            if((file_exists(ROOT_PUBLIC.'/'.UPLOAD_IMAGES.date('Y/m',explode('-',$this->banner['multi_image']['banner-home'][0]['thumbnail'])[0]).'/'.$this->banner['multi_image']['banner-home-mobile'][0]['thumbnail'].WEBP_EXT) && is_file(ROOT_PUBLIC.'/'.UPLOAD_IMAGES.date('Y/m',explode('-',$this->banner['multi_image']['banner-home-mobile'][0]['thumbnail'])[0]).'/'.$this->banner['multi_image']['banner-home-mobile'][0]['thumbnail'].WEBP_EXT))) {
+                echo '<a class="mobile" target="_blank" rel="nofollow" href="'.$this->banner['multi_image']['banner-home-mobile'][0]['link'].'"><img loading="lazy" width="400" height="300" class="lazy" src="'.PUBLIC_PATH.'images/blank.jpg" data-src="'.PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$this->banner['multi_image']['banner-home-mobile'][0]['thumbnail'])[0]).'/'.$this->banner['multi_image']['banner-home-mobile'][0]['thumbnail'].WEBP_EXT.'"  alt="'.$this->banner['multi_image']['banner-home-mobile'][0]['name'].'"></a>';
+            }
+        ?>
+    </div>
+</div>

@@ -1,0 +1,30 @@
+<?php echo $this->bgHeader(array('item' => $this->menu[1])); ?>
+<div class="s-commit-3">
+    <div class="container">
+    	<?php foreach ($this->content as $i => $value) {
+    		echo '<div class="s_block">
+	            <div class="s_thumb">
+	                <div class="ht-ratio--75">
+	                    <img loading="lazy" width="400" height="300" src="'.PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/800x600-'.$value['thumbnail'].WEBP_EXT.'" alt="'.$value['name'].'" class="ht-ratio__img">
+	                </div>
+	            </div>
+	            <div class="s_content">
+	                <div class="info">
+	                    <div>'.($i < 9 ? '0' : '').($i + 1).'</div>
+	                    <div>'.$value['name'].'</div>
+	                </div>
+	                <div class="ht-format-detail">'.$this->convertWebpEditor($value['detail']).'</div>
+	            </div>
+	        </div>';
+    	} ?>
+    </div>
+</div>
+<?php $style = (file_exists(ROOT_PUBLIC.'/'.UPLOAD_IMAGES.date('Y/m',explode('-',$this->detail['multi_image']['loi-ket'][0]['thumbnail'])[0]).'/1903x530-'.$this->detail['multi_image']['loi-ket'][0]['thumbnail'].WEBP_EXT) && is_file(ROOT_PUBLIC.'/'.UPLOAD_IMAGES.date('Y/m',explode('-',$this->detail['multi_image']['loi-ket'][0]['thumbnail'])[0]).'/1903x530-'.$this->detail['multi_image']['loi-ket'][0]['thumbnail'].WEBP_EXT)) ? ' style="background-image: url('.PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$this->detail['multi_image']['loi-ket'][0]['thumbnail'])[0]).'/1903x530-'.$this->detail['multi_image']['loi-ket'][0]['thumbnail'].WEBP_EXT.');"':''; ?>
+<div class="s-thanks-1" <?php echo $style; ?>>
+    <div class="container">
+        <div class="s_box">
+            <div class="s_title"><?php echo $this->detail['multi_image']['loi-ket'][0]['name']; ?></div>
+            <p class="s_desc"><?php echo $this->detail['multi_image']['loi-ket'][0]['desc_short']; ?></p>
+        </div>
+    </div>
+</div>

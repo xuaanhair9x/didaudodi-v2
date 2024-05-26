@@ -1,0 +1,387 @@
+<?php echo $this->bgHeader(array('item' => $this->menu[1], 'detail' => true)); ?>
+<div class="p-detail-13">
+    <div class="container">
+        <?php echo $this->breadcrumb(array('menu' => $this->menu, 'breadcrumb' => $this->breadcrumb, 'class' => 'left')); ?>
+        <div class="row parentPrice">
+            <div class="col-md-6 sticky">
+                <div class="p-slide-7">
+                    <div class="p_thumb ht-ratio--100 gallery" dataid=":nth-child(1)">
+                        <span class="ht-ratio__img">
+                            <img loading="lazy" width="400" height="300" src="<?php echo PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$this->detail['thumbnail'])[0]).'/'.$this->detail['thumbnail'].WEBP_EXT; ?>" alt="<?php echo $this->detail['name']; ?>">
+                        </span>
+                        <div class="p_zoom"><i class="fa fa-search-plus" aria-hidden="true"></i></div>
+                    </div>
+                    <div class="b-sslide-default">
+                    	<?php if(count($this->detail['multi_image']['anh-san-pham']) > 1) { ?>
+	                        <div class="slick-slider slider-nav row-flex">
+	                        	<?php foreach ($this->detail['multi_image']['anh-san-pham'] as $i => $value) {
+	                        		echo '<div class="item item--image" href="'.PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/'.$value['thumbnail'].WEBP_EXT.'" dataid=":nth-child('.($i + 1).')">
+	                                    <div class="item-img ht-ratio--100">
+	                                        <img loading="lazy" width="400" height="300" src="'.PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/'.$value['thumbnail'].WEBP_EXT.'" alt="'.$this->detail['name'].'" class="ht-ratio__img">
+	                                    </div>
+	                                </div>';
+	                        	} ?>
+	                        </div>
+                        <?php } ?>
+                    </div>
+                    <div class="lightgallery hide">
+                    	<?php foreach ($this->detail['multi_image']['anh-san-pham'] as $i => $value) {
+                    		echo '<div class="galleryzoom" href="'.PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/'.$value['thumbnail'].WEBP_EXT.'" >
+	                            <img loading="lazy" width="400" height="300" src="'.PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/'.$value['thumbnail'].WEBP_EXT.'" alt="'.$this->detail['name'].'">
+	                        </div>';
+                    	} ?>
+	                </div>
+	                <?php echo $this->detail['desc_short'] ? '<div class="p_video" ht-trigger="c-modal" ht-target="#myVideo" datasrc="'.$this->getYT($this->detail['desc_short']).'"><img loading="lazy" width="400" height="300" src="'.PUBLIC_PATH.'images/icons/video.svg" alt=""> '.$this->info['headline']['slug-19'].'</div>':''; ?>
+                </div>
+            </div>
+            <div class="col-md-6 p_content">
+                <h1 class="title" name="buy"><?php echo $this->detail['name']; ?></h1>
+                <div class="b-star-2 starscroll">
+                    <div class="b_star">
+                        <span>
+                        	<?php
+                                $starAvg = !is_nan($this->avgStar) ? round($this->avgStar) : 0;
+                                $remainStarAvg = 5 - $starAvg;
+                                for ($i = 0; $i < $starAvg; $i++) {
+                                    echo '<i class="fa fa-star" aria-hidden="true"></i>';
+                                }
+                                for ($i = 0; $i < $remainStarAvg; $i++) {
+                                    echo '<i class="fa fa-star-o" aria-hidden="true"></i>';
+                                }
+                            ?>
+                        </span>
+                    </div>
+                    <span>(<?php echo count($this->commentList) > 0 ? count($this->commentList) : 'Chưa có'; ?> đánh giá)</span>
+                </div>
+                <div class="price priceChange">
+                	<?php if($this->detail['price'] > 0 && $this->detail['price_market'] > 0) {
+                		echo '<span class="discount">'.number_format($this->detail['price'],0,0,'.').'đ</span>';
+                		echo $this->detail['price_discount'] > 0 ? '<span class="market">'.number_format($this->detail['price_market'],0,0,'.').'đ</span>':'';
+                		echo $this->detail['price_percent'] ? '<span class="number">-'.$this->detail['price_percent'].'%</span>':'';
+                	} else { echo '<span class="discount">'.$this->translate("Liên hệ").'</span>'; } ?>
+                </div>
+                <?php if($this->camKet) { ?>
+	                <div class="p_item">
+	                	<?php foreach ($this->camKet as $value) {
+	                		echo '<div class="item">
+		                        <img loading="lazy" width="400" height="300" src="'.PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/100x100-'.$value['thumbnail'].WEBP_EXT.'" alt="'.$value['name'].'">
+		                        <h3>'.$value['name'].'</h3>
+		                    </div>';
+	                	} ?>
+	                </div>
+	            <?php } if($this->package) { ?>
+	                <div class="size">
+	                    <span><?php echo $this->info['headline']['slug-20']; ?></span>
+	                    <ul>
+	                    	<?php foreach ($this->package as $i => $package) {
+	                    		echo '<li class="'.($i == 0 ? 'is-select':'').'" data-item="'.htmlspecialchars(json_encode($package, JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE)).'">
+		                        	<img loading="lazy" width="400" height="300" src="'.PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$package['thumbnail'])[0]).'/100x100-'.$package['thumbnail'].WEBP_EXT.'" alt="'.$package['name'].'">
+		                        	<div>
+		                        		<span>'.$package['name'].'</span>
+		                        		'.($package['price'] ? '<span>'.number_format($package['price'],0,0,'.').'đ</span>':'').'
+		                        	</div>
+		                        </li>';
+	                    	} ?>
+	                    </ul>
+	                </div>
+	            <?php } ?>
+                <div class="p_flex">
+                    <div class="quality">
+                        <div class="clearfix">
+                            <span ht-trigger="s-cart" ht-type="minus"><i class="fa fa-minus" aria-hidden="true"></i></span>
+                            <input ht-trigger="s-cart" ht-type="blur" type="text" name="quantity" value="1">
+                            <span ht-trigger="s-cart" ht-type="plus"><i class="fa fa-plus" aria-hidden="true"></i></span>
+                        </div>
+                    </div>
+                    <div class="button">
+                        <a href="javascript:;" class="c-btn-border--primary add-to-cart <?php echo $this->detail['price'] > 0 && $this->detail['price_market'] > 0 ? '':'disabled'; ?>" onclick="bookingX(this, '<?php echo PUBLIC_PATH.'gio-hang-61.html'; ?>', '<?php echo htmlspecialchars(json_encode(($this->booking), JSON_UNESCAPED_UNICODE|JSON_HEX_APOS)); ?>');"><i class="fa fa-cart-plus" aria-hidden="true"></i> Thêm vào giỏ</a>
+                    </div>
+                </div>
+                <?php if($this->support) { ?>
+	                <div class="p_icon">
+	                	<?php foreach ($this->support as $value) {
+	                		echo '<div class="item">
+		                        <img loading="lazy" width="400" height="300" src="'.PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/100x100-'.$value['thumbnail'].WEBP_EXT.'" alt="'.$value['name'].'">
+		                        <h3>'.$value['name'].'</h3>
+		                    </div>';
+	                	} ?>
+	                </div>
+	            <?php } if($this->detail['multi_detail']['dac-diem']) { ?>
+	                <div class="p_list">
+	                    <h3 class="title" style="font-size: 22px;"><?php echo $this->detail['multi_input']['dac-diem'] ? $this->detail['multi_input']['dac-diem'] : $this->info['headline']['slug-21']; ?> <i class="fa fa-plus" aria-hidden="true"></i></h3>
+	                    <div class="ht-format-detail" style="display: block;"><?php echo $this->convertWebpEditor($this->detail['multi_detail']['dac-diem']); ?></div>
+	                </div>
+	            <?php } if($this->p_other && !$this->combo) { ?>
+	                <div class="p_other">
+	                    <h3 class="mtitle"><?php echo $this->info['headline']['slug-22']; ?></h3>
+	                    <div class="b-sslide-default">
+	                        <div class="slick-slider">
+	                        	<?php foreach ($this->p_other as $value) { ?>
+	                        		<div class="item">
+		                                <a href="<?php echo PUBLIC_PATH.$value['rootSlug'].'/'.$value['slug']; ?>" class="b-card-59">
+		                                    <div class="b_thumb ht-ratio--100">
+		                                        <img loading="lazy" width="400" height="300" src="<?php echo PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/800x800-'.$value['thumbnail'].WEBP_EXT; ?>" alt="<?php echo $value['name']; ?>" class="ht-ratio__img" />
+		                                    </div>
+		                                    <div class="b_content">
+		                                        <h3 class="b_title"><?php echo $value['name']; ?></h3>
+		                                        <div class="b_price">
+		                                            <span class="discount">
+		                                            	<?php echo ($value['price'] > 0 && $value['price_market'] > 0) ? ''.number_format($value['price'],0,0,'.').'đ':'Liên hệ'; ?>
+		                                            </span>
+		                                        </div>
+		                                    </div>
+		                                </a>
+		                            </div>
+	                        	<?php } ?>
+	                        </div>
+	                    </div>
+	                </div>
+	            <?php } if($this->combo) { ?>
+	                <div class="s-tab-9">
+	                    <ul class="s_content">
+	                    	<?php foreach ($this->combo as $i => $value) { ?>
+	                    		<li id="combo-<?php echo ($i + 1); ?>">
+		                            <div class="s_sale">
+		                                <div class="s_flex">
+		                                    <h3 class="mtitle"><i class="fa fa-bell" aria-hidden="true"></i> <?php echo $value['name']; ?></h3>
+		                                    <a href="<?php echo PUBLIC_PATH.'combo/'.$value['slug']; ?>" class="s_more">Xem chi tiết <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+		                                </div>
+		                                <div class="b-sslide-default">
+		                                    <div class="slick-slider">
+		                                    	<?php foreach ($value['listItem'] as $item) { if($item['id']) { ?>
+		                                    		<div class="item">
+						                                <a href="<?php echo PUBLIC_PATH.$item['rootSlug'].'/'.$item['slug']; ?>" class="b-card-59">
+						                                    <div class="b_thumb ht-ratio--100">
+						                                        <img loading="lazy" width="400" height="300" src="<?php echo PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$item['thumbnail'])[0]).'/800x800-'.$item['thumbnail'].WEBP_EXT; ?>" alt="<?php echo $item['name']; ?>" class="ht-ratio__img" />
+						                                    </div>
+						                                    <div class="b_content">
+						                                        <h3 class="b_title"><?php echo $item['name']; ?></h3>
+						                                        <div class="b_price">
+						                                            <span class="discount">
+						                                            	<?php echo ($item['price'] > 0 && $item['price_market'] > 0) ? ''.number_format($item['price'],0,0,'.').'đ':'Liên hệ'; ?>
+						                                            </span>
+						                                        </div>
+						                                    </div>
+						                                </a>
+						                            </div>
+		                                    	<?php }} ?>
+		                                    </div>
+		                                </div>
+		                            </div>
+		                        </li>
+	                    	<?php } ?>
+	                    </ul>
+	                    <ul class="s_menu">
+	                    	<?php foreach ($this->combo as $i => $value) {
+	                    		echo '<li'.($i == 0 ? ' class="is-active"':'').'><a href="#combo-'.($i + 1).'">Combo 0'.($i + 1).'</a></li>';
+	                    	} ?>
+	                    </ul>
+	                </div>
+	            <?php } if($this->detail['multi_detail']['uu-dai-them']) { ?>
+	                <div class="p_promo">
+	                    <h3><?php echo $this->detail['multi_input']['uu-dai-them'] ? $this->detail['multi_input']['uu-dai-them'] : $this->info['headline']['slug-23']; ?></h3>
+	                    <div class="ht-format-detail"><?php echo $this->convertWebpEditor($this->detail['multi_detail']['uu-dai-them']); ?></div>
+	                </div>
+	            <?php } ?>
+            </div>
+        </div>
+    </div>
+    <div class="p_detail">
+        <div class="container">
+            <div class="p_box">
+            	<?php foreach ($this->detail['multi_detail']['detail'] as $value) {
+            		echo ($value['name'] ? '<div class="c-headline-8 text-center">
+                        <h2 class="c_name"><span>'.$value['name'].'</span></h2>
+                    </div>':'').
+                    '<div class="ht-format-detail ht-mrb30">'.$this->convertWebpEditor($value['detail']).'</div>';
+            	} if($this->danhGiaChatLuong) { ?>
+	                <div class="s-section-1">
+	                	<?php echo $this->detail['multi_input']['tieu-de-danh-gia'] ? '<div class="c-headline-8 text-center">
+	                        <h2 class="c_name"><span>'.$this->detail['multi_input']['tieu-de-danh-gia'].'</span></h2>
+	                    </div>':''; ?>
+	                    <?php foreach ($this->danhGiaChatLuong as $value) { if($value['desc_short']) {
+	                    	echo '<div class="s_item">
+		                        <h3>'.$value['desc_short'].'</h3>
+		                        <div class="line" style="width: '.str_replace(',','', $value['multi_input']['chat-luong']).'%"><span>'.str_replace(',','', $value['multi_input']['chat-luong']).'%</span></div>
+		                    </div>';
+	                    }} ?>
+	                </div>
+	            <?php } foreach ($this->detail['multi_detail']['noi-dung-1'] as $value) {
+            		echo ($value['name'] ? '<div class="c-headline-8 text-center">
+                        <h2 class="c_name"><span>'.$value['name'].'</span></h2>
+                    </div>':'').
+                    '<div class="ht-format-detail ht-mrb30">'.$this->convertWebpEditor($value['detail']).'</div>';
+            	} ?>
+            	<?php if($this->detail['multi_input']['uu-diem'] || $this->detail['multi_input']['uu-diem']) { ?>
+	                <div class="s-section-2">
+	                    <div class="row">
+	                    	<?php if($this->detail['multi_input']['uu-diem']) { ?>
+		                        <div class="col-md-6">
+		                            <div class="s_left">
+		                                <h3><?php echo $this->info['headline']['slug-24']; ?> <i class="fa fa-check" aria-hidden="true"></i></h3>
+		                                <ul>
+		                                	<?php foreach ($this->detail['multi_input']['uu-diem'] as $value) {
+		                                		echo '<li>'.$value['name'].'</li>';
+		                                	} ?>
+		                                </ul>
+		                            </div>
+		                        </div>
+		                    <?php } if($this->detail['multi_input']['nhuoc-diem']) { ?>
+		                        <div class="col-md-6">
+		                            <div class="s_right">
+		                                <h3><?php echo $this->info['headline']['slug-25']; ?> <i class="fa fa-times" aria-hidden="true"></i></h3>
+		                                <ul>
+		                                	<?php foreach ($this->detail['multi_input']['nhuoc-diem'] as $value) {
+		                                		echo '<li>'.$value['name'].'</li>';
+		                                	} ?>
+		                                </ul>
+		                            </div>
+		                        </div>
+		                    <?php } ?>
+	                    </div>
+	                </div>
+                <?php } foreach ($this->detail['multi_detail']['noi-dung-2'] as $value) {
+            		echo ($value['name'] ? '<div class="c-headline-8 text-center">
+                        <h2 class="c_name"><span>'.$value['name'].'</span></h2>
+                    </div>':'').
+                    '<div class="ht-format-detail ht-mrb30">'.$this->convertWebpEditor($value['detail']).'</div>';
+            	}?>
+            	<div class="shiting">
+            		<div class="content pure view-more">
+		            	<?php if($this->loiIch) { ?>
+			                <div class="s-section-3">
+			                	<?php echo $this->detail['multi_input']['tieu-de-loi-ich'] ? '<div class="c-headline-8 text-center">
+			                        <h2 class="c_name"><span>'.$this->detail['multi_input']['tieu-de-loi-ich'].'</span></h2>
+			                    </div>':''; ?>
+			                    <div class="row row-flex">
+			                    	<?php foreach ($this->loiIch as $value) {
+			                    		echo '<div class="col-md-6">
+				                            <div class="b-card-3">
+				                                <div class="b_icon"><img loading="lazy" width="400" height="300" src="'.PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/100x100-'.$value['thumbnail'].WEBP_EXT.'" alt="'.$value['name'].'"></div>
+				                                <div class="b_content">
+				                                    <h3 class="b_title">'.$value['name'].'</h3>
+				                                    <div class="b_desc">'.$value['desc_short'].'</div>
+				                                </div>
+				                            </div>
+				                        </div>';
+			                    	} ?>
+			                    </div>
+			                </div>
+			            <?php } foreach ($this->detail['multi_detail']['noi-dung-3'] as $value) {
+		            		echo ($value['name'] ? '<div class="c-headline-8 text-center">
+		                        <h2 class="c_name"><span>'.$value['name'].'</span></h2>
+		                    </div>':'').
+		                    '<div class="ht-format-detail ht-mrb30">'.$this->convertWebpEditor($value['detail']).'</div>';
+		            	} if($this->review) { ?>
+			                <div class="s-section-4">
+			                	<?php echo $this->detail['multi_input']['tieu-de-review'] ? '<div class="c-headline-8 text-center">
+			                        <h2 class="c_name"><span>'.$this->detail['multi_input']['tieu-de-review'].'</span></h2>
+			                    </div>':''; ?>
+			                    <div class="row row-flex">
+			                    	<?php foreach ($this->review as $value) {
+			                    		echo '<div class="col-12 col-xs-4">
+				                            <div class="b-card-28">
+				                                <div class="b_thumb ht-ratio--100"><img loading="lazy" width="800" height="800" src="'.PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/'.$value['thumbnail'].WEBP_EXT.'" alt="'.$value['name'].'" class="ht-ratio__img"></div>
+				                                <div class="b_content">
+				                                	'.($value['name'] ? '<h3 class="b_title">'.$value['name'].'</h3>':'').
+				                                	($value['desc_short'] ? '<div class="b_desc">'.$value['desc_short'].'</div>':'').'
+				                                </div>
+				                            </div>
+				                        </div>';
+			                    	} ?>
+			                    </div>
+			                </div>
+			            <?php } foreach ($this->detail['multi_detail']['noi-dung-4'] as $value) {
+		            		echo ($value['name'] ? '<div class="c-headline-8 text-center">
+		                        <h2 class="c_name"><span>'.$value['name'].'</span></h2>
+		                    </div>':'').
+		                    '<div class="ht-format-detail ht-mrb30">'.$this->convertWebpEditor($value['detail']).'</div>';
+		            	} if($this->congDung) { ?>
+			                <div class="s-section-5">
+			                	<?php echo $this->detail['multi_input']['tieu-de-cong-dung'] ? '<div class="c-headline-8 text-center">
+			                        <h2 class="c_name"><span>'.$this->detail['multi_input']['tieu-de-cong-dung'].'</span></h2>
+			                    </div>':''; ?>
+			                    <div class="row row-flex">
+			                    	<?php foreach ($this->congDung as $value) {
+			                    		echo '<div class="col-12 col-xs-4">
+				                            <div class="b-card-23">
+				                                <div class="b_thumb ht-ratio--100"><img loading="lazy" width="800" height="800" src="'.PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/'.$value['thumbnail'].WEBP_EXT.'" alt="'.$value['name'].'" class="ht-ratio__img"></div>
+				                                <h3 class="b_title">'.$value['name'].'</h3>
+				                            </div>
+				                        </div>';
+			                    	} ?>
+			                    </div>
+			                </div>
+			            <?php } foreach ($this->detail['multi_detail']['noi-dung-5'] as $value) {
+		            		echo ($value['name'] ? '<div class="c-headline-8 text-center">
+		                        <h2 class="c_name"><span>'.$value['name'].'</span></h2>
+		                    </div>':'').
+		                    '<div class="ht-format-detail ht-mrb30">'.$this->convertWebpEditor($value['detail']).'</div>';
+		            	} if($this->productReference) { ?>
+			                <div class="s-section-6">
+			                    <div class="c-headline-8 text-center">
+			                        <h2 class="c_name"><span><?php echo $this->info['headline']['slug-26']; ?></span></h2>
+			                    </div>
+			                    <div class="table-reponsive">
+			                        <table cellpadding="5" cellspacing="0">
+			                            <tr>
+			                                <td rowspan="2">Đặc điểm</td>
+			                                <?php foreach ($this->productReference as $i => $value) {
+			                                	echo '<td class="td-img"><a href="'.$value['desc_short'].'"><img loading="lazy" width="400" height="300" src="'.PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/100x100-'.$value['thumbnail'].WEBP_EXT.'" alt="'.$value['name'].'"></a></td>';
+			                                } ?>
+			                            </tr>
+			                            <tr>
+			                            	<?php foreach ($this->productReference as $i => $value) {
+			                            		echo '<td><a href="'.$value['desc_short'].'">'.$value['name'].'</a></td>';
+			                            	} ?>
+			                            </tr>
+			                            <?php foreach ($this->label as $key => $value) {
+						                    echo '<tr>
+						                        <td>'.$value.'</td>
+						                        <td>'.$this->value[0][$key].'</td>
+						                        '.(isset($this->value[1]) ? '<td>'.$this->value[1][$key].'</td>':'').'
+						                        '.(isset($this->value[2]) ? '<td>'.$this->value[2][$key].'</td>':'').'
+						                        '.(isset($this->value[3]) ? '<td>'.$this->value[3][$key].'</td>':'').'
+						                        '.(isset($this->value[4]) ? '<td>'.$this->value[4][$key].'</td>':'').'
+						                        '.(isset($this->value[5]) ? '<td>'.$this->value[5][$key].'</td>':'').'
+						                    </tr>';
+						                } ?>
+			                        </table>
+			                    </div>
+			                </div>
+			            <?php } foreach ($this->detail['multi_detail']['noi-dung-6'] as $value) {
+		            		echo ($value['name'] ? '<div class="c-headline-8 text-center">
+		                        <h2 class="c_name"><span>'.$value['name'].'</span></h2>
+		                    </div>':'').
+		                    '<div class="ht-format-detail ht-mrb30">'.$this->convertWebpEditor($value['detail']).'</div>';
+		            	} ?>
+	            	</div>
+		            <?php if($this->loiIch || $this->review || $this->congDung || $this->productReference) { ?>
+		                <div class="s-more-1 click1">
+		                    <a href="javascript:;"><span>Xem thêm</span> <i class="fa fa-angle-double-down" aria-hidden="true"></i></a>
+		                </div>
+	                <?php } ?>
+                </div>
+                <?php if($this->faq) { ?>
+	                <div class="s-faq-1">
+	                    <div class="p_headline"><?php echo $this->info['headline']['slug-27']; ?></div>
+	                    <?php foreach ($this->faq as $i => $value) { ?>
+	                    	<div class="item" <?php echo $i > 3 ? 'style="display: none;"':''; ?>>
+		                        <div class="item-title">
+		                            <i class="fa fa-question-circle" aria-hidden="true"></i>
+		                            <span><?php echo $value['name']; ?></span>
+		                            <i class="fa fa-angle-down fa-4" aria-hidden="true"></i>
+		                        </div>
+		                        <div class="item-body">
+		                            <div class="ht-format-detail"><?php echo $this->convertWebpEditor($value['detail']); ?></div>
+		                        </div>
+		                    </div>
+	                    <?php } ?>
+	                    <?php echo count($this->faq) > 4 ? '<a href="javascript:;" class="s_more">Xem thêm <i class="fa fa-angle-double-down" aria-hidden="true"></i></a>':''; ?>
+	                </div>
+	            <?php } ?>
+                <?php echo $this->commentProduct(array('id' => $this->detail['id'], 'name' => $this->detail['name'], 'link' => PROTOCOL.DOMAIN.$_SERVER['REQUEST_URI'], 'type' => 'product_tb', 'info' => $this->info)); ?>
+            </div>
+        </div>
+    </div>
+</div>

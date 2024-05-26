@@ -1,0 +1,64 @@
+<div class="c_body">
+    <div class="b-card-77 parentPrice">
+        <div class="row">
+            <div class="col-12 col-xs-6 col-md-5">
+                <div class="b_thumb ht-ratio--100">
+                    <a href="<?php echo PUBLIC_PATH.$this->detail['rootSlug'].'/'.$this->detail['slug']; ?>"><img src="<?php echo PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$this->detail['thumbnail'])[0]).'/800x800-'.$this->detail['thumbnail'].WEBP_EXT; ?>" alt="<?php echo $this->detail['name']; ?>" class="ht-ratio__img"></a>
+                </div>
+            </div>
+            <div class="col-12 col-xs-6 col-md-7">
+                <div class="b_content">
+                	<a href="<?php echo PUBLIC_PATH.$this->detail['rootSlug'].'/'.$this->detail['slug']; ?>">
+	                    <div class="b_title"><?php echo $this->detail['name']; ?></div>
+	                    <div class="b_price priceChange">
+	                    	<?php if($this->detail['price'] > 0 && $this->detail['price_market'] > 0) {
+	                    		echo '<span class="discount">'.number_format($this->detail['price'],0,0,'.').'đ</span>';
+	                    		echo $this->detail['price_discount'] > 0 ? '<span class="market">'.number_format($this->detail['price_market'],0,0,'.').'đ</span>':'';
+	                    	} else { echo '<span class="discount">'.$this->translate("Liên hệ").'</span>'; } ?>
+	                    </div>
+	                    <div class="b-star-2">
+	                        <div class="b_star">
+	                            <span>
+	                            	<?php
+		                                $starAvg = !is_nan($this->avgStar) ? round($this->avgStar) : 0;
+		                                $remainStarAvg = 5 - $starAvg;
+		                                for ($i = 0; $i < $starAvg; $i++) {
+		                                    echo '<i class="fa fa-star" aria-hidden="true"></i>';
+		                                }
+		                                for ($i = 0; $i < $remainStarAvg; $i++) {
+		                                    echo '<i class="fa fa-star-o" aria-hidden="true"></i>';
+		                                }
+		                            ?>
+	                            </span>
+	                        </div>
+	                        <span>(<?php echo count($this->commentList) > 0 ? count($this->commentList) : 'Chưa có'; ?> đánh giá)</span>
+	                    </div>
+	                    <div class="b_list">
+	                    	<div class="ht-format-detail"><?php echo $this->convertWebpEditor($this->detail['multi_detail']['dac-diem']); ?></div>
+	                    </div>
+	                </a>
+	                <?php if($this->package) { ?>
+	                    <div class="size double">
+		                    <span><?php echo $this->info['headline']['slug-20']; ?></span>
+		                    <ul>
+		                    	<?php foreach ($this->package as $i => $package) {
+		                    		echo '<li class="'.($i == 0 ? 'is-select':'').'" data-item="'.htmlspecialchars(json_encode($package, JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE)).'">
+			                        	<img src="'.PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$package['thumbnail'])[0]).'/100x100-'.$package['thumbnail'].WEBP_EXT.'" alt="'.$package['name'].'">
+			                        	<div>
+			                        		<span>'.$package['name'].'</span>
+			                        		'.($package['price'] ? '<span>'.number_format($package['price'],0,0,'.').'đ</span>':'').'
+			                        	</div>
+			                        </li>';
+		                    	} ?>
+		                    </ul>
+		                </div>
+		            <?php } ?>
+                    <div class="button">
+                    	<a href="javascript:;" class="b_more add-to-cart border <?php echo $this->detail['price'] > 0 && $this->detail['price_market'] > 0 ? '':'disabled'; ?>" onclick="bookingX(this, '<?php echo PUBLIC_PATH.'gio-hang-61.html'; ?>', '<?php echo htmlspecialchars(json_encode(($this->booking), JSON_UNESCAPED_UNICODE|JSON_HEX_APOS)); ?>', true<?php echo $this->params['actionBtn'] == 'reload' ? ', true':'' ?>);">Thêm vào giỏ <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+                    	<a href="<?php echo PUBLIC_PATH.$this->detail['rootSlug'].'/'.$this->detail['slug']; ?>" class="b_more border">Xem chi tiết <i class="fa fa-eye" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

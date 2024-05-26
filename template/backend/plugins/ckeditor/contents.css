@@ -1,0 +1,178 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap');
+
+@font-face {
+    font-family: 'IBM Plex Serif';
+    font-style: normal;
+    font-weight: 600;
+    src: url(https://fonts.gstatic.com/s/ibmplexserif/v14/jizAREVNn1dOx-zrZ2X3pZvkTi3A_yI0q1s.woff2) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/*
+Copyright (c) 2003-2015, CKSource - Frederico Knabben. All rights reserved.
+For licensing, see LICENSE.md or http://ckeditor.com/license
+*/
+
+body
+{
+    /* Font */
+    font-family: "Open Sans", Arial, sans-serif, Verdana, "Trebuchet MS";
+    font-size: 14px;
+
+    /* Text color */
+    color: #333;
+
+    /* Remove the background color to make it transparent */
+    background-color: #fff;
+
+    margin: 20px;
+}
+
+.cke_editable
+{
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+table:not(.cke_show_border) td {
+    border-color: #2c2c2c;
+}
+
+/* blockquote
+{
+    font-style: italic;
+    font-family: Georgia, Times, "Times New Roman", serif;
+    padding: 2px 0;
+    border-style: solid;
+    border-color: #ccc;
+    border-width: 0;
+}
+
+.cke_contents_ltr blockquote
+{
+    padding-left: 20px;
+    padding-right: 8px;
+    border-left-width: 5px;
+}
+
+.cke_contents_rtl blockquote
+{
+    padding-left: 8px;
+    padding-right: 20px;
+    border-right-width: 5px;
+} */
+
+blockquote {
+    position: relative;
+    padding: .5rem;
+}
+
+blockquote::before,
+blockquote::after {
+    position: absolute;
+    color: #ccc;
+    font-size: 8rem;
+    width: 4rem;
+    height: 4rem;
+    font-family: 'IBM Plex Serif', cursive;
+}
+
+blockquote::before {
+    content: '“';
+    left: -4rem;
+    top: -4rem;
+}
+
+blockquote::after {
+    content: '”';
+    right: -4rem;
+    bottom: 3rem;
+}
+
+a
+{
+    color: #0782C1;
+}
+b,strong {
+    font-weight: inherit;
+    font-weight: 600;
+}
+ol,ul,dl
+{
+    /* IE7: reset rtl list margin. (#7334) */
+    *margin-right: 0px;
+    /* preserved spaces for list items with text direction other than the list. (#6249,#8049)*/
+    padding: 0 40px;
+}
+
+h1,h2,h3,h4,h5,h6
+{
+    font-weight: normal;
+    line-height: 1.2;
+}
+
+hr
+{
+    border: 0px;
+    border-top: 1px solid #ccc;
+}
+
+img.right
+{
+    border: 1px solid #ccc;
+    float: right;
+    margin-left: 15px;
+    padding: 5px;
+}
+
+img.left
+{
+    border: 1px solid #ccc;
+    float: left;
+    margin-right: 15px;
+    padding: 5px;
+}
+
+pre
+{
+    white-space: pre-wrap; /* CSS 2.1 */
+    word-wrap: break-word; /* IE7 */
+    -moz-tab-size: 4;
+    -o-tab-size: 4;
+    -webkit-tab-size: 4;
+    tab-size: 4;
+}
+
+.marker
+{
+    background-color: Yellow;
+}
+
+span[lang]
+{
+    font-style: italic;
+}
+
+figure
+{
+    text-align: center;
+    border: solid 1px #ccc;
+    border-radius: 2px;
+    background: rgba(0,0,0,0.05);
+    padding: 10px;
+    margin: 10px 20px;
+    display: inline-block;
+}
+
+figure > figcaption
+{
+    text-align: center;
+    display: block; /* For IE8 */
+}
+
+a > img {
+    padding: 1px;
+    margin: 1px;
+    border: none;
+    outline: 1px solid #0782C1;
+}

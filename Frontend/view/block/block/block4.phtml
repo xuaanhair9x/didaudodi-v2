@@ -1,0 +1,38 @@
+<?php foreach ($this->list as $value) { ?>
+	<div class="<?php echo $this->col; ?>">
+        <div class="b-card-58 block-product">
+            <div class="b_thumb ht-ratio--100">
+                <a href="<?php echo PUBLIC_PATH.$value['rootSlug'].'/'.$value['slug']; ?>"><img loading="lazy" width="400" height="300" <?php echo $this->lazy ? 'src="'.PUBLIC_PATH.'images/blank.jpg" data-':''; ?>src="<?php echo PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/800x800-'.$value['thumbnail'].WEBP_EXT; ?>" alt="<?php echo $value['name']; ?>" class="ht-ratio__img<?php echo $this->lazy ? ' lazy':''; ?>" /></a>
+            </div>
+            <div class="b_content">
+                <div class="b_view" onclick="getDetail(<?php echo $value['id'].($this->action == 'cart' ? ', \'reload\'':''); ?>);"><i class="fa fa-eye" aria-hidden="true"></i> Xem nhanh</div>
+                <a href="<?php echo PUBLIC_PATH.$value['rootSlug'].'/'.$value['slug']; ?>">
+	                <h2 class="b_title"><?php echo $value['name']; ?></h2>
+	                <div class="b-star-2">
+	                    <div class="b_star">
+	                        <span>
+	                        	<?php
+	                                $starAvg = !is_nan($value['avgStar']) ? round($value['avgStar']) : 0;
+	                                $remainStarAvg = 5 - $starAvg;
+	                                for ($i = 0; $i < $starAvg; $i++) {
+	                                    echo '<i class="fa fa-star" aria-hidden="true"></i>';
+	                                }
+	                                for ($i = 0; $i < $remainStarAvg; $i++) {
+	                                    echo '<i class="fa fa-star-o" aria-hidden="true"></i>';
+	                                }
+	                            ?>
+	                        </span>
+	                    </div>
+	                    <span>(<?php echo $value['countComment']; ?> đánh giá)</span>
+	                </div>
+	                <div class="b_price">
+	                	<?php if($value['price'] > 0 && $value['price_market'] > 0) {
+	                		echo '<span class="discount">'.number_format($value['price'],0,0,'.').'đ</span>';
+	                		echo $value['price_discount'] > 0 ? '<span class="market">'.number_format($value['price_market'],0,0,'.').'đ</span>':'';
+	                	} else { echo '<span class="discount">'.$this->translate("Liên hệ").'</span>'; } ?>
+	                </div>
+	            </a>
+            </div>
+        </div>
+    </div>
+<?php } ?>

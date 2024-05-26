@@ -1,0 +1,20 @@
+<?php echo $this->bgHeader(array('item' => array('name' => $this->detail['name'], 'multi_image' => $this->menu[1]['multi_image']))); ?>
+<div class="p-detail-12">
+    <div class="container">
+        <div class="p_box">
+            <div class="ht-format-detail"><?php echo $this->convertWebpEditor($this->detail['detail']); ?></div>
+        </div>
+    </div>
+</div>
+<?php $this->headStyle()->captureStart('',array('media' => '')); ?>
+	.p-detail-12 .p_box {
+        width: 60%;
+        padding: 30px 0;
+        margin: 0 auto;
+    }
+    @media screen and (max-width: 991px) {
+        .p-detail-12 .p_box{
+            width: 100%
+        }
+    }
+<?php $this->headStyle()->captureEnd(); ?>

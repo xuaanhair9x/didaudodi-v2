@@ -1,0 +1,12 @@
+<?php if($this->cate) { ?>
+	<div class="p_link clearfix <?php echo $this->class; ?>">
+	    <div class="b-sslide-default">
+	        <div class="slick-slider">
+	        	<?php foreach ($this->cate as $value) {
+	        		echo '<a href="'.PUBLIC_PATH.$value['slug'].'" class="item'.($this->catID == $value['id'] ? ' is-active':'').'"><img loading="lazy" width="400" height="300" src="'.PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$value['multi_image']['icon'][0]['thumbnail'])[0]).'/100x100-'.$value['multi_image']['icon'][0]['thumbnail'].WEBP_EXT.'" alt="'.$value['name'].'"><'.($this->htmlTag ? $this->htmlTag : 'div').' class="title">'.$value['name'].'</'.($this->htmlTag ? $this->htmlTag : 'div').'></a>';
+	        	} ?>
+	        	<a href="<?php echo PUBLIC_PATH.end(explode(',', $this->topic['link'])); ?>" class="item"><img loading="lazy" width="400" height="300" src="<?php echo PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$this->topic['multi_image']['icon'][0]['thumbnail'])[0]).'/100x100-'.$this->topic['multi_image']['icon'][0]['thumbnail'].WEBP_EXT; ?>" alt="<?php echo $this->topic['name']; ?>"><<?php echo $this->htmlTag ? $this->htmlTag : 'div'; ?> class="title">Khác</<?php echo $this->htmlTag ? $this->htmlTag : 'div'; ?>></a>
+	        </div>
+	    </div>
+	</div>
+<?php } ?>

@@ -1,0 +1,155 @@
+<?php echo $this->bgHeader(array('item' => $this->menu[1])); ?>
+<div class="p-list-7">
+    <div class="ht-page">
+        <div class="container">
+            <?php echo !$this->params['menu_id'] ? '<div class="p_title ht-format-detail">'.$this->convertWebpEditor($this->content['detail']).'</div>':''; ?>
+            <?php if(!$this->params['menu_id']) {
+            	echo $this->blockSlideCate(array('htmlTag' => $this->params['id'] == 6 ? 'h2':'div'));
+	        } if($this->params['id'] == 6) { ?>
+	            <div class="ht-page__main">
+	            	<?php if($this->params['menu_id']) { ?>
+	            		<?php echo $this->breadcrumb(array('menu' => $this->menu, 'breadcrumb' => $this->breadcrumb, 'class' => 'left')); ?>
+	                    <div class="s_title topic"><?php echo $this->info['headline']['slug-11']; ?></div>
+	                    <?php if($this->listCatPaginator->getTotalItemCount() > 0) { ?>
+	                    	<div class="row row-flex" data-items="<?php echo $this->listCatPaginator->getTotalItemCount(); ?>">
+	                    		<?php echo $this->block2(array('list' => $this->listCat, 'col' => 'col-6 col-xs-4')); ?>
+		                    </div>
+		                    <?php if ($this->listCatPaginator->getTotalItemCount() > $this->listCatPaginator->getItemCountPerPage()) { ?>
+					            <div class="p_more">
+						            <a href="javascript:;" id="newsCat21X" class="c-button-4" onclick="showMore('<?php echo PUBLIC_PATH."pagination-81.html"; ?>','<?php echo htmlspecialchars(json_encode(array('page' => 2, 'limit' => $this->listCatPaginator->getItemCountPerPage(), 'id' => $this->params['id'], 'type' => 'newsCat21X'), JSON_UNESCAPED_UNICODE)); ?>', '.b-card-23.topic', '#newsCat21X');"><span class="fa fa-angle-down"> Xem thêm</span></a>
+						        </div>
+					        <?php } ?>
+	                    <?php } else { echo '<div class="h3" style="text-transform: uppercase;margin: 5px 0;color: #03707d;">'.$this->menu[1]['name'].' Đang cập nhật...</div>'; } ?>
+	                    <?php $this->headStyle()->captureStart('',array('media' => '')); ?>
+	                    	.p-list-7 {
+	                    		margin-top: 30px;
+	                    	}
+	                    	.b-card-23.topic .b_title {
+	                    		margin: 10px 0 5px;
+	                    	}
+	                    	.b-card-23.topic .b_bot {
+	                    		margin-top: 0;
+	                    	}
+	                    <?php $this->headStyle()->captureEnd(); ?>
+	            	<?php } else { ?>
+		        		<?php if($this->listNewsHot) { ?>
+			                <div class="p_box p_top">
+			                    <div class="row">
+			                        <div class="col-sm-8">
+			                            <a href="<?php echo PUBLIC_PATH.$this->listNewsHot[0]['rootSlug'].'/'.$this->listNewsHot[0]['slug']; ?>" class="b-card-23">
+			                                <div class="b_thumb ht-ratio--75"><img loading="lazy" width="400" height="300" src="<?php echo PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$this->listNewsHot[0]['thumbnail'])[0]).'/800x600-'.$this->listNewsHot[0]['thumbnail'].WEBP_EXT; ?>" alt="<?php echo $this->listNewsHot[0]['name']; ?>" class="ht-ratio__img"></div>
+			                                <h3 class="b_title"><?php echo $this->listNewsHot[0]['name']; ?></h3>
+			                                <div class="b_desc"><?php echo $this->listNewsHot[0]['desc_short']; ?></div>
+			                                <div class="b_bot">
+			                                    <div class="b_user"><?php echo $this->listNewsHot[0]['author']; ?></div>
+			                                    <div class="b_time"><?php echo $this->timeElapsedString($this->listNewsHot[0]['multi_input']['date'] ? date('Y-m-d H:i:s', strtotime($this->listNewsHot[0]['multi_input']['date'])) : $this->listNewsHot[0]['date_published']); ?></div>
+			                                </div>
+			                            </a>
+			                        </div>
+			                        <div class="col-sm-4">
+			                        	<?php if($this->listNewsHot[1]['id']) { ?>
+				                            <a href="<?php echo PUBLIC_PATH.$this->listNewsHot[1]['rootSlug'].'/'.$this->listNewsHot[1]['slug']; ?>" class="b-card-23 small">
+				                                <div class="b_thumb ht-ratio--75"><img loading="lazy" width="400" height="300" src="<?php echo PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$this->listNewsHot[1]['thumbnail'])[0]).'/800x600-'.$this->listNewsHot[1]['thumbnail'].WEBP_EXT; ?>" alt="<?php echo $this->listNewsHot[1]['name']; ?>" class="ht-ratio__img"></div>
+				                                <h3 class="b_title"><?php echo $this->listNewsHot[1]['name']; ?></h3>
+				                                <div class="b_bot">
+				                                    <div class="b_user"><?php echo $this->listNewsHot[1]['author']; ?></div>
+				                                    <div class="b_time"><?php echo $this->timeElapsedString($this->listNewsHot[1]['multi_input']['date'] ? date('Y-m-d H:i:s', strtotime($this->listNewsHot[1]['multi_input']['date'])) : $this->listNewsHot[0]['date_published']); ?></div>
+				                                </div>
+				                            </a>
+				                        <?php } ?>
+			                            <ul class="p_list_2">
+			                                <ul>
+			                                	<?php foreach (array_slice($this->listNewsHot, 2) as $value) {
+			                                		echo '<li><a href="'.PUBLIC_PATH.$value['rootSlug'].'/'.$value['slug'].'">'.$value['name'].'</a></li>';
+			                                	} ?>
+			                                </ul>
+			                            </ul>
+			                        </div>
+			                    </div>
+			                </div>
+			            <?php } if($this->topic['list']) { ?>
+			                <div class="s-sidebar-2 mobile">
+			                    <h3 class="s_title"><?php echo $this->info['headline']['slug-7']; ?> <a href="<?php echo PUBLIC_PATH.end(explode(',', $this->topic['link'])); ?>"><?php echo $this->info['headline']['slug-8']; ?></a></h3>
+			                    <ul class="s_list">
+			                    	<?php foreach ($this->topic['list'] as $value) {
+			                    		echo '<li><a href="'.PUBLIC_PATH.$value['slug'].'">'.$value['name'].'</a></li>';
+			                    	} ?>
+			                    </ul>
+			                </div>
+			            <?php } ?>
+		                <div class="p_box p_bot">
+		                	<?php if($this->paginator->getTotalItemCount() > 0) { ?>
+			                    <div class="p_list">
+			                    	<?php echo $this->block1(array('list' => array_slice($this->listArray, 0, 5))); ?>
+			                    </div>
+			                    <?php echo $this->blockVideo(); ?>
+			                    <div class="p_list">
+			                    	<?php echo $this->block1(array('list' => array_slice($this->listArray, 5, 5))); ?>
+			                    </div>
+			                    <?php
+			                        if((file_exists(ROOT_PUBLIC.'/'.UPLOAD_IMAGES.date('Y/m',explode('-',$this->banner['multi_image']['banner-kinh-nghiem'][0]['thumbnail'])[0]).'/'.$this->banner['multi_image']['banner-kinh-nghiem'][0]['thumbnail'].WEBP_EXT) && is_file(ROOT_PUBLIC.'/'.UPLOAD_IMAGES.date('Y/m',explode('-',$this->banner['multi_image']['banner-kinh-nghiem'][0]['thumbnail'])[0]).'/'.$this->banner['multi_image']['banner-kinh-nghiem'][0]['thumbnail'].WEBP_EXT))) {
+			                            echo '<div class="s-banner-1">
+					                        <a href="'.$this->banner['multi_image']['banner-kinh-nghiem'][0]['link'].'" target="_blank" rel="nofollow"><img loading="lazy" width="400" height="300" src="'.PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$this->banner['multi_image']['banner-kinh-nghiem'][0]['thumbnail'])[0]).'/'.$this->banner['multi_image']['banner-kinh-nghiem'][0]['thumbnail'].WEBP_EXT.'" alt="'.$this->banner['multi_image']['banner-kinh-nghiem'][0]['name'].'"></a>
+					                    </div>';
+			                        }
+			                    ?>
+			                    <div class="p_list" data-items="<?php echo $this->paginator->getTotalItemCount(); ?>">
+			                    	<?php echo $this->block1(array('list' => array_slice($this->listArray, 10))); ?>
+			                    </div>
+			                    <?php if ($this->paginator->getTotalItemCount() > $this->paginator->getItemCountPerPage()) { ?>
+						            <div class="p_more">
+							            <a href="javascript:;" id="news21X" class="c-button-4" onclick="showMore('<?php echo PUBLIC_PATH."pagination-81.html"; ?>','<?php echo htmlspecialchars(json_encode(array('page' => 2, 'limit' => $this->paginator->getItemCountPerPage(), 'id' => $this->params['id'], 'type' => 'news21X'), JSON_UNESCAPED_UNICODE)); ?>', '.b-card-1.block-news', '#news21X');"><span class="fa fa-angle-down"> Xem thêm</span></a>
+							        </div>
+						        <?php } ?>
+						        <?php echo $this->blockSlideCate(array('class' => 'mr')); ?>
+		                    <?php } else { echo '<div class="h3" style="text-transform: uppercase;margin: 30px 0;color: #03707d;text-align: center;">'.$this->menu[1]['name'].' Đang cập nhật...</div>'; } ?>
+		                </div>
+			        <?php } ?>
+	            </div>
+	            <div class="ht-page__sidebar"><?php echo $this->sidebarNews(array('topic' => $this->topic, 'info' => $this->info)); ?></div>
+            <?php } else { ?>
+            	<?php echo $this->breadcrumb(array('menu' => $this->menu, 'breadcrumb' => $this->breadcrumb, 'class' => 'left')); ?>
+                <div class="p_title_2"><?php echo $this->menu[1]['name']; ?> <span>(<?php echo $this->paginator->getTotalItemCount(); ?> kết quả)</span></div>
+                <div class="ht-page__sidebar"><?php echo $this->sidebarNewsFilter(array('params' => $this->params, 'info' => $this->info)); ?></div>
+                <div class="ht-page__main" id="listNews">
+                	<?php if($this->paginator->getTotalItemCount() > 0) { ?>
+                		<div class="row row-flex" data-items="<?php echo $this->paginator->getTotalItemCount(); ?>">
+                			<?php echo $this->block3(array('list' => $this->list, 'col' => 'col-6 col-md-4', 'htmlTag' => 'h2')); ?>
+	                    </div>
+	                    <?php if ($this->paginator->getTotalItemCount() > $this->paginator->getItemCountPerPage()) { ?>
+				            <div class="p_more" style="margin-top: 0;">
+					            <a href="javascript:;" id="news21Y" class="c-button-4" onclick="showMore('<?php echo PUBLIC_PATH."pagination-81.html"; ?>','<?php echo htmlspecialchars(json_encode(array('page' => 2, 'limit' => $this->paginator->getItemCountPerPage(), 'id' => $this->params['id'], 'type' => 'news21Y'), JSON_UNESCAPED_UNICODE)); ?>', '.b-card-53.block-news', '#news21Y');"><span class="fa fa-angle-down"> Xem thêm</span></a>
+					        </div>
+				        <?php } ?>
+                	<?php } else { echo '<div class="h3" style="text-transform: uppercase;margin: 5px 0;color: #03707d;">'.$this->menu[1]['name'].' Đang cập nhật...</div>'; } ?>
+                </div>
+                <?php $this->headStyle()->captureStart('',array('media' => '')); ?>
+                	@media screen and (min-width: 1260px){
+			            .ht-page__sidebar {
+			                width: 270px;
+			            }
+			            .ht-page__main {
+			                width: calc(100% - 300px);
+			            }
+			        }
+                <?php $this->headStyle()->captureEnd(); ?>
+            <?php } ?>
+        </div>
+    </div>
+</div>
+<?php $this->inlineScript()->captureStart('', 'text/javascript', array()); ?>
+	$(document).ready(function() {
+        $('.p-list-7 .p_link .slick-slider').slick({
+            slidesToShow: 6,
+            slidesToScroll: 1,
+            autoplay: false,
+            responsive: [{
+                breakpoint: 992,
+                settings: { slidesToShow: 4 }
+            },{
+                breakpoint: 480,
+                settings: { slidesToShow: 3 }
+            }]
+        });
+    });
+<?php $this->inlineScript()->captureEnd(); ?>

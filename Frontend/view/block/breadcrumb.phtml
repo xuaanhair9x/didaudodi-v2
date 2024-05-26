@@ -1,0 +1,14 @@
+<ul class="s-breadcrumb-1 <?php echo $this->class; ?>">
+    <li><a href="<?php echo PUBLIC_PATH; ?>"><?php echo $this->menu[0]['name']; ?></a></li>
+    <?php
+        if ($this->breadcrumb) {
+            echo '<li><a href="'.PUBLIC_PATH.preg_replace('/-[0-9]+(-[0-9]+\.html)$/', '', end(explode(',',$this->breadcrumb['link']))).'">'.$this->breadcrumb['name'].'</a></li>';
+        }
+        if ($this->menu[2]) {
+            echo '<li><a href="'.PUBLIC_PATH.preg_replace('/-[0-9]+(-[0-9]+\.html)$/', '', end(explode(',',$this->menu[1]['link']))).'">'.$this->menu[1]['name'].'</a></li>';
+        } else {
+            echo '<li><span>'.$this->menu[1]['name'].'</span></li>';
+        }
+    ?>
+
+</ul>

@@ -1,0 +1,132 @@
+<div class="p-contact-1">
+    <div class="container-fluid">
+        <div class="p_contact">
+            <ul class="p_contact-info">
+                <li><h2><span class="fa fa-home fa-abs-top"><?php echo $this->info['name']; ?></span></h2></li>
+                <li><span class="fa fa-map-marker fa-abs-top"><?php echo $this->info['address']; ?></span></li>
+                <li>
+                    <?php
+                        echo $this->info['multi_input']['dien-thoai'] ? '<span class="fa fa-phone">'.$this->info['multi_input']['dien-thoai'].'</span>':'';
+                        echo $this->info['multi_input']['hotline'] ? '<span class="fa fa-mobile">'.$this->info['multi_input']['hotline'].'</span>':'';
+                        echo $this->info['multi_input']['hotline-2'] ? '<span class="fa fa-mobile">'.$this->info['multi_input']['hotline-2'].'</span>':'';
+                    ?>
+                </li>
+                <li>
+                    <span class="fa fa-envelope ht-hover"><a href="mailto:<?php echo $this->info['email']; ?>"><?php echo $this->info['email']; ?></a></span>
+                    <span class="fa fa-globe ht-hover"><a href="<?php echo URL; ?>"><?php echo DOMAIN; ?></a></span>
+                </li>
+                <li><?php echo $this->info['map']; ?></li>
+            </ul>
+            <form id="form_contact" action="" method="POST" accept-charset="utf-8" enctype="multipart/form-data">
+                <div class="form-group c-form c-form--icon <?php echo ($this->error['fullname']) ? 'is-error' : ''; ?>">
+                    <span class="c_icon"><i class="fa fa-user text--icon" aria-hidden="true"></i></span>
+                    <input type="text" name="fullname" class="c_input" value="<?php echo $this->item['fullname']; ?>" placeholder="<?php echo $this->translate("Họ và tên"); ?> (*)" />
+                    <?php if ($this->error['fullname']) { ?>
+                        <span class="c_error"><i class="fa fa-times-circle-o" aria-hidden="true"></i><span><?php echo $this->error['fullname']; ?></span></span>
+                    <?php } ?>
+                </div>
+                <div class="form-group c-form c-form--icon <?php echo ($this->error['phone']) ? 'is-error' : ''; ?>">
+                    <span class="c_icon"><i class="fa fa-phone-square text--icon" aria-hidden="true"></i></span>
+                    <input type="text" name="phone" class="c_input" value="<?php echo $this->item['phone']; ?>" placeholder="<?php echo $this->translate("Điện thoại"); ?> (*)" />
+                    <?php if ($this->error['phone']) { ?>
+                        <span class="c_error"><i class="fa fa-times-circle-o" aria-hidden="true"></i><span><?php echo $this->error['phone']; ?></span></span>
+                    <?php } ?>
+                </div>
+                <div class="form-group c-form c-form--icon <?php echo ($this->error['email']) ? 'is-error' : ''; ?>">
+                    <span class="c_icon"><i class="fa fa-envelope text--icon" aria-hidden="true"></i></span>
+                    <input type="text" name="email" class="c_input" value="<?php echo $this->item['email']; ?>" placeholder="Email (*)" />
+                    <?php if ($this->error['email']) { ?>
+                        <span class="c_error"><i class="fa fa-times-circle-o" aria-hidden="true"></i><span><?php echo $this->error['email']; ?></span></span>
+                    <?php } ?>
+                </div>
+                <div class="form-group c-form c-form--icon">
+                    <span class="c_icon"><i class="fa fa-map-marker text--icon" aria-hidden="true"></i></span>
+                    <input type="text" name="address" class="c_input" value="" placeholder="<?php echo $this->translate("Địa chỉ"); ?>" />
+                </div>
+                <div class="form-group c-form c-form--icon">
+                    <span class="c_icon c_icon--top"><i class="fa fa-info-circle text--icon" aria-hidden="true"></i></span>
+                    <textarea name="content" class="c_input" rows="2" placeholder="<?php echo $this->translate("Nội dung"); ?>"></textarea>
+                </div>
+                <div class="form-group text-center"><button type="submit" class="c-btn--primary"><?php echo $this->translate("Gửi"); ?></button></div>
+            </form>
+        </div>
+    </div>
+</div>
+<?php $this->headStyle()->captureStart('',array('media' => '')); ?>
+    /* BEGIN p-contact-1 */
+    .p-contact-1 {
+        margin: 30px 0;
+    }
+    .p-contact-1 .p_contact {
+        position: relative;
+        margin-bottom: 30px;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-justify-content: center;
+        justify-content: center;
+    }
+    .p-contact-1 .p_contact > ul {
+        margin: 0 1.25%;
+    }
+    .p-contact-1 .p_contact > ul h2 {
+        font-size: 20px;
+        margin: 10px 0 5px;
+        text-transform: uppercase;
+    }
+    .p-contact-1 .p_contact > ul span.fa {
+        margin-bottom: 7px;
+        line-height: 1.42857143;
+        font-weight: inherit;
+    }
+    .p-contact-1 .p_contact > ul span.fa:not(:last-child) {
+        margin-right: 20px;
+    }
+    .p-contact-1 .p_contact > ul span.fa::before {
+        width: 15px;
+        text-align: center;
+    }
+    .p-contact-1 .p_contact > ul iframe {
+        width: 100% !important;
+        height: 225px !important;
+        margin-top: 25px;
+    }
+    .p-contact-1 .p_contact > form {
+        width: 30%;
+        margin: 0 1.25%;
+    }
+    @media screen and (max-width: 991px) {
+        .p-contact-1 .p_contact {
+            flex-direction: column;
+        }
+        .p-contact-1 .p_contact > ul h1 {
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .p-contact-1 .p_contact > ul iframe {
+            margin: 15px 0;
+        }
+        .p-contact-1 .p_contact > form {
+            width: auto;
+        }
+    }
+    /* END p-contact-1 */
+<?php $this->headStyle()->captureEnd(); ?>
+<?php $this->inlineScript()->captureStart('', 'text/javascript', array()); ?>
+    /* BEGIN p-contact-1 */
+    /* Thêm thư viện js/hitech/HTValidate.js */
+    $(document).ready(function(){
+        $('#form_contact').HTValidate({
+            rules: {
+                fullname: { required: '<?php echo $this->translate("Thông tin bắt buộc"); ?>' },
+                phone: { required: '<?php echo $this->translate("Thông tin bắt buộc"); ?>', number: '<?php echo $this->translate("Vui lòng nhập số"); ?>' },
+                email: { required: '<?php echo $this->translate("Thông tin bắt buộc"); ?>', email: '<?php echo $this->translate("Email không hợp lệ"); ?>' }
+            },
+            ajax: { url: '<?php echo $this->translate("lien-he-51.html"); ?>' },
+            setTemplate: {
+                notify: '<?php echo $this->translate("Bạn đã gửi thành công. Chúng tôi sẽ liên hệ lại trong thời gian sớm nhất!"); ?>',
+                modal: 'notify_contact',
+            }
+        });
+    });
+    /* END p-contact-1 */
+<?php $this->inlineScript()->captureEnd(); ?>

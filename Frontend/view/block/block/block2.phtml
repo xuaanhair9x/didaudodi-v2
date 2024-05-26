@@ -1,0 +1,11 @@
+<?php foreach ($this->list as $value) {
+	echo '<div class="'.$this->col.'">
+        <a href="'.PUBLIC_PATH.$value['slug'].'" class="b-card-23 topic">
+            <div class="b_thumb ht-ratio--75"><img loading="lazy" width="400" height="300" src="'.PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/800x600-'.$value['thumbnail'].WEBP_EXT.'" alt="'.$value['name'].'" class="ht-ratio__img"></div>
+            <h2 class="b_title">'.$value['name'].'</h2>
+            <div class="b_bot">
+                <div class="b_user">'.($value['count'] > 0 ? 'Có '.$value['count'].' bài viết':'Chưa có bài viết').'</div>
+            </div>
+        </a>
+    </div>';
+} ?>

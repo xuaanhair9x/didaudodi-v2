@@ -1,0 +1,115 @@
+<?php echo $this->bgHeader(array('item' => $this->menu[1], 'detail' => true)); ?>
+<div class="s-combo-2">
+    <div class="container">
+        <?php echo $this->breadcrumb(array('menu' => $this->menu, 'breadcrumb' => $this->breadcrumb, 'class' => 'left', 'detail' => true)); ?>
+        <div class="row">
+            <div class="col-12 col-md-8">
+                <h1 class="s_title"><?php echo $this->detail['name'].' ('.count($this->detail['listItem']).' sản phẩm)'; ?></h1>
+                <div class="s_box">
+                    <div class="b-sslide-default">
+                        <div class="slick-slider">
+                        	<?php foreach ($this->detail['listItem'] as $value) { if($value['id']) { ?>
+                        		<div class="item">
+                                    <div class="top">
+                            			<a href="<?php echo PUBLIC_PATH.$value['rootSlug'].'/'.$value['slug']; ?>">
+    		                                <div class="s_name"><?php echo $value['name']; ?></div>
+    		                            </a>
+                                    </div>
+                                    <div class="bot">
+                                        <a href="<?php echo PUBLIC_PATH.$value['rootSlug'].'/'.$value['slug']; ?>">
+                                            <div class="s_thumb ht-ratio--100">
+                                                <img loading="lazy" width="400" height="300" src="<?php echo PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/800x800-'.$value['thumbnail'].WEBP_EXT; ?>" alt="<?php echo $value['name']; ?>" class="ht-ratio__img">
+                                            </div>
+                                        </a>
+    	                                <div class="s_view" onclick="getDetail(<?php echo $value['id']; ?>);"><i class="fa fa-eye" aria-hidden="true"></i> Xem nhanh</div>
+    	                                <div class="s_price priceChange">
+    	                                	<?php
+    	                                		echo '<span class="discount">'.number_format($value['price'],0,0,'.').'đ</span>';
+                                                echo $value['price_discount'] > 0 ? '<span class="market">'.number_format($value['price_market'],0,0,'.').'đ</span>':'';
+    	                                	?>
+    	                                </div>
+    	                                <div class="s_size sizeCombo">
+    	                                    <span><?php echo $this->info['headline']['slug-20']; ?></span>
+    	                                    <ul>
+    	                                    	<?php foreach ($value['package'] as $i => $package) {
+    	                                    		echo '<li class="'.($i == 0 ? 'is-select':'').'" data-item="'.htmlspecialchars(json_encode($package, JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE)).'">
+    						                        	<img loading="lazy" width="400" height="300" src="'.PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$package['thumbnail'])[0]).'/100x100-'.$package['thumbnail'].WEBP_EXT.'" alt="'.$package['name'].'">
+    						                        	<div>
+    						                        		<span>'.$package['name'].'</span>
+    						                        		<span>'.number_format($package['price'],0,0,'.').'đ</span>
+    						                        	</div>
+    						                        </li>';
+    					                    	} ?>
+    	                                    </ul>
+    	                                </div>
+                                    </div>
+	                            </div>
+                        	<?php }} ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4">
+                <div class="s_content">
+                    <div class="flex mrt">
+                        <?php
+                            switch ($this->detail['multi_input']['discount']['type']) {
+                                case 1:
+                                    $percent = $this->detail['multi_input']['discount']['value'].'%';
+                                    $type = 'data-type="percent"';
+                                    break;
+                                case 2:
+                                    $percent = str_replace(',','.', $this->detail['multi_input']['discount']['value']).'đ';
+                                    $type = 'data-type="price"';
+                                    break;
+                            }
+                            echo $this->detail['multi_input']['discount']['value'] ? '<div class="sale">-'.$percent.'</div><input type="hidden" name="percent" value="'.str_replace(',','', $this->detail['multi_input']['discount']['value']).'" '.$type.'>':'';
+                        ?>
+                        <div class="price comboPrice">
+                            <?php
+                                echo '<span class="discount">'.number_format($this->detail['price'],0,0,'.').'đ</span>';
+                                echo $this->detail['price_discount'] > 0 ? '<span class="market">'.number_format($this->detail['price_market'],0,0,'.').'đ</span>':'';
+                            ?>
+                        </div>
+                    </div>
+                    <div class="text">Chọn số lượng: </div>
+                    <div class="flex">
+                        <div class="quality">
+                            <div class="clearfix">
+                                <span ht-trigger="s-cart" ht-type="minus"><i class="fa fa-minus" aria-hidden="true"></i></span>
+                                <input ht-trigger="s-cart" ht-type="blur" type="text" name="quantity" value="1">
+                                <span ht-trigger="s-cart" ht-type="plus"><i class="fa fa-plus" aria-hidden="true"></i></span>
+                            </div>
+                        </div>
+                        <div class="button">
+                            <a href="javascript:;" class="c-btn-border--primary add-to-cart" onclick="bookingCombo(this, '<?php echo PUBLIC_PATH.'gio-hang-61.html'; ?>', '<?php echo htmlspecialchars(json_encode(($this->bookingCombo), JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE)); ?>');"><i class="fa fa-cart-plus" aria-hidden="true"></i> Thêm vào giỏ</a>
+                        </div>
+                    </div>
+                    <?php echo $this->detail['detail'] ? '<h3 class="title">Mô tả</h3>
+                    <div class="ht-format-detail">'.$this->convertWebpEditor($this->detail['detail']).'</div>':''; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<?php if($this->detail['multi_detail']['chi-tiet']) { ?>
+	<div class="s-tab-4">
+	    <div class="container">
+	        <div class="s_box">
+	            <div class="s_title"><?php echo $this->info['headline']['slug-32']; ?></div>
+	            <ul class="s_menu">
+	            	<?php foreach ($this->detail['multi_detail']['chi-tiet'] as $i => $value) {
+	            		echo '<li'.($i == 0 ? ' class="is-active"':'').'><a href="#'.$this->toSlug($value['name']).'">'.$value['name'].'</a></li>';
+	            	} ?>
+	            </ul>
+	            <ul class="s_content">
+	            	<?php foreach ($this->detail['multi_detail']['chi-tiet'] as $value) {
+	            		echo '<li id="'.$this->toSlug($value['name']).'">
+		                    <div class="ht-format-detail">'.$this->convertWebpEditor($value['detail']).'</div>
+		                </li>';
+	            	} ?>
+	            </ul>
+	        </div>
+	    </div>
+	</div>
+<?php } ?>

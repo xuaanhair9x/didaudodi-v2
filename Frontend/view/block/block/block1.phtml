@@ -1,0 +1,15 @@
+<?php foreach ($this->list as $value) {
+	echo '<a href="'.PUBLIC_PATH.$value['rootSlug'].'/'.$value['slug'].'" class="b-card-1 block-news">
+        <div class="b_thumb ht-ratio--75">
+            <img loading="lazy" width="400" height="300" src="'.PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/800x600-'.$value['thumbnail'].WEBP_EXT.'" alt="'.$value['name'].'" class="ht-ratio__img">
+        </div>
+        <div class="b_content">
+            <h3 class="b_title">'.$value['name'].'</h3>
+            <div class="b_bot">
+                <div class="b_user">'.$value['author'].'</div>
+                <div class="b_time">'.$this->timeElapsedString($value['multi_input']['date'] ? date('Y-m-d H:i:s', strtotime($value['multi_input']['date'])) : $value['date_published']).'</div>
+            </div>
+            <div class="b_desc">'.$value['desc_short'].'</div>
+        </div>
+    </a>';
+} ?>

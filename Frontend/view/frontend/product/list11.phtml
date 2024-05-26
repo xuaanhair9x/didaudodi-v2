@@ -1,0 +1,154 @@
+<?php echo $this->bgHeader(array('item' => $this->menu[1])); ?>
+<?php if($this->params['id'] == 1 && !$this->params['menu_id']) { ?>
+	<?php if($this->cate) { ?>
+		<div class="s-cate-1">
+		    <div class="container b-sslide-default">
+		        <div class="slick-slider">
+		        	<?php foreach ($this->cate as $value) {
+		        		echo '<div class="item">
+			                <a href="'.PUBLIC_PATH.$value['slug'].'" class="b-card-6">
+			                    <div class="b_thumb ht-ratio--100"><img loading="lazy" width="400" height="300" src="'.PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/800x800-'.$value['thumbnail'].WEBP_EXT.'" alt="'.$value['name'].'" class="ht-ratio__img" /></div>
+			                    <div class="b_title">'.$value['name'].'</div>
+			                </a>
+			            </div>';
+		        	} ?>
+		        </div>
+		    </div>
+		</div>
+	<?php } ?>
+	<div class="s-product-2">
+	    <div class="container">
+	    	<?php foreach ($this->cate as $value) { if($value['child']) { ?>
+	    		<div class="s_box">
+		            <a href="<?php echo PUBLIC_PATH.$value['slug']; ?>" class="s_flex">
+		                <h2><?php echo $value['name']; ?></h2>
+		                <span class="viewmore">Xem tất cả >></span>
+		            </a>
+		            <div class="row row-flex">
+		                <div class="none col-md-2-4">
+		                	<?php $style = (file_exists(ROOT_PUBLIC.'/'.UPLOAD_IMAGES.date('Y/m',explode('-',$value['multi_image']['anh-danh-muc'][0]['thumbnail'])[0]).'/'.$value['multi_image']['anh-danh-muc'][0]['thumbnail'].WEBP_EXT) && is_file(ROOT_PUBLIC.'/'.UPLOAD_IMAGES.date('Y/m',explode('-',$value['multi_image']['anh-danh-muc'][0]['thumbnail'])[0]).'/'.$value['multi_image']['anh-danh-muc'][0]['thumbnail'].WEBP_EXT)) ? ' style="background-image: url('.PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$value['multi_image']['anh-danh-muc'][0]['thumbnail'])[0]).'/'.$value['multi_image']['anh-danh-muc'][0]['thumbnail'].WEBP_EXT.');"':' style="background-image: url('.PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/800x800-'.$value['thumbnail'].WEBP_EXT.');"'; ?>
+		                    <div class="s_background"<?php echo $style; ?>>
+		                        <h2><?php echo $value['name']; ?></h2>
+		                    </div>
+		                </div>
+		                <?php echo $this->block4(array('list' => $value['child'], 'col' => 'col-6 col-sm-4 col-md-2-4')); ?>
+		            </div>
+		        </div>
+	    	<?php }} ?>
+	    </div>
+	</div>
+<?php } else { ?>
+	<div class="s-product-3 ht-mrt45">
+        <div class="container">
+            <?php echo $this->breadcrumb(array('menu' => $this->menu, 'breadcrumb' => $this->breadcrumb, 'class' => 'left')); ?>
+            <div class="s-tab-4">
+            	<?php if(!$this->params['menu_id']) { ?>
+	                <ul class="s_menu">
+	                    <li class="is-active"><a href="#product"><?php echo $this->menu[1]['name']; ?> (<?php echo $this->paginator->getTotalItemCount(); ?>)</a></li>
+	                    <li><a href="#news">Bài viết liên quan (<?php echo count($this->news); ?>)</a></li>
+	                </ul>
+	            <?php } ?>
+                <ul class="s_content <?php echo $this->params['menu_id'] ? 'sale':''; ?>">
+                    <li id="product">
+                        <div class="ht-page">
+                            <div class="ht-page__sidebar">
+                                <?php echo $this->sidebarProductFilter(array('params' => $this->params, 'info' => $this->info, 'paginator' => $this->paginator)); ?>
+                            </div>
+                            <div class="ht-page__main">
+                                <div class="s_flex">
+                                    <div class="c-select c-form-border">
+                                        <div class="c_input text--icon" ht-trigger="c-select">Sắp xếp</div>
+                                        <span class="c-icons"><i class="fa fa-angle-down" aria-hidden="true"></i></span>
+                                        <div class="c_list">
+                                        	<?php foreach ($this->sort as $value) {
+                                        		echo '<div class="c-radio"><label><input type="radio" name="sort" value="'.$value['orderby'].'" onclick="sortAjax(this, \'sort\');"><span>'.$value['name'].'</span></label></div>';
+                                        	} ?>
+                                        </div>
+                                    </div>
+                                    <div class="s-button-fillter"><i class="fa fa-filter" aria-hidden="true"></i> Lọc sản phẩm</div>
+                                </div>
+                                <div id="listProduct">
+                                	<?php if($this->paginator->getTotalItemCount() > 0) { ?>
+                                		<div class="row row-flex" data-items="<?php echo $this->paginator->getTotalItemCount(); ?>">
+                                			<?php echo $this->block4(array('list' => $this->list, 'col' => 'col-6 col-sm-4 col-md-3')); ?>
+		                                </div>
+		                                <?php if ($this->paginator->getTotalItemCount() > $this->paginator->getItemCountPerPage()) { ?>
+								            <div class="s_more">
+									            <a href="javascript:;" id="productList11X" class="c-button-4" onclick="showMore('<?php echo PUBLIC_PATH."pagination-81.html"; ?>','<?php echo htmlspecialchars(json_encode(array('page' => 2, 'limit' => $this->paginator->getItemCountPerPage(), 'id' => $this->params['id'], 'type' => 'productList11X', 'filter_sale' => $this->params['filter_sale'], 'label_id' => $this->params['label_id']), JSON_UNESCAPED_UNICODE)); ?>', '.b-card-58.block-product', '#productList11X');"><span class="fa fa-angle-down"> Xem thêm</span></a>
+									        </div>
+								        <?php } ?>
+                                	<?php } else { echo '<div class="h3" style="text-transform: uppercase;margin: 30px 0;color: #03707d;">'.$this->menu[1]['name'].' Đang cập nhật...</div>'; } ?>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li id="news">
+                    	<div class="row row-flex">
+                    		<?php echo $this->news ? $this->block3(array('list' => $this->news, 'col' => 'col-6 col-md-3')) : ''; ?>
+                    	</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="s-popup-3 filter">
+        <div class="s_popup">
+            <div class="s_close"><i class="fa fa-times" aria-hidden="true"></i></div>
+            <div class="s_overflow">
+            	<?php echo $this->sidebarProductFilter(array('params' => $this->params, 'info' => $this->info, 'paginator' => $this->paginator, 'type' => 'mobile')); ?>
+            </div>
+        </div>
+    </div>
+<?php } ?>
+<?php
+	$arrAjaxSort = array(
+        'id' => $this->params['id'],
+        'slug' => $this->params['slug'],
+        'format' => $this->params['format'],
+        'limit' => $this->paginator->getItemCountPerPage()
+    );
+
+	// Copy thêm nếu có "shortcut"
+    if ($this->params['shortcut']) {
+        $arrsShortcut = array('mn' => 'menu_id');
+        $arrAjaxSort['shortcut'] = $this->params['shortcut'];
+        $arrAjaxSort[$arrsShortcut[$this->params['shortcut']]] = $this->params[$arrsShortcut[$this->params['shortcut']]];
+    } if($this->params['label_id']) {
+        $arrAjaxSort['label_id'] = $this->params['label_id'];
+    }
+?>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.s-cate-1 .slick-slider').slick({
+            slidesToShow: 8,
+            slidesToScroll: 1,
+            responsive: [{
+                breakpoint: 992,
+                settings: { slidesToShow: 4 }
+            }, {
+                breakpoint: 576,
+                settings: { slidesToShow: 2 }
+            }]
+        });
+    });
+	function sortAjax(obj, action, type) {
+        var datafiter = $.parseJSON('<?php echo json_encode($arrAjaxSort); ?>');
+        switch(action) {
+            case 'sort':
+                datafiter.sort = obj.value;
+            break;
+        }
+        window.setTimeout(function() {
+            $.ajax({
+                url: '<?php echo PUBLIC_PATH."sortFilter-84.html"; ?>',
+                type: 'POST',
+                data: datafiter,
+                beforeSend: function() { $("body").append('<div class="ht-loading-gif"><img loading="lazy" width="400" height="300" src="images/loading.svg" /></div>'); }
+            }).done(function(data) {
+                $("body").find("div.ht-loading-gif").remove();
+                $('#listProduct').html(data);
+                $("html,body").animate({"scrollTop": $('#listProduct').offset().top - 120}, 500);
+            });
+        },200);
+    }
+</script>

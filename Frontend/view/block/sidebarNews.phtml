@@ -1,0 +1,113 @@
+<?php if($this->banner['multi_image']['banner-sidebar-list']) {
+    foreach ($this->banner['multi_image']['banner-sidebar-list'] as $value) {
+        echo '<div class="s-sidebar-1">
+            <a href="'.$value['link'].'" target="_blank" rel="nofollow"><img loading="lazy" width="400" height="300" src="'.PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/'.$value['thumbnail'].WEBP_EXT.'" alt="'.$value['name'].'"></a>
+        </div>';
+    }
+} if($this->topic['list']) { ?>
+    <div class="s-sidebar-2 desktop">
+        <h3 class="s_title"><?php echo $this->info['headline']['slug-7']; ?> <a href="<?php echo PUBLIC_PATH.end(explode(',', $this->topic['link'])); ?>"><?php echo $this->info['headline']['slug-8']; ?></a></h3>
+        <ul class="s_list">
+            <?php foreach ($this->topic['list'] as $value) {
+                echo '<li><a href="'.PUBLIC_PATH.$value['slug'].'">'.$value['name'].'</a></li>';
+            } ?>
+        </ul>
+    </div>
+<?php } if($this->newsCmt) { ?>
+    <div class="s-sidebar-3">
+    	<h3 class="s_title"><?php echo $this->info['headline']['slug-16']; ?></h3>
+    	<div class="s_list">
+            <?php foreach ($this->newsCmt as $i => $value) {
+                echo '<a href="'.PUBLIC_PATH.($value['cat_id'] != 19 && $value['rootSlug'] != 'bai-viet-chinh-sach' ? $value['rootSlug'].'/':'').$value['slug'].'">
+                    <div>'.($i + 1).'</div>
+                    <div class="title">
+                        '.$value['name'].'
+                        <span class="morecom"><i class="fa fa-comment" aria-hidden="true"></i>'.$value['countCmt'].'</span>
+                    </div>
+                </a>';
+            } ?>
+    	</div>
+    </div>
+<?php } if($this->paginatorProductNew->getTotalItemCount() > 0) { ?>
+    <div class="s-sidebar-4">
+        <h3 class="s_title"><?php echo $this->info['headline']['slug-10']; ?></h3>
+        <ul class="s_list" data-items="<?php echo $this->paginatorProductNew->getTotalItemCount(); ?>">
+            <?php foreach ($this->listProductNew as $value) { ?>
+                <li class="product-sidebar-item itemShow">
+                    <a href="<?php echo PUBLIC_PATH.$value['rootSlug'].'/'.$value['slug']; ?>">
+                        <img loading="lazy" width="400" height="300" src="<?php echo PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/800x800-'.$value['thumbnail'].WEBP_EXT; ?>" alt="<?php echo $value['name']; ?>">
+                        <div>
+                            <div class="title"><?php echo $value['name']; ?></div>
+                            <div class="price">
+                                <?php if($value['price'] > 0 && $value['price_market'] > 0) {
+                                    echo '<span class="discount">'.number_format($value['price'],0,0,'.').'₫</span>';
+                                    echo $value['price_discount'] > 0 ? '<span class="market">'.number_format($value['price_market'],0,0,'.').'₫</span>':'';
+                                } else { echo '<span class="discount">'.$this->translate("Liên hệ").'</span>'; } ?>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+            <?php } ?>
+        </ul>
+        <?php if ($this->paginatorProductNew->getTotalItemCount() > $this->paginatorProductNew->getItemCountPerPage()) { ?>
+            <div class="btn">
+                <a href="javascript:;" id="productSidebar" class="s_more" onclick="showMore('<?php echo PUBLIC_PATH."pagination-81.html"; ?>','<?php echo htmlspecialchars(json_encode(array('page' => 2, 'limit' => $this->paginatorProductNew->getItemCountPerPage(), 'id' => 1, 'type' => 'productSidebar'), JSON_UNESCAPED_UNICODE)); ?>', '.product-sidebar-item', '#productSidebar', true);">Xem thêm <i class="fa fa-angle-down" aria-hidden="true"></i></a>
+            </div>
+        <?php } ?>
+    </div>
+<?php } ?>
+<?php foreach ($this->listSidebarProduct as $value) { ?>
+    <?php if($value['paginator']->getTotalItemCount() > 0) { ?>
+        <div class="s-sidebar-4">
+            <h3 class="s_title"><?php echo $value['name']; ?></h3>
+            <ul class="s_list" data-items="<?php echo $value['paginator']->getTotalItemCount(); ?>">
+                <?php foreach ($value['list'] as $item) { ?>
+                    <li class="product-sidebar-item-<?php echo $value['id']; ?> itemShow">
+                        <a href="<?php echo PUBLIC_PATH.$item['rootSlug'].'/'.$item['slug']; ?>">
+                            <img loading="lazy" width="400" height="300" src="<?php echo PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$item['thumbnail'])[0]).'/800x800-'.$item['thumbnail'].WEBP_EXT; ?>" alt="<?php echo $item['name']; ?>">
+                            <div>
+                                <div class="title"><?php echo $item['name']; ?></div>
+                                <div class="price">
+                                    <?php if($item['price'] > 0 && $item['price_market'] > 0) {
+                                        echo '<span class="discount">'.number_format($item['price'],0,0,'.').'₫</span>';
+                                        echo $item['price_discount'] > 0 ? '<span class="market">'.number_format($item['price_market'],0,0,'.').'₫</span>':'';
+                                    } else { echo '<span class="discount">'.$this->translate("Liên hệ").'</span>'; } ?>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                <?php } ?>
+            </ul>
+            <?php if ($value['paginator']->getTotalItemCount() > $value['paginator']->getItemCountPerPage()) { ?>
+                <div class="btn">
+                    <a href="javascript:;" id="productSidebar-<?php echo $value['id']; ?>" class="s_more" onclick="showMore('<?php echo PUBLIC_PATH."pagination-81.html"; ?>','<?php echo htmlspecialchars(json_encode(array('page' => 2, 'limit' => $value['paginator']->getItemCountPerPage(), 'id' => 1, 'type' => 'productSidebar', 'parent' => $value['id'], 'list_product_id' => $value['list_product_id']), JSON_UNESCAPED_UNICODE)); ?>', '.product-sidebar-item-<?php echo $value['id']; ?>', '#productSidebar-<?php echo $value['id']; ?>', true);">Xem thêm <i class="fa fa-angle-down" aria-hidden="true"></i></a>
+                </div>
+            <?php } ?>
+        </div>
+    <?php } ?>
+<?php } ?>
+<?php foreach ($this->listSidebarNews as $value) { if($value['list']) { ?>
+    <div class="s-sidebar-5">
+        <h3 class="s_title"><?php echo $value['name']; ?></h3>
+        <a href="<?php echo PUBLIC_PATH.($value['list'][0]['cat_id'] != 19 ? $value['list'][0]['rootSlug'].'/':'').$value['list'][0]['slug']; ?>" class="s_block">
+            <div class="b_thumb ht-ratio--75"><img loading="lazy" width="400" height="300" src="<?php echo PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$value['list'][0]['thumbnail'])[0]).'/800x600-'.$value['list'][0]['thumbnail'].WEBP_EXT; ?>" alt="<?php echo $value['list'][0]['name']; ?>" class="ht-ratio__img"></div>
+            <div class="title"><?php echo $value['list'][0]['name']; ?></div>
+        </a>
+        <div class="row row-flex" data-items="<?php echo $value['paginator']->getTotalItemCount(); ?>">
+            <?php foreach ($value['list'] as $i => $item) {
+                echo '<div class="col-6 col-md-6 news-sidebar-item-'.$value['id'].' itemShow '.($i == 0 ? 'hide':'').'">
+                    <a href="'.PUBLIC_PATH.($item['cat_id'] != 19 ? $item['rootSlug'].'/':'').$item['slug'].'" class="s_block small">
+                        <div class="b_thumb ht-ratio--75"><img loading="lazy" width="400" height="300" src="'.PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$item['thumbnail'])[0]).'/800x600-'.$item['thumbnail'].WEBP_EXT.'" alt="'.$item['name'].'" class="ht-ratio__img"></div>
+                        <div class="title">'.$item['name'].'</div>
+                    </a>
+                </div>';
+            } ?>
+        </div>
+        <?php if ($value['paginator']->getTotalItemCount() > $value['paginator']->getItemCountPerPage()) { ?>
+            <div class="btn">
+                <a href="javascript:;" id="newsSidebar-<?php echo $value['id']; ?>" class="s_more" onclick="showMore('<?php echo PUBLIC_PATH."pagination-81.html"; ?>','<?php echo htmlspecialchars(json_encode(array('page' => 2, 'limit' => $value['paginator']->getItemCountPerPage(), 'type' => 'newsSidebar', 'parent' => $value['id'], 'list_news_id' => $value['list_news_id']), JSON_UNESCAPED_UNICODE)); ?>', '.news-sidebar-item-<?php echo $value['id']; ?>', '#newsSidebar-<?php echo $value['id']; ?>', true);">Xem thêm <i class="fa fa-angle-down" aria-hidden="true"></i></a>
+            </div>
+        <?php } ?>
+    </div>
+<?php }} ?>
+

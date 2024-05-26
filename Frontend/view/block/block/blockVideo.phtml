@@ -1,0 +1,38 @@
+<?php if($this->video['multi_input']['video']) { ?>
+	<div class="p_slide video">
+	    <div class="title">
+	        <h2><?php echo $this->video['name']; ?></h2>
+	        <a href="<?php echo $this->video['desc_short']; ?>" target="_blank" class="follow">
+	        	<div class="btnYt"><i class="fa fa-youtube-play" aria-hidden="true"></i> </div>
+	        	<?php echo $this->info['headline']['slug-9']; ?>
+	        </a>
+	    </div>
+	    <div class="b-sslide-default">
+	        <div class="slick-slider">
+	        	<?php foreach ($this->video['multi_input']['video'] as $value) {
+	        		echo '<div class="item">
+		                <a href="'.$value['desc_short'].'" target="_blank" class="b-card-78">
+		                    <div class="ht-ratio--75">
+		                        <img loading="lazy" width="400" height="300" src="https://i.ytimg.com/vi/'.$this->getYT($value['desc_short']).'/hqdefault.jpg" alt="'.$value['name'].'" class="ht-ratio__img">
+		                        <i class="fa fa-youtube-play" aria-hidden="true"></i>
+		                    </div>
+		                    <h3>'.$value['name'].'</h3>
+		                </a>
+		            </div>';
+	        	} ?>
+	        </div>
+	    </div>
+	</div>
+	<?php $this->inlineScript()->captureStart('', 'text/javascript', array()); ?>
+		$(document).ready(function() {
+			$('.video .slick-slider').slick({
+				slidesToShow: 2,
+				slidesToScroll: 1,
+				responsive: [{
+					breakpoint: 992,
+					settings: { slidesToShow: 2 }
+				}]
+			});
+		});
+	<?php $this->inlineScript()->captureEnd(); ?>
+<?php } ?>

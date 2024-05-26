@@ -1,0 +1,53 @@
+<?php
+    $link = URL_LANG.$this->params['slug'];
+    $keysearch = (isset($this->params['query_string'])) ? '?'.$this->params['query_string'] : '';
+    if (isset($this->params['shortcut'])) {
+        $arrsShortcut = array('mn' => 'menu_id','lb' => 'label_id','br' => 'brand_id','tg' => 'tag_id');
+        $format = '-'.$this->params['shortcut'].$this->params[$arrsShortcut[$this->params['shortcut']]].(($this->params['id']) ? '-'.$this->params['id'] : '').'-'.$this->params['format'];
+    } else if ($this->params['action'] == 'search') {
+        $link = $this->toSlug($this->translate('Kết quả tìm kiếm'));
+        $format = '-'.$this->params['format'];
+    } else {
+        $format = '-'.$this->params['id'].'-'.$this->params['format'];
+        if(isset($this->params['search'])) {
+        	$format = '-'.$this->params['format'];
+        }
+    }
+
+	// Trang đầu tiên
+	if ($this->first != $this->current && $this->first > 0) {
+		$strPageStart = '<li><a href="'.$link.$format.'">««</a></li>';
+	} else {
+		$strPageStart = '';
+	}
+	// Lùi lại 1 trang
+	if (isset($this->previous)) {
+		$linkPrevious = '<li><a href="'.$link.(($this->previous == 1) ? '' : '-pg'.$this->previous).$format.'">«</a></li>';
+	} else {
+		$linkPrevious = '';
+	}
+	// Tiến lên 1 trang
+	if (isset($this->next)) {
+		$linkNext = '<li><a href="'.$link.'-pg'.$this->next.$format.'">»</a></li>';
+	} else {
+		$linkNext ='';
+	}
+	// Về cuối cùng
+	if ($this->last != $this->current && $this->last > 0) {
+		$strPageEnd = '<li><a href="'.$link.'-pg'.$this->pageCount.$format.'">»»</a></li>';
+	} else {
+		$strPageEnd = '';
+	}
+    $strPage = '';
+	foreach ($this->pagesInRange as $key) {
+		if ($this->current != $key) {
+			$strPage .='<li><a href="'.$link.(($key == 1) ? '' : '-pg'.$key).$format.'">'.$key.'</a></li>';
+		} else {
+			$strPage .='<li class="active"><a href="javascript:;">'.$key.'</a></li>';
+		}
+	}
+	$page = $strPageStart . $linkPrevious . $strPage . $linkNext . $strPageEnd;
+	if ($this->last > 1) {
+		echo $page;
+	}
+?>

@@ -1,0 +1,257 @@
+/* BEGIN c-form-border */
+.c-form-border .c_input {
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding: 17px 15px;
+    -webkit-transition: color 0.3s ease-in-out, border-color 0.3s ease-in-out, background-color 0.3s ease-in-out;
+    -o-transition: color 0.3s ease-in-out, border-color 0.3s ease-in-out, background-color 0.3s ease-in-out;
+    transition: color 0.3s ease-in-out, border-color 0.3s ease-in-out, background-color 0.3s ease-in-out;
+}
+.c-form-border .c_input:focus {
+    outline: none;
+    border-color: #1976d2;
+}
+.c-form-border--label .c_label {
+    font-size: 14px;
+    color: #999;
+    background-color: #fff;
+    pointer-events: none;
+    position: absolute;
+    top: 8px;
+    left: 10px;
+    z-index: 9;
+    padding: 0 5px;
+    -webkit-transition: 0.3s ease all;
+    -o-transition: 0.3s ease all;
+    transition: 0.3s ease all;
+}
+.c-form-border--label:not(.is-empty) .c_label, .c-form-border--label.is-focused .c_label {
+    font-size: 11px;
+    color: #1976d2;
+    position: absolute;
+    top: -6px;
+}
+.c-form-border.is-focused .c_icon, .c-form-border.is-focused .c_input {
+    border-color: #1976d2;
+}
+.c-form-border.is-error {
+    margin-bottom: 25px;
+}
+.c-form-border.is-error .c_input, .c-form-border.is-error .c_icon {
+    border-color: #f55145;
+}
+.c-form-border.is-error .c_icon+.c_error {
+    text-align: left;
+    left: 2px;
+}
+.c-form-border.is-error .c_icon+.c_error>span {
+    left: 0;
+    margin: 0;
+}
+/* END c-form-border */
+/* BEGIN b-card-12 */
+.b-card-12 {
+    background-color: #FFFFFF;
+    text-align: center;
+    border: 1px solid #EEEEEE;
+    border-radius: 6px;
+    max-width: 350px;
+    margin: 30px auto;
+    padding: 20px 15px 30px;
+    -webkit-transition: box-shadow 0.2s linear;
+    -o-transition: box-shadow 0.2s linear;
+    transition: box-shadow 0.2s linear;
+}
+.b-card-12 .b_name {
+    font-weight: bold;
+    font-size: 22px;
+}
+.b-card-12 .b_price {
+    margin: 15px 0;
+    font-size: 22px;
+}
+.b-card-12 .b_list {
+    font-size: 14px;
+    padding-bottom: 20px;
+    color: #9A9A9A;
+    text-align: left;
+}
+.b-card-12 .b_list li {
+    padding: 0.72em 0 0.72em 0;
+    border-bottom: 1px solid #E3E3E3;
+}
+.b-card-12:hover {
+    box-shadow: 0 16px 38px -12px rgba(0, 0, 0, 0.56), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);
+}
+.b-card-12 button:hover, .b-card-12 .c-btn:hover, .b-card-12 [class*="c-btn-"]:hover {
+    background-color: #f60;
+}
+.b-card-12 .b_list li>span.fa:before {
+    text-align: center;
+    width: 15px;
+    color: #9c9b9b;
+}
+.b-card-12 .b_form {
+    display: none;
+    font-size: 14px;
+    padding: 2px 0 0;
+    color: #9A9A9A;
+    text-align: left;
+}
+.b-card-12 .b_footer {
+    padding-top: 20px;
+    text-align: center;
+}
+/* END b-card-12 */
+
+/* END c-upload-file */
+.c-upload>input {
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    z-index: 1;
+    font-weight: 300;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+/* BEGIN c-upload-file */
+.c-upload-file.c_input {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-align-items: center;
+    align-items: center;
+}
+.c-upload-file .c_file>div {
+    color: #999;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 37px;
+}
+.c-upload-file .c_file-filename {
+    display: none;
+}
+.c-upload-file .c_icon {
+    line-height: 0;
+}
+.c-upload-file .c_icon span {
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
+    margin-right: 5px;
+    margin-left: 0;
+}
+.c-upload-file .c_file {
+    width: calc(100% - 50px);
+}
+.c-upload-file.is-active .c_file-text {
+    display: none;
+}
+.c-upload-file.is-active .c_file-filename {
+    display: block;
+    color: #111;
+}
+.c-upload-file .c_icon span:first-child {
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
+}
+.c-upload-file .c_icon span:first-child {
+    margin-right: 10px;
+}
+.c-upload-file .c_icon span:last-child {
+    display: none;
+    position: absolute;
+    right: 10px;
+    margin: 0;
+}
+.c-upload-file.is-active .c_icon span:last-child {
+    display: inline-block;
+}
+/* END c-upload-file */
+
+/* BEGIN c-upload-image */
+.c-upload-image .c_thumb {
+    position: relative;
+    overflow: hidden;
+    line-height: 0;
+}
+.c-upload-image .c_thumb::before {
+    content: '';
+    display: block;
+    padding-bottom: 100%;
+}
+.c-upload-image .c_thumb>div {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-align-items: center;
+    align-items: center;
+}
+.c-upload-image .c_thumb>div>img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.c-upload-image .c_thumb-preview {
+    display: none !important;
+}
+.c-upload-image .c_btn {
+    text-align: center;
+}
+.c-upload-image .c_btn-change, .c-upload-image .c_btn-remove {
+    display: none;
+}
+.c-upload-image .c_btn-remove {
+    position: relative;
+    z-index: 2;
+}
+.c-upload-image.is-active .c_thumb-default {
+    display: none;
+}
+.c-upload-image.is-active .c_thumb-preview {
+    display: flex !important;
+}
+.c-upload-image.is-active .c_btn-change, .c-upload-image.is-active .c_btn-remove {
+    display: inline-block;
+}
+.c-upload-image.is-active .c_btn-new {
+    display: none;
+}
+
+/* END c-upload-image */
+
+.avatar {
+    position: relative;
+    width: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 0 auto 15px;
+    background-color: #f2f2f2;
+    border: 2px solid #ccc;
+}
+.avatar .c_thumb-ovelay {
+    align-items: center;
+    justify-content: center;
+    font-size: 35px;
+    background-color: rgb(157 173 165 / 50%);
+    opacity: 0;
+    transition: 0.2s ease;
+}
+form .avatar:hover {
+    border: 2px dashed #ccc;
+}
+.avatar:hover .c_thumb-ovelay {
+    opacity: 1;
+}
+.avatar .c_thumb-ovelay i.fa {
+    color: #fff;
+}

@@ -1,0 +1,390 @@
+<?php if($this->countImg > 0) { ?>
+    <div class="s-img-1">
+        <div class="p_headline"><?php echo $this->info['headline']['slug-29']; ?></div>
+        <div class="row row-flex">
+            <?php $checkImg = 1; foreach ($this->comment['list'] as $value) { if($value['multi_image']) {
+                $multiImg = json_decode($value['multi_image'], true);
+                if($checkImg <= 6) {
+                    echo '<div class="col-4 col-xs-3 col-md-2">
+                        <a href="javascript:;" class="b-card-38 '.($checkImg == 6 && $this->countImg > 6 ? 'overlay':'').'" onclick="getModalCmt('.$value['id'].', '.$this->comment['article']['article_id'].', \'thumbnail\');">
+                            <div class="b_thumb ht-ratio--75"><img loading="lazy" width="400" height="300" src="'.PUBLIC_PATH.UPLOAD_FILES.$multiImg[0].'" alt="'.$value['fullname'].'" class="ht-ratio__img" /></div>
+                            '.($checkImg == 6 && $this->countImg > 6 ? '<div class="b_overlay">+'.($this->countImg - 6).'</div>':'<div class="b_icon"><i class="fa fa-plus" aria-hidden="true"></i></div>').'
+                        </a>
+                    </div>';
+                }
+                $checkImg++;
+            }} ?>
+        </div>
+    </div>
+<?php } if($this->countVideo > 0) { ?>
+    <div class="s-video-1">
+        <div class="p_headline"><?php echo $this->info['headline']['slug-30']; ?></div>
+        <div class="row row-flex">
+            <?php $checkVideo = 1; foreach ($this->comment['list'] as $value) { if($value['video']) {
+                if($checkVideo <= 6) {
+                    echo '<div class="col-4 col-xs-3 col-md-2">
+                        <a href="javascript:;" class="b-card-39 '.($checkVideo == 6 && $this->countVideo > 6 ? 'overlay':'').'" onclick="getModalCmt('.$value['id'].', '.$this->comment['article']['article_id'].', \'video\');">
+                            <div class="b_thumb ht-ratio--75"><video src="'.PUBLIC_PATH.UPLOAD_FILES.$value['video'].'" alt="'.$value['fullname'].'" class="ht-ratio__img"></video></div>
+                            '.($checkVideo == 6 && $this->countVideo > 6 ? '<div class="b_overlay">+'.($this->countVideo - 6).'</div>':'<div class="b_icon"><i class="fa fa-play-circle-o" aria-hidden="true"></i></div>').'
+                        </a>
+                    </div>';
+                }
+                $checkVideo++;
+            }} ?>
+        </div>
+    </div>
+<?php } ?>
+<div class="s-review-1">
+    <div class="row">
+        <div class="col-12 col-md-<?php echo $this->comment['list'] ? '4 sticky':'8 center-block' ?>">
+            <div class="s_medium">
+                <?php echo is_nan($this->avgStar) ? '<div class="title none">Chưa có đánh giá!</div>' : '<div class="title">'.number_format($this->avgStar, 2).'</div>'; ?>
+                <div class="b-star-2">
+                    <div class="b_star">
+                        <span>
+                            <?php
+                                $starAvg = !is_nan($this->avgStar) ? round($this->avgStar) : 0;
+                                $remainStarAvg = 5 - $starAvg;
+                                for ($i = 0; $i < $starAvg; $i++) {
+                                    echo '<i class="fa fa-star" aria-hidden="true"></i>';
+                                }
+                                for ($i = 0; $i < $remainStarAvg; $i++) {
+                                    echo '<i class="fa fa-star-o" aria-hidden="true"></i>';
+                                }
+                            ?>
+                        </span>
+                    </div>
+                    <span>(<?php echo count($this->comment['list']); ?> đánh giá)</span>
+                </div>
+            </div>
+            <div class="s_rating">
+                <?php echo $this->advertise != 0 ? '<h3 class="title">'.$this->advertise.' '.$this->info['headline']['slug-28'].'</h3>':''; ?>
+                <?php foreach ($this->listStar as $starX => $value) {
+                    $remainStarX = 5 - $starX;
+                    $rate = ($value / $this->starTotal) * 100;
+                ?>
+                    <div class="rating">
+                        <div class="b-star-2">
+                            <div class="b_star">
+                                <span>
+                                    <?php
+                                        for ($i = 0; $i < $starX; $i++) {
+                                            echo '<i class="fa fa-star" aria-hidden="true"></i>';
+                                        }
+                                        for ($i = 0; $i < $remainStarX; $i++) {
+                                            echo '<i class="fa fa-star-o" aria-hidden="true"></i>';
+                                        }
+                                    ?>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="bar">
+                            <div style="width: <?php echo $rate; ?>%;"></div>
+                        </div>
+                        <div class="count"><?php echo $value; ?></div>
+                    </div>
+                <?php } ?>
+            </div>
+            <div class="s_button">
+                <a href="javascript:;" <?php echo $this->logged ? 'ht-trigger="c-modal" ht-target="#formReview"':'ht-trigger="c-modal" ht-target="#s-sign-in-1"'; ?>>Viết đánh giá ></a>
+            </div>
+        </div>
+        <?php if($this->comment['list']) { ?>
+            <div class="col-12 col-md-8">
+                <div class="s_sort">
+                    <div class="title"><img loading="lazy" width="400" height="300" src="<?php echo PUBLIC_PATH; ?>images/detail/icon-11.svg" alt="Sắp xếp theo"> Sắp xếp theo</div>
+                    <div class="c-select c-form-border">
+                        <div class="c_input text--icon" ht-trigger="c-select">Sắp xếp</div>
+                        <span class="c-icons"><i class="fa fa-angle-down" aria-hidden="true"></i></span>
+                        <div class="c_list">
+                            <?php foreach ($this->sort as $value) {
+                                echo '<div class="c-radio"><label><input type="radio" name="sort" value="'.$value['orderby'].'" onclick="sortComment(this, \'sort\');"><span>'.$value['name'].'</span></label></div>';
+                            } ?>
+                        </div>
+                    </div>
+                </div>
+                <div id="listComment">
+                    <div class="s-box-comment">
+                        <?php foreach ($this->comment['list'] as $value){
+                            $star = $value['star'] ?? 0;
+                            $remainStar = 5 - $star;
+                        ?>
+                            <div class="s-comment-1">
+                                <div class="s_content">
+                                    <div class="author"><?php echo $value['fullname']; ?></div>
+                                    <div class="star">
+                                        <div class="b-star-2">
+                                            <div class="b_star">
+                                                <span>
+                                                    <?php
+                                                        for ($i = 0; $i < $star; $i++) {
+                                                            echo '<i class="fa fa-star" aria-hidden="true"></i>';
+                                                        }
+                                                        for ($i = 0; $i < $remainStar; $i++) {
+                                                            echo '<i class="fa fa-star-o" aria-hidden="true"></i>';
+                                                        }
+                                                    ?>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="date"><?php echo date('d/m/Y', strtotime($value['date_created'])); ?></div>
+                                    </div>
+                                    <h3 class="title"><?php echo $value['title']; ?></h3>
+                                    <p class="desc"><?php echo $value['comment']; ?></p>
+                                    <?php if(!empty($value['used'])) { ?>
+                                        <div class="name"><div>Đã sử dụng <?php echo $value['used']; ?></div></div>
+                                        <div class="check"><i class="fa fa-check-circle" aria-hidden="true"></i> Đã mua hàng</div>
+                                    <?php } ?>
+                                </div>
+                                <div class="s_like">
+                                    <span><?php echo $this->info['headline']['slug-15']; ?></span>
+                                    <div>
+                                        <a href="javascript:;" <?php echo $this->logged ? 'ht-trigger="like" onclick="changeThis(this, \'like\');" data-id="'.$value['id'].'"':'ht-trigger="c-modal" ht-target="#s-sign-in-1"' ?> <?php echo in_array($value['id'], $this->logged['listLike']) ? 'class="is-active"':''; ?>>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="19.931" height="21.592" viewBox="0 0 19.931 21.592"><path fill="#424453" class="a" d="M8.057,22.1H4.83A.83.83,0,0,1,4,21.27v-8.3a.83.83,0,0,1,.83-.83H10.2l1.384-2.08Q12.6,7.973,13.115,6.9q.256-.537.382-.814c.027-.06.049-.11.066-.149a.261.261,0,0,0-.016.135,3.507,3.507,0,0,1,.137-1.5A2.2,2.2,0,0,1,15.85,3a2.9,2.9,0,0,1,1.758.607c1.046.725,1.341,1.91,1.341,3.545a10.117,10.117,0,0,1-.44,2.274,10.908,10.908,0,0,0-.39,1.876c0,.134.3.445,1.026.83,2.016-.025,3.268.191,3.909.8a3.814,3.814,0,0,1,.879,2.675,2.318,2.318,0,0,1-.5,1.569,3.306,3.306,0,0,1-1.115,2.647,3,3,0,0,1-.357,1.34,3.215,3.215,0,0,1-1.124,1.226,3.226,3.226,0,0,1-2.715,2.2,23.153,23.153,0,0,1-5.4-.942A16.649,16.649,0,0,1,10.949,22.4a2.966,2.966,0,0,0-.5-.3h-2.3A.839.839,0,0,1,8.057,22.1Zm.926-1.655h1.661a.83.83,0,0,1,.364.084,4.516,4.516,0,0,1,1.08.665,17.22,17.22,0,0,0,1.462,1.018,28.19,28.19,0,0,0,4.568.719,1.632,1.632,0,0,0,1.137-1.089.83.83,0,0,1,.526-.772,1.457,1.457,0,0,0,.707-.68,1.2,1.2,0,0,0,.149-.777.83.83,0,0,1,.358-.862,1.621,1.621,0,0,0,.741-1.672.83.83,0,0,1,.333-.9c.149-.1.2-.218.2-.573a2.536,2.536,0,0,0-.375-1.483,6.4,6.4,0,0,0-2.93-.33.83.83,0,0,1-.388-.088c-1.36-.681-2.116-1.438-2.119-2.4A10.034,10.034,0,0,1,16.9,9.027a11,11,0,0,0,.391-1.874c0-1.113-.191-1.878-.672-2.214a1.287,1.287,0,0,0-.766-.277.553.553,0,0,0-.588.435,2.431,2.431,0,0,0-.05.987c.013.312-.1.552-2.161,4.752L13,10.93l-1.661,2.5a.83.83,0,0,1-.691.37H8.983ZM5.661,13.8v6.644H7.322V13.8Z" transform="translate(-4 -3)"/></svg>
+                                            <span><?php echo $value['like']; ?></span>
+                                        </a>
+                                        <a href="javascript:;" <?php echo $this->logged ? 'ht-trigger="dislike" onclick="changeThis(this, \'dislike\');" data-id="'.$value['id'].'"':'ht-trigger="c-modal" ht-target="#s-sign-in-1"' ?> <?php echo in_array($value['id'], $this->logged['listDislike']) ? 'class="is-active"':''; ?>>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="19.931" height="21.592" viewBox="0 0 19.931 21.592"><path class="a" d="M8.152,15.457H4.83a.83.83,0,0,1-.83-.83v-8.3a.83.83,0,0,1,.83-.83H8.057a.839.839,0,0,1,.1-.005h2.3a2.966,2.966,0,0,0,.5-.3A16.649,16.649,0,0,1,12.72,3.942,23.153,23.153,0,0,1,18.118,3a3.226,3.226,0,0,1,2.715,2.2,3.215,3.215,0,0,1,1.124,1.226,3,3,0,0,1,.357,1.34,3.306,3.306,0,0,1,1.115,2.647,2.318,2.318,0,0,1,.5,1.569,3.814,3.814,0,0,1-.879,2.675c-.641.611-1.892.827-3.909.8-.723.385-1.025.7-1.026.83a10.908,10.908,0,0,0,.39,1.876,10.117,10.117,0,0,1,.44,2.274c0,1.635-.3,2.82-1.341,3.545a2.9,2.9,0,0,1-1.758.607,2.2,2.2,0,0,1-2.166-1.577,3.507,3.507,0,0,1-.137-1.5.261.261,0,0,0,.016.135c-.017-.039-.039-.088-.066-.149q-.125-.276-.382-.814-.511-1.071-1.532-3.153L10.2,15.457Zm.83-8.31V13.8h1.661a.83.83,0,0,1,.691.37L13,16.662l.054.094c2.059,4.2,2.174,4.44,2.161,4.752a2.431,2.431,0,0,0,.05.987.553.553,0,0,0,.588.435,1.287,1.287,0,0,0,.766-.277c.481-.336.672-1.1.672-2.214a11,11,0,0,0-.391-1.874,10.034,10.034,0,0,1-.439-2.281c0-.963.76-1.72,2.119-2.4a.83.83,0,0,1,.388-.088,6.4,6.4,0,0,0,2.93-.33,2.536,2.536,0,0,0,.375-1.483c0-.355-.052-.47-.2-.573a.83.83,0,0,1-.333-.9,1.621,1.621,0,0,0-.741-1.672.83.83,0,0,1-.358-.862,1.2,1.2,0,0,0-.149-.777,1.457,1.457,0,0,0-.707-.68.83.83,0,0,1-.526-.772,1.632,1.632,0,0,0-1.137-1.089,28.19,28.19,0,0,0-4.568.719A17.22,17.22,0,0,0,12.088,6.4a4.516,4.516,0,0,1-1.08.665.83.83,0,0,1-.364.084Zm-3.322.005V13.8H7.322V7.152Z" transform="translate(-4 -3)"/></svg>
+                                            <span><?php echo $value['dislike']; ?></span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <?php foreach ($value['child'] as $item) {
+                                    echo '<div class="s_answer"><div class="ht-format-detail">'.$item['comment'].'</div></div>';
+                                } ?>
+                            </div>
+                        <?php } ?>
+                    </div>
+                    <?php if(count($this->comment['list']) > 5) { ?>
+                        <div class="s-more-1 click2">
+                            <a href="javascript:;">Xem thêm <i class="fa fa-angle-double-down" aria-hidden="true"></i></a>
+                        </div>
+                    <?php } ?>
+                </div>
+            </div>
+        <?php } ?>
+    </div>
+</div>
+<button class="hide" ht-trigger="c-modal" ht-target="#formReviewCmt"></button>
+<div id="formReviewCmt" class="c-modal c-imgreview">
+    <div class="c-modal-box">
+        <div class="c-modal-group" ht-skip="parent">
+            <div class="c_close text--white" ht-close="c-modal"><i class="fa fa-times" aria-hidden="true"></i></div>
+            <div id="contentCmt"></div>
+        </div>
+    </div>
+</div>
+<?php if($this->logged) { ?>
+    <div id="formReview" class="c-modal c-review">
+        <div class="c-modal-box">
+            <div class="c-modal-group" ht-skip="parent">
+                <div class="c_close text--white" ht-close="c-modal"><i class="fa fa-times" aria-hidden="true"></i></div>
+                <div class="c_body">
+                    <form id="form_commentProduct" action="" method="POST" accept-charset="utf-8" enctype="multipart/form-data">
+                        <div class="c_rating">
+                            <label class="label">Đánh giá sản phẩm <span>(*)</span></label>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="b-star-1 form-group c-form is-empty">
+                                        <input type="radio" name="star" value="">
+                                        <div class="b_star">
+                                            <span>
+                                                <i class="fa fa-star-o" aria-hidden="true" data-star="1"></i>
+                                                <i class="fa fa-star-o" aria-hidden="true" data-star="2"></i>
+                                                <i class="fa fa-star-o" aria-hidden="true" data-star="3"></i>
+                                                <i class="fa fa-star-o" aria-hidden="true" data-star="4"></i>
+                                                <i class="fa fa-star-o" aria-hidden="true" data-star="5"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="rater-msg">Chọn điểm đánh giá</div>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="multi_data" value="<?php echo htmlspecialchars(json_encode($this->comment['article'], JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE)); ?>" />
+                        <label class="label">Họ và tên <span>(*)</span></label>
+                        <div class="form-group c-form-border">
+                            <input type="text" name="fullname" class="c_input" value="<?php echo $this->logged['fullname'] ?>" placeholder="Tên của bạn">
+                        </div>
+                        <label class="label">Tiêu đề <span>(*)</span></label>
+                        <div class="form-group c-form-border">
+                            <input type="text" name="title" class="c_input" value="" placeholder="Tiêu đề">
+                        </div>
+                        <label class="label">Nội dung <span>(*)</span></label>
+                        <div class="form-group c-form-border">
+                            <textarea name="comment" class="c_input" rows="5" placeholder="Đánh giá của bạn"></textarea>
+                        </div>
+                        <label class="label">Video sản phẩm </label>
+                        <div class="form-group c-form-border">
+                            <div class="c-upload c-upload-file c_input">
+                                <input type="file" name="video" onchange="readFile(this, true);" accept=".mp4,.mov,.wmv,.avi,.flv,.f4v,.webm">
+                                <div class="c_file">
+                                    <div class="c_file-text">Tải video lên</div>
+                                    <div class="c_file-filename"></div>
+                                </div>
+                                <div class="c_icon">
+                                    <span class="c-icon-bg text--white"><i class="fa fa-minus" aria-hidden="true" ht-close="c-upload"></i></span>
+                                    <span class="c-icon-bg text--white"><i class="fa fa-plus" aria-hidden="true"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-field">
+                            <label class="active">Upload hình ảnh</label>
+                            <div class="input-images" style="padding-top: .5rem;"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="c_choose">
+                                    <label class="label">Bạn sẽ giới thiệu sản phẩm này? <span>(*)</span></label>
+                                    <div class="recommend">
+                                        <div class="active">
+                                            <label style="cursor: pointer;">
+                                                <span>Có</span>
+                                                <input type="radio" name="advertise" value="1" checked>
+                                            </label>
+                                        </div>
+                                        <div>
+                                            <label style="cursor: pointer;">
+                                                <span>Không</span>
+                                                <input type="radio" name="advertise" value="0">
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="label">Thời gian sử dụng</label>
+                                <div class="c-select c-form-border">
+                                    <div class="c_input text--icon" ht-trigger="c-select">Chọn</div>
+                                    <span class="c-icons"><i class="fa fa-angle-down" aria-hidden="true"></i></span>
+                                    <div class="c_list">
+                                        <div class="c-radio">
+                                            <label><input type="radio" name="used" value="Dưới 1 tuần"><span>Dưới 1 tuần</span></label>
+                                        </div>
+                                        <div class="c-radio">
+                                            <label><input type="radio" name="used" value="2 đến 8 tuần"><span>2 đến 8 tuần</span></label>
+                                        </div>
+                                        <div class="c-radio">
+                                            <label><input type="radio" name="used" value="3 đến 6 tháng"><span>3 đến 6 tháng</span></label>
+                                        </div>
+                                        <div class="c-radio">
+                                            <label><input type="radio" name="used" value="7 đến 12 tháng"><span>7 đến 12 tháng</span></label>
+                                        </div>
+                                        <div class="c-radio">
+                                            <label><input type="radio" name="used" value="Hơn 1 năm"><span>Hơn 1 năm</span></label>
+                                        </div>
+                                        <div class="c-radio">
+                                            <label><input type="radio" name="used" value="Hơn 2 năm"><span>Hơn 2 năm</span></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="c_button">
+                            <button type="submit">Gửi đánh giá &gt;</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#form_commentProduct").HTValidate({
+                rules: {
+                    star: { required: 'Vui lòng chọn sao đánh giá', notify: { type: 'icon' } },
+                    fullname: { required: 'Vui lòng nhập họ và tên' },
+                    title: { required: 'Vui lòng nhập một tiêu đề' },
+                    comment: { required: 'Nhập đánh giá của bạn' },
+                    advertise: { required: 'Thông tin bắt buộc' }
+                },
+                ajax: { url: '<?php echo PUBLIC_PATH."binh-luan-54.html"; ?>' },
+                setTemplate: {
+                    notify: '<?php echo $this->info['headline']['slug-14']; ?>',
+                    modal: 'notify_commentProduct',
+                }
+            });
+        });
+
+        function changeThis(obj, action) {
+            if(action) {
+                $.ajax({
+                    url: '<?php echo PUBLIC_PATH."binh-luan-54.html"; ?>',
+                    type: 'POST',
+                    data: {
+                        id: $(obj).data('id'),
+                        type: action,
+                        countLike: $(obj).closest('.s-comment-1').find('[ht-trigger="like"] span').text(),
+                        countDislike: $(obj).closest('.s-comment-1').find('[ht-trigger="dislike"] span').text(),
+                    }
+                }).done(function(data){
+                    var response = $.parseJSON(data);
+                    if(response.like != undefined || response.dislike != undefined) {
+                        $(obj).closest('.s-comment-1').find('[ht-trigger="like"] span').text(response.like);
+                        $(obj).closest('.s-comment-1').find('[ht-trigger="dislike"] span').text(response.dislike);
+                        switch (action) {
+                            case 'like':
+                                $(obj).toggleClass('is-active');
+                                $(obj).parent().find('[ht-trigger="dislike"]').removeClass('is-active');
+                                break;
+                            case 'dislike':
+                                $(obj).toggleClass('is-active');
+                                $(obj).parent().find('[ht-trigger="like"]').removeClass('is-active');
+                                break;
+                        }
+                    }
+                });
+            }
+        }
+    </script>
+<?php } ?>
+<?php
+    $arrAjaxSort = array(
+        'article_id' => $this->id,
+        'type' => $this->type
+    );
+?>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.c-imgreview [ht-close="c-modal"]').click(function(){
+            $('#contentCmt').html('');
+        });
+    });
+
+    function sortComment(obj, action) {
+        var datafiter = $.parseJSON('<?php echo json_encode($arrAjaxSort); ?>');
+        switch(action) {
+            case 'sort':
+                datafiter.sort = obj.value;
+            break;
+        }
+        window.setTimeout(function() {
+            $.ajax({
+                url: '<?php echo PUBLIC_PATH."sortComment-85.html"; ?>',
+                type: 'POST',
+                data: datafiter,
+                beforeSend: function() { $("body").append('<div class="ht-loading-gif"><img loading="lazy" width="400" height="300" src="'+ URL_ROOT +'images/loading.svg" /></div>'); }
+            }).done(function(data) {
+                $("body").find("div.ht-loading-gif").remove();
+                $('#listComment').html(data);
+            });
+        },200);
+    }
+
+    function getModalCmt(id, article_id, type) {
+        $('#contentCmt').html('');
+        $('.s-popup-1, .s-popup-3').css({'z-index': 1000, 'transition': 'none'});
+        $.ajax({
+            url: '<?php echo PUBLIC_PATH."getthumbCmnt-86.html"; ?>',
+            type: 'POST',
+            data: { id: id, article_id: article_id, type: type },
+            beforeSend: function() { $("body").append('<div class="ht-loading-gif"><img loading="lazy" width="400" height="300" src="'+ URL_ROOT +'images/loading.svg" /></div>'); }
+        }).done(function(data) {
+            $("body").find("div.ht-loading-gif").remove();
+            $('#contentCmt').html(data);
+            $('[ht-target="#formReviewCmt"]').click();
+        });
+    }
+</script>
