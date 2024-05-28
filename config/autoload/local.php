@@ -2,9 +2,9 @@
 
 return array(
     'db' => array(
-        'username' => 'thieuthi_didaudodi',
-        'password' => '1nZiT)jToC2l',
-        'database' => 'thieuthi_didaudodi'
+        'username' => 'thieuthi_yuzi',
+        'password' => 'YGD5s,xee30$',
+        'database' => 'thieuthi_yuzi'
     ),
 );
 

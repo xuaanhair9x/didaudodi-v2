@@ -19,7 +19,7 @@ define('LOCK_EXPIRE', 900); // 15 phút
 
 // Đường dẫn
 define('ROOT', dirname(__DIR__));
-define('ROOT_PUBLIC', realpath(dirname(__DIR__) . '/public_html'));
+define('ROOT_PUBLIC', realpath(dirname(__DIR__) . '/src'));
 define('PUBLIC_PATH', $link_home);
 
 define('DOMAIN', $_SERVER['SERVER_NAME']);
