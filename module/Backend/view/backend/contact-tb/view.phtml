@@ -1,0 +1,96 @@
+<div class="page-container-bg-solid">
+    <div class="page-content">
+        <div class="page-bar">
+            <ul class="page-breadcrumb">
+                <li><a href="<?php echo $this->url('admincp'); ?>"><?php echo $this->translate("Trang chủ"); ?></a><i class="fa fa-circle"></i></li>
+                <li><a href="<?php echo $this->linkList; ?>"><?php echo explode('/', $this->_params['title'])[0]; ?></a><i class="fa fa-circle"></i></li>
+                <li><span><?php echo explode('/', $this->_params['title'])[1]; ?></span></li>
+            </ul>
+            <div class="pull-right">
+                <?php if ($this->item['status'] == 0) { ?>
+                    <?php $action = str_replace('"', "\'", json_encode(array('url' => $this->linkChange, 'redirect' => $this->linkList, 'status' => 1), JSON_UNESCAPED_SLASHES)); ?>
+                    <a href="javascript:;" class="btn btn-sm blue" onclick="_HTTemplate.yesno('<?php echo $this->translate("Bạn có chắc muốn duyệt thông tin này không?"); ?>', '_HTChange.status(this, \'button\', <?php echo $action; ?>)');"><i class="fa fa-check-square-o"></i> <?php echo $this->translate("Duyệt"); ?></a>
+                <?php } ?>
+                <a href="<?php echo $this->linkList; ?>" class="btn btn-sm red"><i class="fa fa-share"></i> <?php echo $this->translate("Thoát"); ?></a>
+            </div>
+        </div>
+        <div class="profile-content">
+            <div class="portlet light ">
+                <div class="portlet-title tabbable-line">
+                    <div class="caption caption-md">
+                        <i class="icon-globe theme-font hide"></i>
+                        <span class="caption-subject font-blue-madison bold uppercase"><?php echo $this->translate("Trạng thái"); ?></span> - <span class="caption-subject uppercase"><?php echo ($this->item['status'] == 0) ? $this->translate("Chưa duyệt") : $this->translate("Đã duyệt"); ?></span>
+                    </div>
+                </div>
+                <div class="portlet-body portlet-table">
+                    <div class="portlet-table__row">
+                        <div class="portlet-table__item">
+                            <div class="item-title"><b><?php echo $this->translate($this->_field['fullname']); ?></b></div>
+                            <div class="item-content"><?php echo $this->item['fullname']; ?></div>
+                        </div>
+                        <?php if ($this->_field['phone']) { ?>
+                            <div class="portlet-table__item">
+                                <div class="item-title"><b><?php echo $this->translate($this->_field['phone']); ?></b></div>
+                                <div class="item-content"><?php echo $this->item['phone']; ?></div>
+                            </div>
+                        <?php } ?>
+                        <?php if ($this->_field['address']) { ?>
+                            <div class="portlet-table__item">
+                                <div class="item-title"><b><?php echo $this->translate($this->_field['address']); ?></b></div>
+                                <div class="item-content"><?php echo $this->item['address']; ?></div>
+                            </div>
+                        <?php } ?>
+                        <?php if ($this->_field['email']) { ?>
+                            <div class="portlet-table__item">
+                                <div class="item-title"><b><?php echo $this->translate($this->_field['email']); ?></b></div>
+                                <div class="item-content"><?php echo $this->item['email']; ?></div>
+                            </div>
+                        <?php } ?>
+                        <?php if ($this->_field['company']) { ?>
+                            <div class="portlet-table__item">
+                                <div class="item-title"><b><?php echo $this->translate($this->_field['company']); ?></b></div>
+                                <div class="item-content"><?php echo $this->item['company']; ?></div>
+                            </div>
+                        <?php } ?>
+                        <?php if ($this->_field['type']) { ?>
+                            <div class="portlet-table__item">
+                                <div class="item-title"><b><?php echo $this->translate($this->_field['type']); ?></b></div>
+                                <div class="item-content"><?php echo $this->item['type']; ?></div>
+                            </div>
+                        <?php } ?>
+                        <?php if ($this->_field['file']) { ?>
+                            <div class="portlet-table__item">
+                                <div class="item-title"><b><?php echo $this->translate($this->_field['file']); ?></b></div>
+                                <div class="item-content"><a href="<?php echo PUBLIC_PATH.UPLOAD_FILES.$this->item['file']; ?>"><?php echo $this->item['file']; ?></a></div>
+                            </div>
+                        <?php } ?>
+                        <?php if ($this->_field['multi_field']) { ?>
+                            <?php foreach ($this->_field['multi_field'] as $i => $value) { ?>
+                                <?php if ($i > 0) { ?>
+                                    <div class="portlet-table__item">
+                                        <div class="item-title"><b><?php echo $this->translate($value['label']); ?></b></div>
+                                        <div class="item-content"><?php echo $this->item['multi_field'][$value['name']]; ?></div>
+                                    </div>
+                                <?php } ?>
+                            <?php } ?>
+                        <?php } ?>
+                        <?php foreach ($this->item['multi_field'] as $i => $value) { ?>
+                            <?php if (is_numeric($i)) { ?>
+                                <div class="portlet-table__item">
+                                    <div class="item-title"><b><?php echo $value['label']; ?></b></div>
+                                    <div class="item-content"><?php echo is_array($value['value']) ? implode(',',$value['value']) : $value['value']; ?></div>
+                                </div>
+                            <?php } ?>
+                        <?php } ?>
+                        <?php if ($this->_field['content']) { ?>
+                            <div class="portlet-table__item">
+                                <div class="item-title"><b><?php echo $this->translate($this->_field['content']); ?></b></div>
+                                <div class="item-content"><?php echo $this->item['content']; ?></div>
+                            </div>
+                        <?php } ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

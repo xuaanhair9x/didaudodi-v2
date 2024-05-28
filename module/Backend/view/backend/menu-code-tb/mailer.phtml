@@ -1,0 +1,42 @@
+<div class="page-content">
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li><a href="<?php echo $this->url('admincp'); ?>">Trang chủ</a><i class="fa fa-circle"></i></li>
+            <li><a href="<?php echo $this->linkList; ?>"><?php echo explode('/', $this->_params['title'])[0]; ?></a><i class="fa fa-circle"></i></li>
+            <li><span><?php echo explode('/', $this->_params['title'])[1]; ?></span></li>
+        </ul>
+    </div>
+    <form id="form-add" action="" method="POST" enctype="multipart/form-data">
+        <div class="portlet box blue margin-bottom-0">
+            <div class="portlet-title">
+                <div class="caption">Thông tin cấu hình</div>
+                <div class="actions">
+                    <button type="submit" class="btn green-jungle"><i class="fa fa-check-square-o"></i> Lưu</button>
+                    <a href="<?php echo $this->linkList; ?>" class="btn btn-sm red"><i class="fa fa-share"></i> Thoát</a>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-body">
+                    <?php if ($this->success) { ?>
+                        <div class="alert bg-green-jungle display-block">
+                            <button class="close" data-close="alert"></button>
+                            <p> <?php echo $this->success; ?> </p>
+                        </div>
+                    <?php } ?>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group" style="display: flex;">
+                                <strong style="flex: none;">Services:</strong>
+                                <div class="config-field">
+                                    <?php foreach ($this->list as $value) {
+                                        echo '<label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="define[]" value="'.(htmlspecialchars(json_encode($value, JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE))).'" '.(in_array($value['service'], array_column($this->define, 'service')) ? 'checked' : '').'><span></span>'.$value['name'].'</label>';
+                                    } ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

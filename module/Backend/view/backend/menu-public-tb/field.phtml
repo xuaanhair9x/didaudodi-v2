@@ -1,0 +1,132 @@
+<div class="page-content">
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li><a href="<?php echo $this->url('admincp'); ?>"><?php echo $this->translate("Trang chủ"); ?></a><i class="fa fa-circle"></i></li>
+            <li><a href="<?php echo $this->linkList; ?>"><?php echo explode('/', $this->_params['title'])[0]; ?></a><i class="fa fa-circle"></i></li>
+            <li><span><?php echo explode('/', $this->_params['title'])[1]; ?></span></li>
+        </ul>
+    </div>
+    <form id="form-add" action="" method="POST" enctype="multipart/form-data" onchange="setIsChangeValue();" onkeydown="setIsChangeValue();">
+        <div class="portlet box blue margin-bottom-0">
+            <div class="portlet-title">
+                <div class="caption"><?php echo $this->translate("Thông tin chi tiết"); ?> </div>
+                <div class="actions">
+                    <?php if ($this->identity()->supper) { ?>
+                        <a href="<?php echo $this->url('admincp',array('controller' => $this->_params['__CONTROLLER__'],'action' => 'codefield', 'id' => $this->_params['id'],'root_id' => $this->_params['root_id'])); ?>" class="btn green"><i class="fa fa-cogs"></i> Cấu hình dữ liệu</a>
+                    <?php } ?>
+                    <button type="submit" onclick="_HTSend.form(this)" class="btn btn-sm green-jungle"><i class="fa fa-check-square-o"></i> <?php echo $this->translate("Lưu"); ?></button>
+                    <a href="<?php echo $this->linkList; ?>" class="btn btn-sm red"><i class="fa fa-share"></i> <?php echo $this->translate("Thoát"); ?></a>
+                </div>
+            </div>
+            <div class="portlet-body form form-help-freeze">
+                <div class="form-body">
+                     <?php if ($this->error) { ?>
+                        <div class="alert alert-danger display-block">
+                            <button class="close" data-close="alert"></button>
+                            <?php foreach ($this->error as $error) { ?>
+                                <p> <?php echo $error; ?> </p>
+                            <?php } ?>
+                        </div>
+                    <?php } ?>
+                    <div class="tabbable-custom">
+                        <?php if (count($this->identity()->langlist) > 1) { ?>
+                            <ul class="nav nav-tabs">
+                                <?php foreach ($this->identity()->langlist as $i => $lang) { ?>
+                                    <li <?php echo ($i == 0) ? 'class="active"' : ''; ?>>
+                                        <a href="#tab_<?php echo $lang[0]; ?>" data-toggle="tab"> <?php echo $lang[0].' - '.$this->translate($lang[1]); ?> </a>
+                                    </li>
+                                <?php } ?>
+                            </ul>
+                        <?php } ?>
+                        <div <?php echo (count($this->identity()->langlist) > 1) ? 'class="tab-content"' : ''; ?>>
+                            <?php foreach ($this->identity()->langlist as $i => $lang) { ?>
+                                <?php
+                                    if ($this->identity()->lang) {
+                                        $arrsLang = array('tab' => $lang[0], 'data' => $this->item['translate'][$lang[0]]);
+                                    }
+                                ?>
+                                <div class="tab-pane <?php echo ($i == 0) ? 'active' : ''; ?>" id="tab_<?php echo $lang[0]; ?>">
+                                    <?php if ($i == 0) { ?>
+                                        <?php if ($this->identity()->supper) { ?>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label>Active <a href="javascript:;" class="mt-sweetalert-note" data-message="
+                                                            <div class='text-left'>Cú pháp: <b>[module]-[action(text)]-[id]</b></div>
+                                                            <div class='text-left'><b>module</b>: product, news, html, contact, ...</div>
+                                                            <div class='text-left'><b>action</b>: list, page, index, ..</div>
+                                                            <div class='text-left'><b>id</b>: Theo id của danh sách code</div>"><i class="fa fa-question-circle" aria-hidden="true"></i></a></label>
+                                                        <input type="text" name="active" value="<?php echo $this->item['active']; ?>" class="form-control" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label>Icon <a href="javascript:;" class="mt-sweetalert-note" data-html="false" data-message="Lấy từ fontawesome"><i class="fa fa-question-circle" aria-hidden="true"></i></a></label>
+                                                        <input type="text" name="icon" value="<?php echo $this->item['icon']; ?>" class="form-control">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label>Menu cấp cha</label>
+                                                        <select name="parent" class="form-control select2">
+                                                            <option></option>
+                                                            <?php foreach ($this->list as $value) { ?>
+                                                            <option value="<?php echo $value['id']; ?>" class="<?php echo 'level'.($value['parent'] > 0 ? $value['level'] : 0 + 1); ?>" <?php echo ($this->item['parent'] == $value['id']) ? 'selected' : ''; ?>><?php echo $value['name'] ?></option>
+                                                            <?php } ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <?php } else { ?>
+                                            <input type="hidden" name="active" value="<?php echo $this->item['active']; ?>" />
+                                        <?php } ?>
+                                    <?php } ?>
+                                    <div class="row">
+                                        <?php echo $this->partialLoop('partials/form-addedit.phtml', array(array('default' => $this->elements, 'lang' => $arrsLang))); ?>
+                                    </div>
+                                </div>
+                            <?php } ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions right">
+                    <button type="submit" onclick="_HTSend.form(this)" class="btn btn-sm green-jungle"><i class="fa fa-check-square-o"></i> <?php echo $this->translate("Lưu"); ?></button>
+                    <a href="<?php echo $this->linkList; ?>" class="btn btn-sm red"><i class="fa fa-share"></i> <?php echo $this->translate("Thoát"); ?></a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    $(document).ready(function() {
+        FormValidation.submit('#form-add', {rules:{name:{required: true}}});
+
+        $('body').on('change', '#name', function() {
+            var id = '<?php echo $this->_params['id']; ?>';
+            if (!id) return;
+
+            var tab = $(this).closest('.tab-pane');
+            var langActive = tab.attr('id').replace('tab_', '');
+
+            var data = <?php echo json_encode($this->item); ?>;
+            var langDefault = '<?php echo $this->identity()->lang; ?>';
+
+            let oldSlug = _HTFormat.slug(data.name);
+            let oldLink = data.link;
+            let pattern = new RegExp(`(^${oldSlug})-(\\d+)-(\\d+.html)$`);
+            if (langDefault) {
+                oldSlug = _HTFormat.slug(data.translate[langActive].name);
+                oldLink = data.translate[langActive].link;
+                if (langDefault !== langActive) {
+                    pattern = new RegExp(`(^${langActive})/(${oldSlug})-(\\d+)-(\\d+.html)$`);
+                }
+            }
+
+            var isValidFormat = pattern.test(oldLink);
+            if (!isValidFormat) return;
+
+            var link = oldLink.replace(oldSlug, _HTFormat.slug($(this).val()));
+            tab.find('#link').val(link);
+        })
+    });
+</script>

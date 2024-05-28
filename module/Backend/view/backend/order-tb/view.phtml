@@ -1,0 +1,229 @@
+<div class="page-container-bg-solid">
+    <div class="page-content">
+        <div class="page-bar">
+            <ul class="page-breadcrumb">
+                <li><a href="<?php echo $this->url('admincp'); ?>"><?php echo $this->translate("Trang chủ"); ?></a><i class="fa fa-circle"></i></li>
+                <li><a href="<?php echo $this->linkList; ?>"><?php echo explode('/', $this->_params['title'])[0]; ?></a><i class="fa fa-circle"></i></li>
+                <li><span><?php echo explode('/', $this->_params['title'])[1]; ?></span></li>
+            </ul>
+            <div class="pull-right">
+                <?php if ($this->discount['menu']['define']['order_id'] && !$this->discount['list']) { ?>
+                    <a href="<?php echo $this->url('admincp',array('controller' => 'product_discount_tb','action' => 'field','root_id' => $this->discount['menu']['id']), array('query' => array_filter(array('order_id' => $this->_params['id'], 'status' => 1), 'strlen'))); ?>" class="btn green"><i class="fa fa-plus-square-o"></i> <?php echo $this->translate("Tạo mã giảm giá"); ?></a>
+                <?php } ?>
+                <?php if ($this->item['status'] == 0) { ?>
+                    <a href="javascript:;" class="btn blue" onclick="_HTTemplate.yesno('<?php echo $this->translate("Bạn có chắc muốn duyệt đơn hàng"); ?> <strong>#<?php echo $this->_params['id']; ?></strong> ?', '_HTChange.status(this, \'button\', <?php echo str_replace('"', "\'", json_encode(array('url' => $this->url('admincp',array('controller' => $this->_params['__CONTROLLER__'],'action' => 'change','id' => $this->_params['id'])), 'redirect' => $this->linkList,'status' => 1), JSON_UNESCAPED_SLASHES)); ?>)');"><i class="fa fa-check-square-o"></i> <?php echo $this->translate("Duyệt"); ?></a>
+                <?php } ?>
+                <a href="<?php echo $this->linkList; ?>" class="btn red"><i class="fa fa-share"></i> <?php echo $this->translate("Thoát"); ?></a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="portlet mt-element-ribbon light portlet-fit bordered margin-bottom-10">
+                    <div class="ribbon ribbon-left ribbon-clip ribbon-shadow ribbon-border-dash-hor ribbon-color-success uppercase"><div class="ribbon-sub ribbon-clip ribbon-left"></div> <?php echo $this->translate("Thông tin đặt hàng"); ?></div>
+                    <div class="portlet-title">
+                        <div class="caption caption-profile">
+                            <span class="caption-subject font-green bold uppercase"><?php echo $this->item['fullname']; ?></span>
+                        </div>
+                    </div>
+                    <div class="portlet-userpic">
+                        <ul class="nav">
+                            <li><span><i class="fa fa-home" aria-hidden="true"></i> <?php echo $this->item['address']; ?></span></li>
+                            <li><span><i class="fa fa-mobile" aria-hidden="true"></i> <?php echo $this->item['phone']; ?></span></li>
+                            <li><span><i class="fa fa-envelope" aria-hidden="true"></i> <?php echo $this->item['email']; ?></span></li>
+                            <!-- <li><span><i class="fa fa-info-circle" aria-hidden="true"></i> <?php // echo ($this->item['active'] == 0) ? 'Chưa kích hoạt' : 'Đã kích hoạt'; ?></span></li> -->
+                        </ul>
+                    </div>
+                </div>
+                <div class="portlet mt-element-ribbon light portlet-fit bordered">
+                    <div class="ribbon ribbon-left ribbon-clip ribbon-shadow ribbon-border-dash-hor ribbon-color-success uppercase"><div class="ribbon-sub ribbon-clip ribbon-left"></div> <?php echo $this->translate("Thông tin giao hàng"); ?></div>
+                    <div class="portlet-title">
+                        <div class="caption caption-profile">
+                            <span class="caption-subject font-green bold uppercase"><?php echo $this->item['recipient_data']['fullname']; ?></span>
+                        </div>
+                    </div>
+                    <div class="portlet-userpic">
+                        <ul class="nav">
+                            <li><span><i class="fa fa-home" aria-hidden="true"></i> <?php echo $this->item['recipient_data']['address']; ?></span></li>
+                            <li><span><i class="fa fa-mobile" aria-hidden="true"></i> <?php echo $this->item['recipient_data']['phone']; ?></span></li>
+                        </ul>
+                    </div>
+                </div>
+                <?php if ($this->discount['apply']) { ?>
+                    <div class="portlet mt-element-ribbon light portlet-fit bordered">
+                        <div class="ribbon ribbon-left ribbon-clip ribbon-shadow ribbon-border-dash-hor ribbon-color-success uppercase"><div class="ribbon-sub ribbon-clip ribbon-left"></div> <?php echo $this->translate("Khuyến mãi"); ?></div>
+                        <div class="portlet-title"></div>
+                        <div class="portlet-userpic">
+                            <ul class="nav">
+                                <li><span><?php echo $this->discount['apply']['message']; ?></span></li>
+                                <?php foreach ($this->discount['apply']['list'] as $name) {
+                                    echo '<li><span><i class="fa fa-angle-right" aria-hidden="true"></i>'.$name.'</span></li>';
+                                } ?>
+                            </ul>
+                        </div>
+                    </div>
+                <?php } ?>
+            </div>
+            <div class="col-md-8">
+                <div class="profile-content">
+                    <div class="portlet light ">
+                        <div class="portlet-title tabbable-line">
+                            <div class="caption caption-md">
+                                <i class="icon-globe theme-font hide"></i>
+                                <span class="caption-subject font-blue-madison bold uppercase"><?php echo $this->translate("Chi tiết đơn hàng"); ?> <span class="font-red">#<?php echo $this->_params['id']; ?></span></span>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <table class="table table-striped table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center" width="60"> <?php echo $this->translate("Ảnh"); ?> </th>
+                                        <?php foreach ($this->_field['multi_field'] as $field) {
+                                            echo '<th>'.$field['label'].'</th>';
+                                        } ?>
+                                        <th> <?php echo $this->translate("Sản phẩm"); ?> </th>
+                                        <?php if ($this->_field['quantity']) { ?>
+                                            <th class="text-center" width="80"> <?php echo $this->translate("Số lượng"); ?> </th>
+                                        <?php } ?>
+                                        <?php if ($this->_field['total']) { ?>
+                                            <th class="text-right" width="130"> <?php echo $this->translate("Thành tiền").' ('.($this->_field['unit'] == 'dollar' ? '$' : 'vnđ').')'; ?> </th>
+                                        <?php } ?>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($this->list as $value) { ?>
+                                        <?php
+                                            $product_meta = json_decode($value['product_meta'], true);
+                                            $thumbnail = UPLOAD_IMAGES.date('Y/m',explode('-',$product_meta['thumbnail'])[0]).'/autox30-'.$product_meta['thumbnail'];
+                                            $thumbnail = file_exists(ROOT_PUBLIC.'/'.$thumbnail) ? PUBLIC_PATH.$thumbnail : BE_TEMPLATE.'/layouts/layout/img/noimage.png';
+                                        ?>
+                                        <tr <?php echo $product_meta['product_sub'] ? 'class="bold"' : ''; ?>>
+                                            <td class="text-center"> <img src="<?php echo $thumbnail; ?>"/> </td>
+                                            <?php foreach ($this->_field['multi_field'] as $field) {
+                                                echo '<td>'.$product_meta[$field['name']].'</td>';
+                                            } ?>
+                                            <td><a href="<?php echo $this->url('admincp',array('controller' => 'product_tb','action' => 'field','id' => $product_meta['id'],'root_id' => $product_meta['root_id'])); ?>"><?php echo $product_meta['name']; ?></a></td>
+                                            <?php if ($this->_field['quantity']) { ?>
+                                                <td class="text-center"> x<?php echo $value['quantity']; ?> </td>
+                                            <?php } ?>
+                                            <?php if ($this->_field['total']) { ?>
+                                                <td class="text-right"> <?php echo ($product_meta['price']) ? $this->formatCurrency(($product_meta['price']*$value['quantity']), $this->_field['unit-decimal']) : '-'; ?> </td>
+                                            <?php } ?>
+                                        </tr>
+                                        <?php if ($product_meta['product_sub']) { ?>
+                                            <tr>
+                                                <td colspan="<?php echo $this->_field['total'] ? 4 : 3 ?>">
+                                                    <table class="table table-striped table-bordered table-hover" style="margin-bottom: 0">
+                                                        <?php foreach ($product_meta['product_sub'] as $vl_sub) { ?>
+                                                            <?php
+                                                                $thumbnail = UPLOAD_IMAGES.date('Y/m',explode('-',$vl_sub['thumbnail'])[0]).'/autox30-'.$vl_sub['thumbnail'];
+                                                                $thumbnail = file_exists(ROOT_PUBLIC.'/'.$thumbnail) ? PUBLIC_PATH.$thumbnail : BE_TEMPLATE.'/layouts/layout/img/noimage.png';
+                                                            ?>
+                                                            <tr>
+                                                                <td class="text-center" width="51"> <img src="<?php echo $thumbnail; ?>"/> </td>
+                                                                <td><?php echo $vl_sub['sku']; ?></td>
+                                                                <td class="text-center" width="70"> x<?php echo $vl_sub['quantity']; ?> </td>
+                                                                <?php if ($this->_field['total']) { ?>
+                                                                    <td class="text-right" width="100"> <?php echo ($vl_sub['price']) ? $this->formatCurrency(($vl_sub['price']*$vl_sub['quantity']), $this->_field['unit-decimal']) : '-'; ?> </td>
+                                                                <?php } ?>
+                                                            </tr>
+                                                        <?php } ?>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        <?php } ?>
+                                    <?php } ?>
+                                    <?php if ($this->_field['total']) { ?>
+                                        <tr>
+                                            <td class="text-right" colspan="<?php echo $this->_field['quantity'] ? '3' : '2'; ?>"> <?php echo $this->translate("Tổng cộng"); ?> </td>
+                                            <td class="text-right"> <strong><?php echo $this->formatCurrency($this->item['sum_price'], $this->_field['unit-decimal']); ?></strong> </td>
+                                        </tr>
+                                        <?php if ($this->discount['apply']) { ?>
+                                            <tr>
+                                                <td class="text-right" colspan="<?php echo $this->_field['quantity'] ? '3' : '2'; ?>"> <?php echo $this->translate("Giảm giá"); ?> </td>
+                                                <td class="text-right"> <?php echo $this->formatCurrency($this->discount['apply']['reducedCash'], $this->_field['unit-decimal']); ?></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-right" colspan="<?php echo $this->_field['quantity'] ? '3' : '2'; ?>"> <?php echo $this->translate($this->hasFee ? "Còn lại" : "Thành tiền"); ?> </td>
+                                                <td class="text-right"> <strong><?php echo $this->formatCurrency(($this->item['sum_price'] - $this->discount['apply']['reducedCash']), $this->_field['unit-decimal']); ?></strong> </td>
+                                            </tr>
+                                        <?php } ?>
+                                        <?php if ($this->_field['shipping_fee'] && $this->item['shipping_fee']) { ?>
+                                            <tr>
+                                                <td class="text-right" colspan="<?php echo $this->_field['quantity'] ? '3' : '2'; ?>"> <?php echo $this->_field['shipping_fee']; ?> </td>
+                                                <td class="text-right"><?php echo $this->formatCurrency($this->item['shipping_fee'], $this->_field['unit-decimal']); ?></td>
+                                            </tr>
+                                        <?php } ?>
+                                        <?php if ($this->_field['paypal_fee'] && $this->item['paypal_fee']) { ?>
+                                            <tr>
+                                                <td class="text-right" colspan="<?php echo $this->_field['quantity'] ? '3' : '2'; ?>"> <?php echo $this->_field['paypal_fee']; ?> </td>
+                                                <td class="text-right"><?php echo $this->formatCurrency($this->item['paypal_fee'], $this->_field['unit-decimal']); ?></td>
+                                            </tr>
+                                        <?php } ?>
+                                        <?php if ($this->hasFee) { ?>
+                                            <tr>
+                                                <td class="text-right" colspan="<?php echo $this->_field['quantity'] ? '3' : '2'; ?>"> <?php echo $this->translate("Thành tiền"); ?> </td>
+                                                <td class="text-right"> <strong><?php echo $this->formatCurrency(($this->item['total_price'] - $this->discount['apply']['reducedCash']), $this->_field['unit-decimal']); ?></strong> </td>
+                                            </tr>
+                                        <?php } ?>
+                                    <?php } ?>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="portlet-title tabbable-line">
+                            <div class="caption caption-md">
+                                <i class="icon-globe theme-font hide"></i>
+                                <span class="caption-subject font-blue-madison bold uppercase"><?php echo $this->translate("Yêu cầu của khách hàng"); ?></span>
+                            </div>
+                        </div>
+                        <div class="portlet-body clearfix">
+                            <textarea class="form-control margin-bottom-10" rows="3" readonly><?php echo $this->item['comment']; ?></textarea>
+                        </div>
+                        <?php if ($this->discount['list']) { ?>
+                            <div class="portlet-title tabbable-line">
+                                <div class="caption caption-md">
+                                    <i class="icon-globe theme-font hide"></i>
+                                    <span class="caption-subject font-blue-madison bold uppercase"><?php echo $this->translate("Mã giảm giá phát sinh theo đơn hàng"); ?></span>
+                                </div>
+                            </div>
+                            <div class="portlet-body">
+                                <table class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th> <?php echo $this->discount['menu']['define']['sku'] ?> </th>
+                                            <th> <?php echo $this->discount['menu']['define']['discount_value'] ?> </th>
+                                            <th> <?php echo $this->discount['menu']['define']['expired_number'] ?> </th>
+                                            <th> <?php echo $this->discount['menu']['define']['expired_date'] ?> </th>
+                                            <th class="text-center"> Chức năng </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($this->discount['list'] as $value) { ?>
+                                            <?php
+                                                $linkField = $this->url('admincp',array('controller' => 'product_discount_tb','action' => 'field','id' => $value['id'],'root_id' => $this->discount['menu']['id']), array('query' => array_filter(array('order_id' => $this->_params['id']), 'strlen')));
+                                                $linkSendMail = $this->url('admincp',array('controller' => 'product_discount_tb','action' => 'sendMail','id' => $value['id'],'root_id' => $this->discount['menu']['id']), array('query' => array_filter(array('order_id' => $this->_params['id']), 'strlen')));
+                                                $linkDelete = $this->url('admincp',array('controller' => 'product_discount_tb','action' => 'delete','id' => $value['id'],'root_id' => $this->discount['menu']['id']));
+                                            ?>
+                                            <tr>
+                                                <td><a href="<?php echo $linkField; ?>"><?php echo $value['sku']; ?></a></td>
+                                                <td> <?php echo $this->formatCurrency($value['discount_value']).' ('.($value['discount_type'] == 1 ? '%' : '$').')'; ?> </td>
+                                                <td> <?php echo $value['remain'].' / '.($value['expired_number'] > 0 ? $value['expired_number'] : '~'); ?></td>
+                                                <td> <?php echo $value['expired_date'] ?? '-'; ?> </td>
+                                                <td class="text-center">
+                                                    <div class="btn-group btn-group-sm btn-group-solid">
+                                                        <a href="<?php echo $linkField; ?>" class="btn btn-sm blue">Sửa</a>
+                                                        <a href="javascript:;" onclick="_HTSend.mail('<?php echo $linkSendMail; ?>');" class="btn btn-sm green ">Gửi mail</a>
+                                                        <a href="javascript:;" onclick="_HTDelete.item('<?php echo $linkDelete; ?>', true);" class="btn btn-sm red">Xóa</a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        <?php } ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <?php } ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

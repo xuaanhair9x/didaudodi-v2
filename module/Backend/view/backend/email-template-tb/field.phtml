@@ -1,0 +1,124 @@
+<div class="page-content">
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li><a href="<?php echo $this->url('admincp'); ?>"><?php echo $this->translate("Trang chủ"); ?></a><i class="fa fa-circle"></i></li>
+            <li><a href="<?php echo $this->linkList; ?>"><?php echo explode('/', $this->_params['title'])[0]; ?></a><i class="fa fa-circle"></i></li>
+            <li><span><?php echo explode('/', $this->_params['title'])[1]; ?></span></li>
+        </ul>
+    </div>
+    <form id="form-add" action="" method="POST" enctype="multipart/form-data" onchange="setIsChangeValue();" onkeydown="setIsChangeValue();">
+        <div class="portlet box blue margin-bottom-0">
+            <div class="portlet-title">
+                <div class="caption"><?php echo $this->translate("Thông tin chi tiết"); ?> </div>
+                <div class="actions">
+                    <div class="btn-group btn-status">
+                        <?php
+                            $appendValueSaveDefault = htmlspecialchars(json_encode(array('save' => 'default'), JSON_UNESCAPED_SLASHES));
+                            $appendValueSaveRollback = htmlspecialchars(json_encode(array('save' => 'rollback'), JSON_UNESCAPED_SLASHES));
+                            $appendValueSaveEdit = htmlspecialchars(json_encode(array('save' => 'edit'), JSON_UNESCAPED_SLASHES));
+                            if ($this->default) {
+                                echo '<button type="submit" onclick="_HTSend.form(this, '.$appendValueSaveDefault.')" class="btn btn-sm green-jungle"><i class="fa fa-check-square-o"></i> '.$this->translate("Lưu").'</button>';
+                            } else {
+                                echo '<button type="submit" onclick="_HTSend.form(this, '.$appendValueSaveRollback.')"  class="btn btn-sm green"><i class="fa fa-check-square-o"></i> '.$this->translate("Reset mẫu mặc định").'</button>';
+                                echo '<button type="submit" onclick="_HTSend.form(this, '.$appendValueSaveEdit.')" class="btn btn-sm green-jungle"><i class="fa fa-check-square-o"></i> '.$this->translate("Lưu").'</button>';
+                            }
+                        ?>
+                        <a href="<?php echo $this->linkList; ?>" class="btn btn-sm red"><i class="fa fa-share"></i> <?php echo $this->translate("Thoát"); ?></a>
+                    </div>
+                </div>
+            </div>
+            <div class="portlet-body form form-help-freeze">
+                <div class="form-body">
+                    <?php if ($this->error) { ?>
+                        <div class="alert alert-danger display-block">
+                            <button class="close" data-close="alert"></button>
+                            <?php foreach ($this->error as $error) { echo '<p>'.$error.'</p>'; } ?>
+                        </div>
+                    <?php } ?>
+                    <div class="row">
+                        <?php echo $this->partialLoop('partials/form-addedit.phtml', array(array('default' => $this->elements))); ?>
+                        <?php if ($this->identity()->supper && $this->default) { ?>
+                            <div class="col-md-12">
+                                <div class="form-group mt-repeater">
+                                    <div class="headline-1"><hr><h4 class="headline__title"><span class="text-uppercase">Tạo biến</span></h4></div>
+                                    <div class="mt-repeater__title" style="width: calc(99% - 36.62px);margin-bottom: 10px;">
+                                        <div class="row">
+                                            <div class="col-md-4"><label>Tên đầy đủ</label></div>
+                                            <div class="col-md-4"><label>Tên ngắn</label></div>
+                                            <div class="col-md-4"><label>Biến</label></div>
+                                        </div>
+                                    </div>
+                                    <div data-repeater-list="placeholders">
+                                        <?php foreach (($this->item["placeholders"] ? $this->item["placeholders"] : array('')) as $value) { ?>
+                                            <div data-repeater-item>
+                                                <div class="mt-repeater-item mt-overflow">
+                                                    <div class="mt-repeater-cell">
+                                                        <div class="mt-repeater-box">
+                                                            <div class="row toslug">
+                                                                <div class="col-md-4"><textarea class="form-control" name="title" data-toslug rows="1" ht-trigger="txtResize"><?php echo $value['title'] ?></textarea></div>
+                                                                <div class="col-md-4"><textarea class="form-control" name="html" rows="1" ht-trigger="txtResize"><?php echo $value['html'] ?></textarea></div>
+                                                                <div class="col-md-4"><textarea class="form-control" name="value" ht-target="toslug" rows="1" ht-trigger="txtResize"><?php echo $value['value'] ?></textarea></div>
+                                                            </div>
+                                                        </div>
+                                                        <a href="javascript:;" data-repeater-delete class="btn red mt-repeater-delete mt-repeater-del-right mt-repeater-btn-inline"><i class="fa fa-close"></i></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <?php } ?>
+                                    </div>
+                                    <a href="javascript:;" data-repeater-create class="btn blue mt-repeater-add"><i class="fa fa-plus"></i> Thêm biến</a>
+                                </div>
+                            </div>
+                        <?php } ?>
+                    </div>
+                </div>
+                <?php if ($this->identity()->supper && $this->default) { ?>
+                    <div class="form-actions right">
+                        <div class="btn-group btn-status">
+                            <?php
+                                $appendValueSaveDefault = htmlspecialchars(json_encode(array('save' => 'default'), JSON_UNESCAPED_SLASHES));
+                                $appendValueSaveRollback = htmlspecialchars(json_encode(array('save' => 'rollback'), JSON_UNESCAPED_SLASHES));
+                                $appendValueSaveEdit = htmlspecialchars(json_encode(array('save' => 'edit'), JSON_UNESCAPED_SLASHES));
+                                if ($this->default) {
+                                    echo '<button type="submit" onclick="_HTSend.form(this, '.$appendValueSaveDefault.')" class="btn btn-sm green-jungle"><i class="fa fa-check-square-o"></i> '.$this->translate("Lưu").'</button>';
+                                } else {
+                                    echo '<button type="submit" onclick="_HTSend.form(this, '.$appendValueSaveRollback.')"  class="btn btn-sm green"><i class="fa fa-check-square-o"></i> '.$this->translate("Reset mẫu mặc định").'</button>';
+                                    echo '<button type="submit" onclick="_HTSend.form(this, '.$appendValueSaveEdit.')" class="btn btn-sm green-jungle"><i class="fa fa-check-square-o"></i> '.$this->translate("Lưu").'</button>';
+                                }
+                            ?>
+                            <a href="<?php echo $this->linkList; ?>" class="btn btn-sm red"><i class="fa fa-share"></i> <?php echo $this->translate("Thoát"); ?></a>
+                        </div>
+                    </div>
+                <?php } ?>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    $(document).ready(function() {
+        FormValidation.submit('#form-add', {rules: {subject: {required: true}, name: {required: true}}});
+    });
+
+    var placeholders = $.parseJSON('<?php echo json_encode($this->item["placeholders"], JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE); ?>');
+    if (placeholders) {
+        placeholders.splice(0, 1);
+        CKEDITOR.replace('body', {
+            toolbar: [
+                { name: 'document', groups: [ 'mode', 'document', 'doctools' ], items: [ 'Source', '-', 'Save', 'NewPage', 'Preview', 'Print', '-', 'Templates' ,'Table'] },
+                { name: 'clipboard', groups: [ 'clipboard', 'undo' ], items: [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ] },
+                { name: 'editing', groups: [ 'find', 'selection', 'spellchecker' ], items: [ 'Find', 'Replace', '-', 'SelectAll', '-', 'Scayt' ] },
+                { name: 'forms', items: [ 'Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField' ] },
+                '/',
+                { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ], items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat' ] },
+                { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ], items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl', 'Language' ] },
+                { name: 'links', items: [ 'Link', 'Unlink', 'Anchor' ] },
+                { name: 'insert', items: [ 'Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak', 'Iframe', 'Youtube' ] },
+                '/',
+                { name: 'styles', items: [ 'Styles', 'Format', 'Font', 'FontSize', 'placeholder_select' ] },
+                { name: 'colors', items: [ 'TextColor', 'BGColor' ] },
+                { name: 'tools', items: [ 'Maximize', 'ShowBlocks' ] }
+            ],
+            placeholder_select: { placeholders : placeholders }
+        });
+    }
+</script>

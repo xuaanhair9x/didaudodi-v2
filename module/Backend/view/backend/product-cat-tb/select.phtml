@@ -1,0 +1,7 @@
+<?php echo $this->partialLoop('partials/form-addedit.phtml', array(array('default' => $this->elements))); ?>
+<script>
+    $(document).ready(function() {
+        $('#list_select_id').html($('#list_select_id #list_select_id').children());
+        BootstrapMultiselect.item('list_select_id');
+    });
+</script>

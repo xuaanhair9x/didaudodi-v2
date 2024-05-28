@@ -1,0 +1,170 @@
+<?php
+
+    use Backend\Model\NewsCatTb;
+    use Backend\Model\ProductCatTb;
+    use Backend\Model\HtmlTb;
+    use Backend\Model\MenuCodeTb;
+    use Backend\Model\SectionTb;
+
+    $this->identity()->lang = '';
+    $this->identity()->langlist = array('');
+    $this->identity()->langfield = array();
+    $this->identity()->modules = array('4' => 'product', '5' => 'news', '7' => 'marketing', '9' => 'admin');
+
+    $MenuCodeTb = new MenuCodeTb();
+    $HtmlTb = new HtmlTb();
+    $NewsCatTb = new NewsCatTb();
+    $ProductCatTb = new ProductCatTb();
+    $SectionTb = new SectionTb();
+
+    $list = array();
+    $list = $MenuCodeTb->listItem(array('display' => 1,'deny_id' => array(30)));
+
+    foreach ($list as $i => $item) {
+        // Loại bỏ các item mặc định của code
+        if (empty($this->identity()->supper) && in_array($item['id'], array(18,27))) {
+            unset($list[$i]);
+            continue;
+        }
+        if (in_array($item['id'], array(4,5))) { // Sản phẩm, Nội dung
+            if ($item['id'] == 4) { // Sản phẩm
+                $list_child = $ProductCatTb->listItem(array('display' => 1,'parent' => 0, 'columns'=>array('id','name','level','define_product')));
+                $controller = 'product';
+            }
+            if ($item['id'] == 5) { // Nội dung
+                $list_child = $NewsCatTb->listItem(array('display' => 1,'parent' => 0, 'columns'=>array('id','name','level','define_news')));
+                $controller = 'news';
+            }
+            // Xử lý chung
+            foreach ($list_child as $child) {
+                $list[$i]['child'][] = array_merge($child, array('skip' => $controller,'parent' => $item['id'],'active' => $controller.'_tb-'.$child['id'], 'link' => '/'.$controller.'_tb/list/root_id='.$child['id']));
+                if ($child['level'] > 0) {
+                    $j = count($list[$i]['child']) - 1;
+                    $dropdown = $list[$i]['child'][count($list[$i]['child']) - 1];
+                    $list[$i]['child'][$j]['link'] = '';
+                    $list[$i]['child'][$j]['child'] = array(
+                        array_merge($dropdown, array('name' => $this->translate("Danh mục").' '.$this->translate($dropdown['name']), 'active' => $dropdown['skip'].'_cat_tb', 'link' => $this->url('admincp',array('controller' => $dropdown['skip'].'_cat_tb','action' => 'list','root_id' => $dropdown['id'])))),
+                        array_merge($dropdown, array('name' => $this->translate("Danh sách").' '.$this->translate($dropdown['name']), 'active' => $dropdown['skip'].'_tb', 'link' => $this->url('admincp',array('controller' => $dropdown['skip'].'_tb','action' => 'list','root_id' => $dropdown['id']))))
+                    );
+                }
+            }
+        }
+        if ($item['id'] == 11) { // Ngôn ngữ
+            $item['define'] = json_decode($item['define'], true);
+            array_pop($item['define']);
+            $this->identity()->lang = $item['define'][0][0];
+            $this->identity()->langlist = $item['define'];
+            $this->identity()->langfield = array('name','title','description','keyword','desc_short','address','detail','link');
+            if (empty($this->identity()->supper)) {
+                unset($list[$i]);
+            }
+        }
+        if ($item['id'] == 19) { // Các trang đơn
+            $list[$i]['child'] = $HtmlTb->listItem(array('display' => 1, 'columns' => array('id','define')));
+            foreach ($list[$i]['child'] as $j => $vl_child) {
+                $list[$i]['child'][$j]['active'] = 'html_tb';
+                $list[$i]['child'][$j]['name'] = json_decode($vl_child['define'], true)['menu'];
+                $list[$i]['child'][$j]['link'] = $this->url('admincp',array('controller' => 'html_tb','action' => 'field','id' => $vl_child['id'],'root_id' => $item['id']));
+            }
+            if (empty($this->identity()->supper)) {
+                $list[$i]['link'] = '';
+            }
+        }
+        if ($item['id'] == 14) { // Sections
+            $controller = 'section_tb';
+            $listChild = $SectionTb->listItem(array('display' => 1, 'columns' => array('id','menu','note')));
+            $list[$i]['allow-link'] = true;
+            $noteSection = array();
+            foreach ($listChild as $j => $child) {
+                $list[$i]['child'][] = array_merge(
+                    $child,
+                    array(
+                        'skip' => '',
+                        'name' => $child['menu'],
+                        'parent' => $item['id'],
+                        'active' => 'section_tb-'.$child['id'],
+                        'link' => '/section_tb/field/id=' . $child['id'] . '/root_id=' . $item['id']
+                    )
+                );
+
+                if($child['note']) {
+                    $noteSection['section_tb-'.$child['id']] = array($child['id'] => $child['note']);
+                }
+            }
+            if (empty($this->identity()->supper)) {
+                $list[$i]['allow-link'] = false;
+                $list[$i]['link'] = '';
+            }
+        }
+    }
+
+    $this->identity()->menu_code = $this->cateSortNested($list, array('parent' => 0, 'type' => 'nested'));
+    $this->_params = $this->viewModel()->getCurrent()->getChildren()[0]->_params;
+    $noteMenu = array(
+        'html_tb-19' => array('19' => 'Chỉnh sửa các trang đơn lẻ (vd: Giới thiệu, Về chúng tôi, …)'),
+        'menu_public_tb-20' => array('20' => 'Cấu hình Title SEO, Description SEO và Keyword cho Trang chủ và các Menu khác',),
+        'info_tb-37' => array('37' => 'Chỉnh sửa các tiêu đề tĩnh trên website'),
+        'info_tb-38' => array('38' => 'Cấu hình Email Server thông báo'),
+        'product_tb-17' => array('17' => 'Gợi ý và tự động giảm khi đơn hàng đạt giá trị tối thiểu'),
+        'product_tb-25' => array('25' => 'Lựa chọn hình thức giao hàng cho các khu vực Tỉnh / Thành phố. Không cộng dồn phí ship với khu vực')
+    );
+
+    $noteMenu = array_merge($noteMenu, $noteSection);
+?>
+<div class="page-sidebar navbar-collapse collapse">
+    <ul class="page-sidebar-menu  page-header-fixed " data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200" style="padding-top: 20px">
+        <li class="sidebar-toggler-wrapper hide"><div class="sidebar-toggler"><span></span></div></li>
+        <?php
+            foreach ($this->identity()->menu_code as $value) {
+                $module = isset($this->identity()->modules[$value['id']]) ? $this->identity()->modules[$value['id']] : $value['active'];
+                if ($this->identity()->permission == 1 || $this->identity()->permission[$module]) {
+                    $active = $open = '';
+                    if (in_array($this->_params['__CONTROLLER__'], explode(',',$value['active']))) {
+                        $open = 'open';
+                        $active = 'active '.$open;
+                    }
+                    echo '<li class="nav-item '.$active.'">
+                            <a href="'.(($value['link']) ? $this->url('admincp').$value['link'] : 'javascript:;').'" class="nav-link nav-toggle"  data-allow-link="' . $value['allow-link'] . '">
+                                <i class="'.$value['icon'].'"></i>
+                                <span class="title">'.$this->translate($value['name']).'</span>'.($value['child'] ? '<span class="arrow '.$open.'"></span>' : '').'
+                            </a>';
+                        if ($value['child']) {
+                            echo '<ul class="sub-menu">';
+                                foreach ($value['child'] as $vl_child) {
+                                    if ($this->identity()->permission == 1 || $this->identity()->permission[$module][$vl_child['active']] || in_array($value['id'], array(6))) {
+                                        $active = $open = $toggle = '';
+                                        $note = $noteMenu[$vl_child['active']][$vl_child['id']];
+                                        if ($vl_child['link']) {
+                                            $open = 'nav-toggle ';
+                                        } else {
+                                            $toggle = 'nav-toggle ';
+                                        }
+                                        if ($vl_child['active'] == $this->_params['active'] && $vl_child['active']) {
+                                            $open .= 'open';
+                                            $active = 'active '.$open;
+                                        }
+                                        echo '<li class="nav-item '.$active.'">
+                                                <a href="'.($vl_child['link'] ? $this->url('admincp').$vl_child['link'] : 'javascript:;').'" class="nav-link '.$toggle.'">
+                                                    <span class="title">'.$this->translate($vl_child['name']).'</span>'.($vl_child['child'] ? '<span class="arrow '.$open.'"></span>' : '').
+                                                    '<span class="tooltips pull-right '.($vl_child['child'] ? 'margin-right-10' : '').' '.($note ? '' : 'hidden').'" data-container="body" title="' . $note . '"><i class="fa fa-question-circle" aria-hidden="true"></i></span>'.
+                                                '</a>';
+                                                if ($vl_child['child']) {
+                                                    echo '<ul class="sub-menu">';
+                                                        foreach ($vl_child['child'] as $vl_sub) {
+                                                            if ($this->identity()->permission == 1 || $this->identity()->permission[$module][$vl_child['active']][$vl_sub['active']] || in_array($vl_child['active'], array('html_tb-19'))) {
+                                                                echo '<li class="nav-item '.((($vl_sub['active'] == $this->_params['__CONTROLLER__']) && (($vl_sub['id'] == $this->_params['root_id'] && !in_array($this->_params['root_id'], array(19))) || $vl_sub['id'] == $this->_params['id'])) ? 'active' : '').'"><a href="'.$vl_sub['link'].'" class="nav-link">'.$this->translate($vl_sub['name']).'</a></li>';
+                                                            }
+                                                        }
+                                                    echo '</ul>';
+                                                }
+                                        echo '</li>';
+                                    }
+                                }
+                            echo '</ul>';
+                        }
+                    echo '</li>';
+                }
+            }
+        ?>
+    </ul>
+</div>

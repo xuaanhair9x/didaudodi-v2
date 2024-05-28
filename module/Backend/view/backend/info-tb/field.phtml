@@ -1,0 +1,93 @@
+<div class="page-content">
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li><a href="<?php echo $this->url('admincp'); ?>"><?php echo $this->translate("Trang chủ"); ?></a><i class="fa fa-circle"></i></li>
+            <li><span><?php echo $this->_params['title']; ?></span></li>
+        </ul>
+        <?php if ($this->identity()->supper) { ?>
+            <div class="pull-right">
+                <a href="<?php echo $this->url('admincp',array('controller' => $this->_params['__CONTROLLER__'],'action' => 'codevalidate','id' => $this->_params['id'],'root_id' => $this->_params['root_id'])); ?>" class="btn green"><i class="fa fa-cogs"></i> Định nghĩa dữ liệu</a>
+                <a href="<?php echo $this->url('admincp',array('controller' => $this->_params['__CONTROLLER__'],'action' => 'codefield','id' => $this->_params['id'],'root_id' => $this->_params['root_id'])); ?>" class="btn green pull-right"><i class="fa fa-cogs"></i> Cấu hình dữ liệu</a>
+            </div>
+        <?php } ?>
+    </div>
+    <form id="form-add" action="" method="POST" enctype="multipart/form-data" onchange="setIsChangeValue();" onkeydown="setIsChangeValue();">
+        <div class="portlet box blue margin-bottom-0">
+            <div class="portlet-title">
+                <div class="caption"><?php echo $this->translate("Thông tin chi tiết"); ?> </div>
+                <div class="actions">
+                    <button type="submit" onclick="_HTSend.form(this)" class="btn btn-sm green-jungle"><i class="fa fa-check-square-o"></i> <?php echo $this->translate("Lưu"); ?></button>
+                </div>
+            </div>
+            <div class="portlet-body form form-help-freeze">
+                <div class="form-body">
+                    <?php if ($this->error) { ?>
+                        <div class="alert alert-danger display-block">
+                            <button class="close" data-close="alert"></button>
+                            <?php foreach ($this->error as $error) { echo '<p>'.$error.'</p>'; } ?>
+                        </div>
+                    <?php } ?>
+                    <?php if ($this->success) { ?>
+                        <div class="alert bg-green-jungle display-block">
+                            <button class="close" data-close="alert"></button>
+                            <p> <?php echo $this->success; ?> </p>
+                        </div>
+                    <?php } ?>
+                    <div class="tabbable-custom">
+                        <?php if (count($this->identity()->langlist) > 1) { ?>
+                            <ul class="nav nav-tabs">
+                                <?php foreach ($this->identity()->langlist as $i => $lang) { ?>
+                                    <li <?php echo ($i == 0) ? 'class="active"' : ''; ?>>
+                                        <a href="#tab_<?php echo $lang[0]; ?>" data-toggle="tab"> <?php echo $lang[0].' - '.$this->translate($lang[1]); ?> </a>
+                                    </li>
+                                <?php } ?>
+                            </ul>
+                        <?php } ?>
+                        <div <?php echo (count($this->identity()->langlist) > 1) ? 'class="tab-content"' : ''; ?>>
+                            <?php foreach ($this->identity()->langlist as $i => $lang) { ?>
+                                <?php if ($this->identity()->lang) {
+                                    $arrsLang = array('tab' => $lang[0], 'data' => $this->item['translate'][$lang[0]], 'field' => $this->_field['validate']['translate']);
+                                } ?>
+                                <div class="tab-pane <?php echo ($i == 0) ? 'active' : ''; ?>" id="tab_<?php echo $lang[0]; ?>">
+                                    <div class="row">
+                                        <?php echo $this->partialLoop('partials/form-addedit.phtml', array(array('default' => $this->elements, 'lang' => $arrsLang))); ?>
+                                        <?php if ($this->identity()->lang == $lang[0] && $this->_field['display']) { ?>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-3">
+                                                            <?php echo $this->translate("Mở/Tắt Website"); ?>:
+                                                            <label><input type="checkbox" name="display" class="make-switch" data-on-text="<?php echo $this->translate("Mở"); ?>" data-off-text="<?php echo $this->translate("Tắt"); ?>" value="<?php echo $this->item['display']; ?>" onchange="_HTChange.status(this, 'switch', <?php echo htmlspecialchars(json_encode(array('url' => $this->url('admincp',array('controller' => $this->_params['__CONTROLLER__'],'action' => 'change','id' => $this->item['id'],'root_id' => $this->_params['root_id']))), JSON_UNESCAPED_SLASHES)); ?>);" <?php echo ($this->item['display']) ? 'checked' : ''; ?>></label>
+                                                        </div>
+                                                        <div class="col-md-9"><input type="text" name="notification" value="<?php echo $this->item['notification']; ?>" class="form-control" placeholder="<?php echo $this->translate("Nhập thông báo đóng website"); ?>"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <?php } ?>
+                                    </div>
+                                </div>
+                            <?php } ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions right">
+                    <button type="submit" onclick="_HTSend.form(this)" class="btn btn-sm green-jungle"><i class="fa fa-check-square-o"></i> <?php echo $this->translate("Lưu"); ?></button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    $(document).ready(function() {
+        var rules = {}, checkForm = $.parseJSON('<?php echo json_encode($this->_params["checkForm"]); ?>');
+
+        if (checkForm.required) {
+            var field_required = Object.keys(checkForm.required);
+            for (var i = 0; i < field_required.length; i++) {
+                rules[field_required[i].replace(/\{(.*?)\}/g, "[$1]")] = {required: true};
+            }
+        }
+
+        FormValidation.submit('#form-add', {rules: rules});
+    });
+</script>

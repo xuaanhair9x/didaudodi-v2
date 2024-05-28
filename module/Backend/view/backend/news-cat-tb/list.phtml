@@ -1,0 +1,154 @@
+<div class="page-content">
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li><a href="<?php echo $this->url('admincp'); ?>"><?php echo $this->translate("Trang chủ"); ?></a><i class="fa fa-circle"></i></li>
+            <li><span><?php echo $this->_params['title']; ?></span></li>
+        </ul>
+        <?php if ($this->identity()->supper) { ?>
+            <div class="pull-right">
+                <a href="<?php echo $this->url('admincp',array('controller' => $this->_params['__CONTROLLER__'],'action' => 'codevalidate','id' => $this->_params['root_id'],'root_id' => $this->_params['root_id'])); ?>" class="btn green"><i class="fa fa-cogs"></i> Định nghĩa dữ liệu</a>
+                <a href="<?php echo $this->url('admincp',array('controller' => $this->_params['__CONTROLLER__'],'action' => 'codefield','id' => $this->_params['root_id'],'root_id' => $this->_params['root_id'])); ?>" class="btn green pull-right"><i class="fa fa-cogs"></i> Cấu hình dữ liệu</a>
+            </div>
+        <?php } ?>
+    </div>
+    <div class="portlet box blue margin-bottom-0">
+        <div class="portlet-title">
+            <div class="caption"><?php echo $this->translate("Danh sách"); ?> </div>
+            <div class="actions">
+                <?php if ($this->_field['add']) { ?>
+                    <a href="<?php echo $this->url('admincp',array('controller' => $this->_params['__CONTROLLER__'],'action' => 'field','root_id' => $this->_params['root_id'])); ?>" class="btn yellow"><i class="fa fa-plus-square-o"></i> <?php echo $this->translate("Thêm"); ?></a>
+                <?php } ?>
+            </div>
+        </div>
+        <div class="portlet-body">
+            <?php if ($this->_field['level'] > 1) { ?>
+                <div class="ht-filter">
+                    <form id="form-filter" action="" method="post" accept-charset="utf-8">
+                        <div class="ht-filter__category">
+                            <div class="input-group input-group-sm select2-bootstrap-prepend">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="button" data-select2-open="ht-open-boxCate"><?php echo $this->translate("Danh mục"); ?></button>
+                                </span>
+                                <select name="parent" id="ht-open-boxCate" class="form-control select2" onchange="_HTHelper.submit(this);">
+                                    <option value="<?php echo $this->_params['root_id']; ?>"><?php echo $this->translate("Tất cả"); ?></option>
+                                    <?php foreach ($this->filter as $value) { ?>
+                                        <option value="<?php echo $value['id']; ?>" <?php echo ($value['id'] == $this->query['parent']) ? 'selected' : ''; ?>><?php echo $value['name']; ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            <?php } ?>
+
+            <table id="datatable-default" class="table table-striped table-bordered table-hover table-checkable">
+                <thead>
+                    <tr>
+                    <?php
+                        echo '<th class="hide"></th>';
+                        if ($this->_field['thumbnail']) {
+                            echo '<th class="nosort text-center table-thumbnail">'.$this->translate("Ảnh").'</th>';
+                        }
+                        echo '<th class="table-checkall"> ID </th>';
+                        echo '<th>'.$this->translate($this->_field['name']).'</th>';
+                        if ($this->_field['sort']) {
+                            echo '<th class="table-sort"><div class="d-flex justify-content--center"><span class="flex-none">' . $this->translate("Sắp xếp") . '</span>&nbsp;<a href="javascript:;" class="tooltips" data-container="body" title="Đánh số để sắp xếp thứ tự hiển thị theo ý muốn. Nguyên tắc số nhỏ hơn sẽ nằm phía trên."><i class="fa fa-question-circle" aria-hidden="true"></i></a></div></th>';
+                        }
+                        foreach ($this->_field['special'] as $item) {
+                            $note = $item['name'] == 'menu' ? ($item['note'] ? $item['note'] : 'Tick chọn để hiển thị trên menu danh mục') : $item['note'];
+                            echo '<th class="nosearch table-show"><span class="d-flex justify-content--center"><span class="flex-none">' . $this->translate($item['label']).'</span>&nbsp;<a href="javascript:;" class="tooltips '.($note ? '' : 'hidden').'" data-container="body" title="'.$note.'"><i class="fa fa-question-circle" aria-hidden="true"></i></a></span></th>';
+                        }
+                        if ($this->identity()->lang && count($this->identity()->langlist) > 1) {
+                            echo '<th class="nosearch table-lang">
+                                        <span class="d-flex justify-content--center"><span class="flex-none">' . $this->translate("Hiển thị") . '</span><a href="javascript:;" class="tooltips" data-container="body" title="Tick chọn để hiển thị trên website, bỏ tick để ẩn đi"><i class="fa fa-question-circle" aria-hidden="true"></i></a></span>
+                                        <span><span>' . implode('</span><span>', array_column($this->identity()->langlist, 0)) . '</span></span>
+                                </th>';
+                        }
+                        if ($this->_field['display']) {
+                            echo '<th class="nosearch table-show"><div class="d-flex justify-content--center"><span class="flex-none">' . $this->translate("Hiển thị") . '</span>&nbsp;<a href="javascript:;" class="tooltips" data-container="body" title="Tick chọn để hiển thị trên website, bỏ tick để ẩn đi"><i class="fa fa-question-circle" aria-hidden="true"></i></a></div></th>';
+                        }
+                        if ($this->_field['add'] || $this->_field['delete']) {
+                            echo '<th class="nosort nosearch table-func">'.$this->translate("Chức năng").'</th>';
+                        }
+                    ?>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($this->list as $value) { ?>
+                        <?php
+                            $linkField = $this->url('admincp',array('controller' => $this->_params['__CONTROLLER__'],'action' => 'field','id' => $value['id'],'root_id' => $this->_params['root_id']));
+                            $linkChange = $this->url('admincp',array('controller' => $this->_params['__CONTROLLER__'],'action' => 'change','id' => $value['id'],'root_id' => $this->_params['root_id']));
+                            $linkDelete = $this->url('admincp',array('controller' => $this->_params['__CONTROLLER__'],'action' => 'delete','id' => $value['id'],'root_id' => $this->_params['root_id']));
+                            $langDislay = array();
+                            if ($value['l.id']) {
+                                // 0: id, 1: display, 2: name
+                                $langDislay = array_merge_recursive(
+                                    array_combine(explode('#@#',$value['l.language']), explode('#@#',$value['l.id'])),
+                                    array_combine(explode('#@#',$value['l.language']), explode('#@#',$value['l.display'])),
+                                    array_combine(explode('#@#',$value['l.language']), explode('#@#',$value['l.name']))
+                                );
+                                $value['name'] = ($langDislay[$this->identity()->lang][2]) ? $langDislay[$this->identity()->lang][2] : $value['name'];
+                            }
+
+                            $iconLinkWeb = '';
+                            if ($this->_field['icon-link-web'] != 'none') {
+                                $routerParams = array_merge(array('%slug%' => $value['slug'], '%id%' => $value['id']), $this->router['params']);
+                                $url = PUBLIC_PATH.str_replace(array_keys($routerParams), array_values($routerParams), $this->router['spec']);
+                                $iconLinkWeb = '<a href="'.$url.'" target="_blank" class="pull-right"><i class="fa fa-external-link" aria-hidden="true"></i></a>';
+                            }
+                        ?>
+                        <tr class="odd gradeX">
+                        <?php
+                            echo '<td class="hide"></td>';
+                            if ($this->_field['thumbnail']) {
+                                $thumbnail = UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/autox30-'.$value['thumbnail'];
+                                $thumbnail = ($value['thumbnail'] && file_exists(ROOT_PUBLIC.'/'.$thumbnail)) ? PUBLIC_PATH.$thumbnail : BE_TEMPLATE.'/layouts/layout/img/noimage.png';
+                                echo '<td class="text-center"><img src="'.$thumbnail.'" /></td>';
+                            }
+                            echo '<td>'.$value['id'].'</td>';
+                            echo '<td><a href="'.$linkField.'" class="level'.$value['level'].'">'.$value['name'].'<span class="font-red">('.$value['count'].')</span></a>'.$iconLinkWeb.'</td>';
+                            if ($this->_field['sort']) {
+                                echo '<td><input type="text" name="sort" class="form-control text-center input-sm" onkeydown="_HTChange.sort(this, \''.$linkChange.'\');" value="'.$value['sort'].'" /></td>';
+                            }
+                            if ($this->_field['special']) {
+                                $special = ($value['special']) ? json_decode($value['special'], true) : array();
+                                foreach ($this->_field['special'] as $item) {
+                                    $vl_special = ($special[$item['name']]) ? 1 : 0;
+                                    echo '<td class="text-center"><label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" data-special name="'.$item['name'].'" value="'.$vl_special.'" onclick="_HTChange.special(this, \''.$linkChange.'\');" '.(($vl_special) ? 'checked' : '').' /><span class="text-hide">'.$vl_special.'</span></label></td>';
+                                }
+                            }
+                            if ($this->identity()->lang && count($this->identity()->langlist) > 1) {
+                                echo '<td class="text-center table-lang">';
+                                    foreach ($this->identity()->langlist as $item) {
+                                        if ($langDislay[$item[0]]) {
+                                            echo '<label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="display" data-menu="'.htmlspecialchars(json_encode(array('language' => $item[0],'active' => 'news-list-'.$this->_params['root_id'],'link' => '-'.$value['id'].'-'.$this->_field['action'], 'columns' => array('id')), JSON_UNESCAPED_SLASHES)).'" value="'.$langDislay[$item[0]][1].'" onclick="_HTChange.status(this, \'switch\', '.htmlspecialchars(json_encode(array('url' => $this->url('admincp',array('controller' => 'lang_multi_tb','action' => 'change','id' => $langDislay[$item[0]][0]))), JSON_UNESCAPED_SLASHES)).');" '.(($langDislay[$item[0]][1]) ? 'checked' : '').' /><span class="text-hide">'.$langDislay[$item[0]][1].'</span></label>';
+                                        }
+                                    }
+                                echo '</td>';
+                            }
+                            if ($this->_field['display']) {
+                                echo '<td class="text-center"><label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="display" value="'.$value['display'].'" onclick="_HTChange.status(this, \'switch\', '.htmlspecialchars(json_encode(array('url' => $linkChange), JSON_UNESCAPED_SLASHES)).');" '.($value['display'] ? 'checked' : '').' /><span class="text-hide">'.$value['display'].'</span></label></td>';
+                            }
+                            if ($this->_field['add'] || $this->_field['delete']) {
+                                echo '<td><div class="text-center"><div class="btn-group btn-group-sm btn-group-solid">';
+                                echo $this->_field['add'] ? '<a href="'.$linkField.'" class="btn blue">'.$this->translate("Sửa").'</a>' : '';
+                                echo $this->_field['delete'] ? '<a href="javascript:;" class="btn red" onclick="_HTDelete.item(\''.$linkDelete.'\', true);">'.$this->translate("Xóa").'</a>' : '';
+                                echo '</div></div></td>';
+                            }
+                        ?>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        TableDatatables.init({
+            destroy: true,
+            ordering: false,
+            pageLength: -1,
+        });
+    });
+</script>

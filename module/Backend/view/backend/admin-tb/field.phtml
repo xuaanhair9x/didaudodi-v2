@@ -1,0 +1,129 @@
+<div class="page-content">
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li><a href="<?php echo $this->url('admincp'); ?>"><?php echo $this->translate("Trang chủ"); ?></a><i class="fa fa-circle"></i></li>
+            <?php if (!$this->isMyself) { ?>
+                <li><a href="<?php echo $this->linkList; ?>"><?php echo explode('/', $this->_params['title'])[0]; ?></a><i class="fa fa-circle"></i></li>
+            <?php } ?>
+            <li><span><?php echo explode('/', $this->_params['title'])[1]; ?></span></li>
+        </ul>
+    </div>
+    <form id="form-add" action="" method="POST" enctype="multipart/form-data" onchange="setIsChangeValue();" onkeydown="setIsChangeValue();">
+        <div class="portlet box blue margin-bottom-0">
+            <div class="portlet-title">
+                <div class="caption"><?php echo $this->translate("Thông tin tài khoản"); ?> </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-body">
+                    <?php if ($this->error) { ?>
+                        <div class="alert alert-danger display-block">
+                            <button class="close" data-close="alert"></button>
+                            <?php foreach ($this->error as $error) { ?>
+                                <p> <?php echo $error; ?> </p>
+                            <?php } ?>
+                        </div>
+                    <?php } ?>
+                    <?php if (!$this->isMyself) { ?>
+                        <div class="row row-flex">
+                            <?php if ($this->_field['role']) { ?>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label"><?php echo $this->translate("Nhóm quyền"); ?></label>
+                                        <select name="role_id" class="form-control select2 select2-not-search">
+                                            <option value=""></option>
+                                            <?php foreach ($this->role as $value) { ?>
+                                                <option value="<?php echo $value['id']; ?>" <?php echo ($value['id'] == $this->item['role_id']) ? 'selected' : ''; ?>><?php echo $value['name']; ?></option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                                </div>
+                            <?php } ?>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label><?php echo $this->translate("Trạng thái"); ?></label>
+                                    <select name="status" class="form-control select2 select2-not-search">
+                                        <?php foreach ($this->status as $value) { ?>
+                                            <option value="<?php echo $value['value']; ?>" <?php echo ($this->item['status'] == $value['value']) ? 'selected' : ''; ?>><?php echo $value['text']; ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row row-flex">
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label class="control-label"><?php echo $this->translate("Tài khoản"); ?> <?php echo $this->_params['id'] ? '' : '<span class="font-red">(*)</span>'; ?></label>
+                                    <input type="text" name="username" value="<?php echo $this->item['username']; ?>" class="form-control" <?php echo ($this->_params['id']) ? 'readonly' : ''; ?>>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="control-label"><?php echo $this->translate($this->_params['id'] ? 'Nhập mật khẩu mới' : 'Nhập mật khẩu'); ?> <?php echo $this->_params['id'] ? '' : '<span class="font-red">(*)</span>'; ?></label>
+                                    <input type="password" name="password" value="" id="password" class="form-control" maxlength="20">
+                                    <h6 id="txtPassword" class="font-blue" style="margin-top: 5px;"></h6>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="control-label" style="white-space: nowrap"><?php echo $this->translate($this->_params['id'] ? "Nhập lại mật khẩu mới" : "Nhập lại mật khẩu"); ?> <?php echo $this->_params['id'] ? '' : '<span class="font-red">(*)</span>'; ?></label>
+                                    <input type="password" name="password_confirm" value="" class="form-control" maxlength="20">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="font-white"><?php echo $this->translate("Mật khẩu ngẫu nhiên"); ?></label>
+                                    <div class="align-items">
+                                        <button type="button" class="btn green-jungle" style="margin-right: 20px;" id="rand_pw">Random</button>
+                                        <label class="mt-checkbox mt-checkbox-outline">
+                                            <input type="checkbox" name="force_reset" value="1" <?php echo ($this->item['force_reset']) ? 'checked' : ''; ?>/>
+                                            <span></span><?php echo $this->translate("Bắt buộc đổi mật khẩu"); ?>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <?php } ?>
+                    <div class="row row-flex">
+                        <?php echo $this->partialLoop('partials/form-addedit.phtml', array(array('default' => $this->elements))); ?>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="control-label">Mô tả</label>
+                                <textarea name="desc_short" class="form-control" rows="2"><?php echo $this->item['desc_short']; ?></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions right">
+                    <?php if (!$this->_params['id']) { ?>
+                        <label class="mt-checkbox mt-checkbox-outline mt-checkbox-right">
+                            <input type="checkbox" value="checked" name="continue" ht-trigger="add-continue" <?php echo $this->continue; ?>/>
+                            <span></span><?php echo $this->translate("Thêm mới khác"); ?>
+                        </label>
+                    <?php } ?>
+                    <button type="submit" onclick="_HTSend.form(this)" class="btn btn-sm green-jungle"><i class="fa fa-check-square-o"></i> <?php echo $this->translate("Lưu"); ?></button>
+                    <a href="<?php echo $this->linkList; ?>" class="btn btn-sm red"><i class="fa fa-share"></i> <?php echo $this->translate("Thoát"); ?></a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    $(document).ready(function() {
+        $('#rand_pw').click(function() {
+            var str = _HTHelper.randString();
+            $('input[name=password]').val(str);
+            $('input[name=password_confirm]').val(str);
+            $('#txtPassword').text('<?php echo $this->translate("Mật khẩu của bạn"); ?>: ' + str);
+        });
+        var field = $.parseJSON('<?php echo json_encode($this->_params["checkForm"]["required"]); ?>');
+        FormValidation.submit('#form-add', {
+            rules: {
+                fullname: { required: true },
+                email: { required: true, email: true },
+                username: { required: true, account: true },
+                password: { required: (field.password) ? true : false, pw: true, },
+                password_confirm: { required: (field.password_confirm) ? true : false, equalTo: '#password' }
+            }
+        });
+    });
+</script>

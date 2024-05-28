@@ -1,0 +1,93 @@
+<div class="page-content">
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li><a href="<?php echo $this->url('admincp'); ?>"><?php echo $this->translate("Trang chủ"); ?></a><i class="fa fa-circle"></i></li>
+            <li><a href="<?php echo $this->linkBack; ?>"><?php echo explode('/', $this->_params['title'])[0]; ?></a><i class="fa fa-circle"></i></li>
+            <li><span><?php echo explode('/', $this->_params['title'])[1]; ?></span></li>
+        </ul>
+    </div>
+    <form id="form-add" action="" method="POST" enctype="multipart/form-data" onchange="setIsChangeValue();" onkeydown="setIsChangeValue();">
+        <div class="portlet box blue margin-bottom-0">
+            <div class="portlet-title">
+                <div class="caption"><?php echo explode('/', $this->_params['title'])[1]; ?></div>
+                <div class="actions">
+                    <button type="submit" onclick="_HTSend.form(this)" class="btn btn-sm green-jungle"><i class="fa fa-check-square-o"></i> <?php echo $this->translate("Lưu"); ?></button>
+                    <a href="<?php echo $this->linkBack; ?>" class="btn btn-sm red"><i class="fa fa-share"></i> <?php echo $this->translate("Thoát"); ?></a>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-body">
+                    <?php if ($this->error) { ?>
+                        <div class="alert alert-danger display-block">
+                            <button class="close" data-close="alert"></button>
+                            <?php foreach ($this->error as $error) { ?>
+                                <p> <?php echo $error; ?> </p>
+                            <?php } ?>
+                        </div>
+                    <?php } ?>
+                    <div class="row">
+                        <?php foreach ($this->pages as $page) { ?>
+                            <?php
+                                $denyTurnOff = 2;
+                                $hidden = ($page['fixed'] || !$this->identity()->supper) ? 'hidden' : '';
+                            ?>
+                            <div class="col-md-<?php echo count($this->pages) == 1 ? '12' : '6'; ?>">
+                                <div class="form-group mt-repeater mt-repeater--columns margin-bottom-10">
+                                    <strong class="<?php echo $page['label'] ? '' : 'hidden'; ?>"><?php echo $page['label']; ?>&nbsp;&nbsp;&nbsp;</strong>
+                                    <a href="javascript:;" data-repeater-create="define" class="btn btn-xs blue mt-repeater-add <?php echo $hidden; ?>"><i class="fa fa-plus"></i></a>
+                                    <div class="margin-top-10" data-repeater-list="<?php echo $page['name']; ?>">
+                                        <?php foreach ($page['columns'] as $column) { ?>
+                                            <?php
+                                                $checkedDisplay = $column['display'] ? 'checked error-checked-repeater' : '';
+                                                $checkedTable = $column['table'] ? 'checked error-checked-repeater' : '';
+                                                $checkedExcel = $column['excel'] ? 'checked error-checked-repeater' : '';
+                                                $onclick = $column['default'] === $denyTurnOff ? 'false' : 'true';
+                                                $readonlyTitle = $this->onlyAllowSort ? 'readonly' : '';
+                                                $readonlyName = $column['default'] ? 'readonly' : '';
+                                                $hiddenItem = (empty($column['display']) && !$this->identity()->supper) ? 'hide' : '';
+                                                $hiddenBtnDelete = ($column['default'] || !$this->identity()->supper) ? 'hide' : '';
+                                                $allowUserCode = $this->identity()->supper ? '' : 'hide';
+                                                $hideDisplay = !$this->identity()->supper || $this->onlyAllowSort ? 'hide' : '';
+                                                $optionDisplay = '';
+                                                foreach ($page['options'] as $optionKey => $optionName) {
+                                                    $checkedOption = $column[$optionKey] ? 'checked error-checked-repeater' : '';
+                                                    preg_match('/(^.*)\[(.*)\]/', $column['name'], $output);
+                                                    $disabledOption = ($optionKey == 'excel' && in_array($output[1] ?? $column['name'], $this->denyColumnsExcel)) ? 'disabled' : '';
+                                                    $optionDisplay .= '<label class="mt-checkbox mt-checkbox-outline '.$disabledOption.'">
+                                                                        <input type="hidden" name="'.$optionKey.'" value="0" />
+                                                                        <input type="checkbox" name="'.$optionKey.'" value="1" '.$checkedOption.' '.$disabledOption.' onclick="return '.$onclick.'"/><span></span> '.$optionName.'
+                                                                    </label>';
+                                                }
+                                            ?>
+
+                                            <div data-repeater-item class="margin-right-10 <?php echo $hiddenItem; ?>">
+                                                <div class="mt-repeater-item mt-overflow">
+                                                    <div class="mt-repeater-cell">
+                                                        <div class="mt-repeater-box <?php echo !$hiddenBtnDelete ? 'margin-right-10' : ''; ?>">
+                                                            <div class="d-flex flex-wrap">
+                                                                <div class="align-items toslug">
+                                                                    <label class="mt-checkbox mt-checkbox-outline flex-none <?php echo $hideDisplay; ?>"><input type="checkbox" name="display" value="1" <?php echo $checkedDisplay; ?> onclick="return <?php echo $onclick; ?>"/><span></span> &nbsp;-&nbsp;</label>
+                                                                    <input type="text" name="sort" value="<?php echo $column['sort']; ?>" class="form-control form-control--sort" placeholder="sort" />
+                                                                    <span>&nbsp;-&nbsp;</span>
+                                                                    <input type="text" name="title" value="<?php echo $column['title']; ?>" class="form-control form-control--text" placeholder="title" data-toslug <?php echo $readonlyTitle; ?>/>
+                                                                    <span class="<?php echo $allowUserCode; ?>">&nbsp;-&nbsp;</span>
+                                                                    <input type="text" name="name" value="<?php echo $column['name']; ?>" class="form-control form-control--text <?php echo $allowUserCode; ?>" placeholder="name" ht-target="toslug" <?php echo $readonlyName; ?>/>
+                                                                    <span class="flex-none <?php echo $optionDisplay ? '' : 'hide'; ?>">&nbsp;-&nbsp; Hiển thị (<?php echo $optionDisplay; ?>)</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <a href="javascript:;" data-repeater-delete class="btn red mt-repeater-delete mt-repeater-del-right mt-repeater-btn-inline <?php echo $hiddenBtnDelete; ?>"><i class="fa fa-close"></i></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <?php } ?>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php } ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,1187 @@
+<?php
+    $htmlField = function($arrs) {
+        $result = '';
+        switch ($arrs['field']) {
+            case 'input':
+                $required = $arrs['required'] ? '<span class="font-red">(*)</span>' : '';
+                $result = '<div class="'.$arrs['class'].'">
+                            <div class="form-group">
+                                <label>'.$arrs['label'].' ' . $required . '</label>
+                                <div class="d-flex flex-wrap">
+                                    <input type="text" name="'.$arrs['name'].'" value="'.htmlentities($arrs['value']).'" '.$arrs['attr'].' class="form-control flex-auto"/>
+                                    '.$arrs['addField'].'
+                                </div>
+                            </div>
+                        </div>';
+            break;
+            case 'input-group-radio':
+                $result = '<div class="'.$arrs['class'].'"><div class="form-group"><label>'.$arrs['label'].'</label><div class="input-group"><input type="text" name="'.$arrs['name'].'" value="'.$arrs['value'].'" '.$arrs['attr'].' class="form-control"/>';
+                foreach ($arrs['addon']['list'] as $vl_list) {
+                    $result .= '<span class="input-group-addon"><label class="mt-radio mt-radio-outline"> '.$vl_list['name'].' <input type="radio" value="'.$vl_list['id'].'" name="'.$arrs['addon']['name'].'" '.(($arrs['addon']['value'] == $vl_list['id']) ? 'checked' : '').'><span></span></label></span>';
+                }
+                $result .= '</div></div></div>';
+            break;
+            case 'textarea':
+                $result = '<div class="'.$arrs['class'].'"><div class="form-group"><label>'.$arrs['label'].'</label><textarea name="'.$arrs['name'].'" '.$arrs['attr'].' class="form-control" rows="1" ht-trigger="txtResize">'.$arrs['value'].'</textarea></div></div>';
+            break;
+            case 'number':
+                $result = '<div class="'.$arrs['class'].'"><div class="form-group"><label>'.$arrs['label'].'</label><input type="text" name="'.$arrs['name'].'" value="'.$arrs['value'].'" '.$arrs['attr'].' class="form-control" ht-trigger="number" data-unit="'.$this->currency.'"/></div></div>';
+            break;
+            case 'date':
+                $result = '<div class="'.$arrs['class'].'"><div class="form-group"><label>'.$arrs['label'].'</label><div class="input-group date date-picker"><input type="text" name="'.$arrs['name'].'" value="'.($arrs['value'] ? date('d-m-Y', strtotime($arrs['value'])) : '').'" '.$arrs['attr'].' placeholder="dd-mm-yyyy" readonly '.$arrs['attr'].' class="form-control"/><span class="input-group-btn"><button class="btn default" type="button"><i class="fa fa-calendar"></i></button></span></div></div></div>';
+            break;
+            case 'time':
+                $result = '<div class="'.$arrs['class'].'"><div class="form-group"><label>'.$arrs['label'].'</label><div class="input-group"><input type="text" name="'.$arrs['name'].'" value="'.$arrs['value'].'" placeholder="hh:ii" readonly '.$arrs['attr'].' class="form-control timepicker timepicker-24"/><span class="input-group-btn"><button class="btn default" type="button"><i class="fa fa-clock-o"></i></button></span></div></div></div>';
+            break;
+            case 'datetime':
+                $result = '<div class="'.$arrs['class'].'"><div class="form-group"><label>'.$arrs['label'].'</label><div class="input-group date bs-datetime '.($arrs['disabled'] ? '' : 'datetime-picker').'"><input type="text" name="'.$arrs['name'].'" value="'.($arrs['value'] ? date('d-m-Y H:i', strtotime($arrs['value'])) : '').'" placeholder="dd-mm-yyy hh:ii" class="form-control" readonly '.$arrs['attr'].' '.($arrs['disabled'] ? 'disabled' : '').'/><span class="input-group-addon"><button class="btn default date-set" type="button"><i class="fa fa-calendar"></i></button></span></div></div></div>';
+            break;
+            case 'switch':
+                $result = '<div class="'.$arrs['class'].'"><div class="form-group"><label>'.$arrs['label'].'</label><div><label>'.($arrs['disabled'] ? '' : '<input type="hidden" name="'.$arrs['name'].'" value="'.$arrs['value'][1].'">').'<input type="checkbox" name="'.$arrs['name'].'" class="make-switch" data-handle-width="'.$arrs['data']['handle-width'].'" data-on-text="'.$arrs['data']['on-text'].'" data-off-text="'.$arrs['data']['off-text'].'" data-label-text="'.$arrs['data']['label-text'].'" value="'.$arrs['value'][0].'" '.($arrs['disabled'] ? 'disabled' : '').' '.($arrs['checked'] ? 'checked' : '').'></label></div></div></div>';
+            break;
+            case 'checkbox':
+                $result = '<label class="mt-checkbox mt-checkbox-outline mt-checkbox--detail">
+                                <input type="hidden" name="'.$arrs['name'].'" value="0"/>
+                                <input type="checkbox" name="'.$arrs['name'].'" '.($arrs['checked'] ? 'checked' : '').' value="1"/><span></span> '.$arrs['label'].'
+                            </label>';
+            break;
+            case 'editor':
+                $result = '<div class="'.($arrs['class'] ?? 'col-md-12').'"><div class="form-group"><h4>'.$arrs['label'].'</h4><textarea name="'.$arrs['name'].'" class="'.($arrs['class-field'] ?? 'ckeditor').'" data-size="'.$arrs['size'].'" '.$arrs['attr'].'>'.$arrs['value'].'</textarea></div></div>';
+            break;
+            case 'image':
+                $classFileinput = 'fileinput-new';
+                $checkGif = end(explode('.', $arrs['thumbnail'])) == 'gif' ? '':'autox30-';
+                $thumbnail = UPLOAD_IMAGES.date('Y/m',explode('-',$arrs['thumbnail'])[0]).'/'.$checkGif.$arrs['thumbnail'];
+                if (file_exists(ROOT_PUBLIC.'/'.$thumbnail)) {
+                    $classFileinput = 'fileinput-exists';
+                    $thumbnail = PUBLIC_PATH.$thumbnail;
+                } else { $thumbnail = ''; }
+
+                $isMultiImage = strpos($arrs['name'], 'multi_image') !== false;
+                $col = (($arrs['note'] && $arrs['desc_short']) || ($arrs['note'] && $arrs['link']) || ($arrs['desc_short'] && $arrs['link'])) ? 12 : 6;
+                $widthInput = '0px';
+                if ($isMultiImage && ($arrs['note'] || $arrs['link'] || $arrs['desc_short'])) {
+                    $widthInput = $col == 12 ? '80%' : '62%';
+                }
+
+                $result = '<div class="col-md-'.$col.'">
+                    <div class="form-group">
+                        <label>'.$arrs['label'].((!$isMultiImage && $arrs['note']) ? '&nbsp;<a href="javascript:;" class="tooltips pull-right data-container="body" title="' . $arrs['note'] . '"><i class="fa fa-question-circle" aria-hidden="true"></i></a>' : '').'</label>
+                        <div class="d-flex ht-thumbnail'.($arrs['sub'] ? ' ht-thumbnail--sub' : '').'">
+                            <div class="d-flex flex-none" style="width: '.$widthInput.'">
+                                '.$arrs['input']['name'].'
+                                '.$arrs['input']['desc_short'].'
+                                '.$arrs['input']['link'].'
+                            </div>
+                            <div class="width-100 '.($arrs['hiddenThumbnail'] ? 'hidden' : '').'">
+                                <div class="'.$classFileinput.'" data-provides="fileinput">
+                                    <div class="fileinput-new thumbnail" data-trigger="fileinput"><img src="'.BE_TEMPLATE.'/layouts/layout/img/noimage.png"/></div>
+                                    <div class="fileinput-preview fileinput-exists thumbnail"><img src="'.$thumbnail.'"/></div>
+                                    <div class="input-group">
+                                        <div class="form-control input-fixed" data-trigger="fileinput"><i class="fa fa-file-image-o fileinput-exists"></i> <span class="fileinput-filename" data-filename="'.$arrs['filename'].'"> '.$arrs['filename'].'</span></div>
+                                        <span class="input-group-addon btn blue btn-file">
+                                            <span class="fileinput-new"><i class="fa fa-upload" aria-hidden="true"></i></span>
+                                            <span class="fileinput-exists"> <i class="fa fa-upload" aria-hidden="true"></i> </span>
+                                            '.implode('',$arrs['input']['file']).'
+                                        </span>
+                                        <a href="javascript:;" class="input-group-addon btn red fileinput-exists" onclick="_HTUpload.image(this, \'delete\');"> <i class="fa fa-close" aria-hidden="true"></i> </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>';
+            break;
+            case 'selectMulti':
+                $xhtmlSearch = $btnLoadData = '';
+                if ($arrs['cate']['list']) {
+                    $options = '';
+                    $name = $arrs['cate']['name'] ?? 'cat_related_id';
+                    $placeholder = $this->translate($arrs['cate']['placeholder'] ?? "Lọc tin theo danh mục");
+                    foreach ($arrs['cate']['list'] as $cate) {
+                        $options .= '<option value="'.$cate['id'].'" class="'.(($cate['level']) ? 'level'.$cate['level'] : '').'" '.((is_numeric($arrs['cate']['value']) && $cate['id'] == $arrs['cate']['value']) ? 'selected' : '').'>'.$cate['name'].'</option>';
+                    }
+                    $xhtmlSearch = '<div class="ms-container">
+                                        <div class="ms-selectable margin-bottom-5">
+                                            <select name="'.$name.'" class="form-control select2" placeholder="'.$placeholder.'" '.$arrs['cate']['attr'].'>
+                                                <option></option>
+                                                <option value="'.$arrs['cate']['root_id'].'" class="level1 text-uppercase">** '.$this->translate("Tất cả").' **</option>
+                                                '.$options.'
+                                            </select>
+                                        </div>
+                                    </div>';
+                }
+
+                $options = '';
+
+                foreach ($arrs['list'] as $item) {
+                    $options .= '<option value="'.$item['id'].'" '.(in_array($item['id'], $arrs['value']) ? 'selected' : '').' data-id=\''.$item['id'].'\' data-info=\''.json_encode($item, JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE).'\'>'.$item['name'].'</option>';
+                }
+                if ($arrs['loadData']) {
+                    $btnLoadData = '<div class="load-container"><button type="button" class="btn btn-sm blue" '.$arrs['loadData'].'><i class="fa fa-download font-white"></i> Tải dữ liệu</button></div>';
+                }
+                $result = '<div class="col-md-12">
+                                <div class="form-group">
+                                    <h4>'.$this->translate($arrs['label']).'</h4>
+                                    <div class="multi-select-container">
+                                        '.$xhtmlSearch.'
+                                        <div id="'.$arrs['name'].'">
+                                            <input type="hidden" name="'.$arrs['name'].'">
+                                            <select multiple="multiple" class="multi-select" name="'.$arrs['name'].'[]">'.$options.'</select>
+                                        </div>
+                                        '.$btnLoadData.'
+                                    </div>
+                                </div>
+                            </div>';
+            break;
+            case 'multi_input':
+                foreach ($arrs['value'] as $item) {
+                    $descTextarea = $arrs['desc_short'] ? '<textarea name="desc_short" class="form-control margin-left-5 flex-auto" ht-trigger="txtResize" placeholder="'.($arrs['desc_short'] == 'checked' ? 'Mô tả' : $arrs['desc_short']).'">'.$item['desc_short'].'</textarea>' : '';
+                    $sortInput = $arrs['sort'] ? '<input type="text" name="sort" class="form-control text-center flex-none" ht-trigger="number" style="width: 80px; margin-right: 5px;" value="'.$item['sort'].'"  placeholder="'.$this->translate("Sắp xếp").'" />' : '';
+                    $hidden = (empty($this->lang) || $this->lang['tab'] == $this->identity()->lang) ? '' : 'hidden';
+                    switch ($arrs['type']) {
+                        case 'input':
+                            $content = '<div class="d-flex">'.$sortInput.'<input type="text" name="name" class="form-control flex-auto" value="'.htmlentities($item['name']).'" '.$arrs['attr'].' placeholder="'.$this->translate($arrs['desc_short'] ? ($arrs['title'] ?? "Tiêu đề") : '').'" />'.$descTextarea.'</div>';
+                        break;
+                        case 'textarea':
+                            $content = '<div class="d-flex">'.$sortInput.'<textarea name="name" class="form-control flex-auto" rows="1" ht-trigger="txtResize" '.$arrs['attr'].'>'.$item['name'].'</textarea></div>';
+                        break;
+                        case 'number':
+                            $content = '<div class="d-flex">'.$sortInput.'<input type="text" name="name" class="form-control flex-auto" ht-trigger="number" data-unit="'.$this->currency.'" value="'.$item['name'].'" '.$arrs['attr'].' /></div>';
+                        break;
+                        case 'date':
+                            $content = '<div class="input-group date date-picker"><input type="text" name="name" value="'.$item['name'].'" '.$arrs['attr'].' class="form-control" placeholder="Nhập ngày/tháng/năm" /><span class="input-group-btn"><button class="btn default" type="button"><i class="fa fa-calendar"></i></button></span></div>';
+                        break;
+                    }
+                    $result .= '<div data-repeater-item class="col-md-6 '.$arrs['class'].'">
+                        <div class="mt-repeater-item mt-overflow">
+                            <div class="mt-repeater-cell">
+                                <div class="mt-repeater-box">'.$content.'</div>
+                                <a href="javascript:;" data-repeater-delete class="btn red mt-repeater-delete mt-repeater-del-right mt-repeater-btn-inline '.$hidden.'"><i class="fa fa-close"></i></a>
+                            </div>
+                        </div>
+                    </div>';
+                }
+            break;
+            case 'multi_image':
+                foreach ($arrs['value'] as $item) {
+                    $checkGif = end(explode('.', $item['thumbnail'])) == 'gif' ? '':'autox30-';
+                    $thumbnail = UPLOAD_IMAGES.date('Y/m',explode('-',$item['thumbnail'])[0]).'/'.$checkGif.$item['thumbnail'];
+                    $thumbnail = file_exists(ROOT_PUBLIC.'/'.$thumbnail) ? PUBLIC_PATH.$thumbnail : BE_TEMPLATE.'/layouts/layout/img/noimage.png';
+                    $hidden = ($arrs['translate'] || empty($this->lang) || $this->lang['tab'] == $this->identity()->lang) ? '' : 'hidden';
+                    $col = 6;
+                    $width = '0px';
+                    if ($arrs['sort'] && ($arrs['note'] || $arrs['link'] || $arrs['desc_short']) || ($arrs['note'] && $arrs['link']) || ($arrs['note'] && $arrs['desc_short']) || ($arrs['link'] && $arrs['desc_short'])) {
+                        $col = 12;
+                    }
+                    if ($arrs['note'] || $arrs['link'] || $arrs['desc_short']) {
+                        $width = $col == 12 ? '81%' : '60%';
+                    }
+                    if($arrs['sort'] && !$arrs['note'] && !$arrs['link'] && !$arrs['desc_short']) {
+                        $width = '20%';
+                    }
+
+                    $result .= '<div data-repeater-item class="col-md-'.$col.'">
+                        <div class="mt-repeater-item">
+                            <div class="mt-repeater-cell">
+                                <div class="mt-repeater-box">
+                                    <div class="ht-thumbnail">
+                                        <div class="d-flex" style="width: '.$width.'">
+                                            <input type="'.($arrs['sort'] ? 'text' : 'hidden').'" name="sort" value="'.$item['sort'].'" placeholder="Sắp xếp" class="form-control flex-none" ht-trigger="number" style="width: 83px; margin-right: 5px;" />
+                                            <input type="'.($arrs['note'] ? 'text' : 'hidden').'" name="name" value="'.$item['name'].'" class="form-control" placeholder="'.$arrs['note'].'" style="margin-right: 5px;" />
+                                            '.($arrs['desc_short'] ?'<textarea name="desc_short" class="form-control margin-right-5" ht-trigger="txtResize" placeholder="'.$arrs['desc_short'].'">'.$item['desc_short'].'</textarea>' : '').'
+                                            '.($arrs['link'] ?'<textarea name="link" class="form-control margin-right-5" ht-trigger="txtResize" placeholder="'.$arrs['link'].'">'.$item['link'].'</textarea>' : '').'
+                                        </div>
+                                        <div class="flex-auto '.$hidden.'">
+                                            <div class="fileinput-exists" data-provides="fileinput">
+                                                <div class="fileinput-preview fileinput-exists thumbnail"><img src="'.$thumbnail.'"/></div>
+                                                <div class="input-group">
+                                                    <div class="form-control input-fixed" data-trigger="fileinput"><i class="fa fa-file-image-o fileinput-exists"></i> <span class="fileinput-filename" data-filename="'.$arrs['filename'].'"> '.$arrs['filename'].'</span></div>
+                                                    <span class="input-group-addon btn blue btn-file">
+                                                        <span class="fileinput-new"><i class="fa fa-upload" aria-hidden="true"></i></span>
+                                                        <span class="fileinput-exists"> <i class="fa fa-upload" aria-hidden="true"></i> </span>
+                                                        <input type="file" name="thumbnail" onchange="_HTUpload.image(this, \'upload\');" />
+                                                        <input type="hidden" disabled name="delete" value="'.$item['thumbnail'].'" />
+                                                        <input type="hidden" name="hide" value="'.$item['thumbnail'].'" />
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <a href="javascript:;" data-repeater-delete class="btn red mt-repeater-delete mt-repeater-del-right mt-repeater-btn-inline '.$hidden.'"><i class="fa fa-close"></i></a>
+                            </div>
+                        </div>
+                    </div>';
+                }
+            break;
+            case 'input-group-radio-multi':
+                $result = '<div class="'.$arrs['class'].'"><div class="form-group choose-type-price margin-bottom-15"><label>'.$arrs['label'].'</label><div class="input-group"><input type="text" name="'.$arrs['name'].'[value]" value="'.$arrs['value']['value'].'" '.$arrs['attr'].' class="form-control"/>';
+                foreach ($arrs['addon']['list'] as $vl_list) {
+                    $result .= '<span class="input-group-addon"><label class="mt-radio mt-radio-outline"> '.$vl_list['name'].' <input type="radio" value="'.$vl_list['id'].'" name="'.$arrs['name'].'['.$arrs['addon']['name'].']" '.(($arrs['addon']['value'] == $vl_list['id']) ? 'checked' : '').'><span></span></label></span>';
+                }
+                $result .= '</div></div></div>';
+            break;
+        }
+        return $result;
+    };
+    $typeField = array(
+        'input' => array('menu','name','email','address','phone','keyword','sku','icon','fullname'),
+        'input-group-radio' => array('discount_value'),
+        'tag' => array('tags','list_tag_id'),
+        'textarea' => array('title','slug','desc_short','description','link','map','note','url_old','url_new','subject'),
+        'datetime' => array('date_published','expired_date','todo_date'),
+        'editor' => array('detail','body'),
+        'image' => array('thumbnail','logo','favicon','image'),
+        'number' => array('price_market','price_discount','price_percent','expired_number','order_value'),
+        'select' => array('parent','cat_id','list_brand_id','brand_id','list_label_id','list_product_id','list_news_id','list_select_id','list_section_id','allowed_value'),
+        'switch' => array('status'),
+        'translate' => isset($this->lang['field']) ? $this->lang['field'] : $this->identity()->langfield
+    );
+    $default = array(
+        'title' => array('attr' => 'data-length="64"'),
+        'keyword' => array('class' => 'pull-right'),
+        'description' => array('class' => 'pull-right', 'attr' => 'data-length="169"')
+    );
+    $multi = array();
+    $currentFields = array();
+    $fieldInputs = array();
+    $fieldImages = array();
+    $fieldSelects = array();
+    $fieldCheckboxes = array();
+    $fieldDetails = array();
+    $fieldDetailsMini = array();
+
+    foreach ($this->default as $item) {
+        // Thêm giá trị mặc định
+        if ($default[$item['name']]) {
+            $item = array_merge($default[$item['name']], $item);
+        }
+        // Tạo chuẩn chung cho các field
+        if (!is_array($item['label'])) {
+            if (!isset($item['translate'])) {
+                $item['translate'] = (in_array($item['name'], $typeField['translate'])) ? 1 : 0;
+            }
+            foreach ($typeField as $type => $value) {
+                if (is_string($item['label']) && in_array($item['name'], $value)) {
+                    $item['label'] = array(array_merge(array('field' => $type), $item));
+                    break;
+                }
+            }
+        }
+        // Field mặc định
+        foreach ($item['label'] as $value) {
+            $xhtml = '';
+            $attr_id = $value['no_attr_id'] ? '' : 'id="'.$value['name'].'"';
+            switch ($item['name']) {
+                case 'special':
+                    $fieldCheckboxes[] = $value;
+                break;
+                case 'multi_input':
+                    $value['value'] = $item['value'][$value['name']];
+                    if ($this->lang['tab'] && $value['translate']) {
+                        if ($this->lang['tab'] != $this->identity()->lang && $this->lang['data']) {
+                            if (is_array($value['value']) && $value['value'][0]) {
+                                foreach ($value['value'] as $i => $vl_not) {
+                                    $value['value'][$i] = $this->lang['data'][$item['name']][$value['name']][$i] ? $this->lang['data'][$item['name']][$value['name']][$i] : array();
+                                }
+                            } else {
+                                $value['value'] = $this->lang['data'][$item['name']][$value['name']];
+                            }
+                        }
+                        $value['name'] = 'translate['.$this->lang['tab'].']['.$item['name'].']['.$value['name'].']';
+                    } else {
+                        $value['name'] = $item['name'].'['.$value['name'].']';
+                    }
+
+                    if ($value['sort'] || $value['desc_short']) {
+                        $value['attr'] = 'placeholder="'.($value['title'] ?? "Tiêu đề").'"';
+                    }
+                    if ($value['desc_short']) {
+                        $value['class'] = $value['auto'] ? 'col-md-12':'col-md-6';
+                    }
+                    $readonly = '';
+                    if ($value['disabled']) {
+                        $readonly = 'readonly';
+                        $value['attr'] .= " ".$readonly;
+                    }
+
+                    if (isset($value['auto'])) {
+                        $multi['input'][] = $value;
+                        $value['field'] = '';
+                    } elseif ($value['desc_short']) {
+                        $value['addField'] = '<textarea name="'.$value['name'].'[desc_short]" class="form-control margin-left-5 flex-auto" ht-trigger="txtResize" placeholder="'.$this->translate($value['desc_short'] == 'checked' ? "Mô tả" : $value['desc_short']).'" '.$readonly.'>'.($value['value']['desc_short'] ?? '').'</textarea>';
+                        $value['name'] = $value['name'].'[name]';
+                        $value['value'] = $value['value']['name'] ?? $value['value'];
+                        $fieldInputs[] = $value;
+                        $value['field'] = '';
+                    } else {
+                        $value['value'] = $value['value']['name'] ?? $value['value'];
+                    }
+                break;
+                case 'multi_image':
+                    $value['value'] = $item['value'][$value['name']];
+                    $value['translate'] = $value['translate'] || $value['translate_image'];
+                    if ($this->lang['tab'] && ($value['translate'])) {
+                        if ($this->lang['tab'] != $this->identity()->lang && $this->lang['data']) {;
+                            if (is_array($value['value']) && $value['value'][0]) {
+                                foreach ($value['value'] as $i => $vl_not) {
+                                    $value['value'][$i] = $this->lang['data'][$item['name']][$value['name']][$i] ? $this->lang['data'][$item['name']][$value['name']][$i] : array();
+                                }
+                            } else {
+                                $value['value'] = $this->lang['data'][$item['name']][$value['name']];
+                            }
+                        }
+                        $value['name'] = 'translate['.$this->lang['tab'].']['.$item['name'].']['.$value['name'].']';
+                    } else {
+                        $value['name'] = $item['name'].'['.$value['name'].']';
+                    }
+
+                    if (isset($value['auto'])) {
+                        $multi['image'][] = $value;
+                    } else {
+                        $value['field'] = 'image';
+                    }
+                break;
+                case 'multi_file':
+                    $value['value'] = $item['value'][$value['name']];
+                    $value['name'] = $item['name'].'['.$value['name'].']';
+                    if (isset($value['auto'])) {
+                        $multi['file'][] = $value;
+                    } else {
+                        $value['field'] = 'file';
+                    }
+                break;
+                case 'multi_detail':
+                    $value['value'] = $item['value'][$value['name']];
+                    if ($this->lang['tab'] && $value['translate']) {
+                        if ($this->lang['tab'] != $this->identity()->lang && $this->lang['data']) {
+                            if (is_array($value['value'])) {
+                                foreach ($value['value'] as $i => $vl_not) {
+                                    $value['value'][$i] = $this->lang['data'][$item['name']][$value['name']] ? $this->lang['data'][$item['name']][$value['name']][$i] : array();
+                                }
+                            } else {
+                                $value['value'] = $this->lang['data'][$item['name']][$value['name']];
+                            }
+                        }
+                        $value['name'] = 'translate['.$this->lang['tab'].']['.$item['name'].']['.$value['name'].']';
+                    } else {
+                        $value['name'] = $item['name'].'['.$value['name'].']';
+                    }
+                    if (isset($value['auto'])) {
+                        $multi['detail'][] = $value;
+                    } else {
+                        $value['field'] = 'editor';
+                    }
+                break;
+                case 'sub':
+                    $value['copy'] = $item['copy'];
+                    $value['value'] = $item['value'][$value['key']];
+                    if ($this->lang['tab']) {
+                        if ($this->lang['tab'] != $this->identity()->lang) {
+                            $value['value'] = $this->lang['data'][$item['name']][$value['key']];
+                        } else if ($this->lang['tab'] == $this->identity()->lang) {
+                            foreach ($value['value'] as $i => $vl) {
+                                $dataLang = $this->lang['data'][$item['name']][$value['key']];
+                                if ($dataLang[$i] && $dataLang[$i]['multi_input']) {
+                                    $value['value'][$i]['multi_input'] = json_decode($value['value'][$i]['multi_input'], true);
+                                    $value['value'][$i]['multi_input'] = json_encode(array_merge($value['value'][$i]['multi_input'], $dataLang[$i]['multi_input']));
+                                }
+                            }
+                        }
+                    }
+                    $value['key'] = $item['name'].'['.$value['key'].']';
+                    if (!empty($value['label'])) {
+                        $multi['sub'][] = $value;
+                    }
+                break;
+                default:
+                    if ($this->lang['tab'] && $value['translate']) {
+                        $value['value'] = ($this->lang['tab'] == $this->identity()->lang && (empty($this->lang['data']) || empty($this->lang['data'][$value['name']]))) ? $value['value'] : $this->lang['data'][$value['name']];
+                        $value['name'] = 'translate['.$this->lang['tab'].']['.$value['name'].']';
+                        if ($item['name'] == 'slug') {
+                            $value['value'] = str_replace($this->lang['tab'] . '/', '', $value['value']);
+                        }
+                    }
+                break;
+            }
+            switch ($value['field']) {
+                case 'input':
+                    $xhtml = $htmlField(array_merge($value, array(
+                        'class' => 'col-md-6 '.$value['class'],
+                        'label' => $this->translate($value['label']),
+                        'attr' => $attr_id.' '.$value['attr']
+                    )));
+                break;
+                case 'input-group-radio-multi':
+                    $addon = array(
+                        'name' => 'type',
+                        'value' => $value['value']['type'] ? $value['value']['type'] : 1,
+                        'list' => array(
+                            array('id' => 1, 'name' => 'Phần trăm', 'value' => 1),
+                            array('id' => 2, 'name' => 'Tiền mặt', 'value' => 2),
+                        ),
+                    );
+                    $attr_id = 'ht-trigger="number"';
+                    $xhtml = $htmlField(array('field' => $value['field'], 'class' => 'col-md-6 '.$value['class'], 'label' => $this->translate($value['label']), 'name' => $value['name'], 'value' => $value['value'], 'attr' => $attr_id.' '.$value['attr'], 'addon' => $addon));
+                break;
+                case 'input-group-radio':
+                    $xhtml = $htmlField(array('field' => $value['field'], 'class' => 'col-md-6 '.$value['class'], 'label' => $this->translate($value['label']), 'name' => $value['name'], 'value' => $value['value'], 'attr' => $attr_id.' '.$value['attr'], 'addon' => $value['addon']));
+                break;
+                case 'textarea':
+                    $xhtml = $htmlField(array('field' => $value['field'], 'class' => 'col-md-6 '.$value['class'], 'label' => $this->translate($value['label']).' '.$value['note'], 'name' => $value['name'], 'value' => $value['value'], 'attr' => $attr_id.' '.$value['attr']));
+                break;
+                case 'number':
+                    $xhtml = $htmlField(array_merge(
+                        $value,
+                        array('class' => $value['class'] ?? 'col-md-6', 'label' => $this->translate($value['label']), 'value' => $value['value'] ?? '', 'attr' => $attr_id.' '.$value['attr']))
+                    );
+                break;
+                case 'date':
+                    $xhtml = $htmlField(array('field' => $value['field'], 'class' => 'col-md-6 '.$value['class'], 'label' => $this->translate($value['label']), 'name' => $value['name'], 'value' => $value['value'], 'attr' => $attr_id.' '.$value['attr']));
+                break;
+                case 'time':
+                    $xhtml = $htmlField(array('field' => $value['field'], 'class' => 'col-md-6 '.$value['class'], 'label' => $this->translate($value['label']), 'name' => $value['name'], 'value' => $value['value'], 'attr' => $attr_id.' '.$value['attr']));
+                break;
+                case 'datetime':
+                    $xhtml = $htmlField(array('field' => $value['field'], 'class' => 'col-md-6 '.$value['class'], 'label' => $this->translate($value['label']), 'name' => $value['name'], 'value' => $value['value'], 'attr' => $attr_id, 'disabled' => $value['disabled']));
+                break;
+                case 'switch':
+                    $xhtml = $htmlField(array('field' => $value['field'], 'class' => 'col-md-6 '.$value['class'], 'label' => $this->translate($value['label']), 'name' => $value['name'], 'value' => $value['value'], 'disabled' => $value['disabled'], 'checked' => $value['checked'], 'data' => $value['data']));
+                break;
+                case 'image':
+                    $sizes = array_filter(explode(',', $value['label']));
+                    $size = count($sizes) == 0 ? '' : ' ('.$sizes[0].')';
+                    $value['note'] = $value['note'] && $value['note'] == 'checked' ? 'Tiêu đề' : $value['note'];
+                    $value['desc_short'] = $value['desc_short'] && $value['desc_short'] == 'checked' ? 'Mô tả' : $value['desc_short'];
+
+                    $arrs = array_merge($value, array(
+                        'field' => $value['field'],
+                        'translate' => $value['translate'],
+                        'filename' => $this->translate("Chọn hình ảnh"),
+                        'thumbnail' => $value['value'],
+                        'label' => ($value['text'] ? $value['text'] : $this->translate("Ảnh đại diện")) . $size,
+                        'input' => array(
+                            'name' => '',
+                            'file' => array(
+                                '<input type="file" name="'.$value['name'].'" onchange="_HTUpload.image(this, \'upload\');" /> ',
+                                '<input type="hidden" name="'.$value['name'].'" value="'.$value['value'].'" />',
+                            )
+                        ),
+                    ));
+                    if ($item['name'] == 'multi_image') {
+                        $arrs['hiddenThumbnail'] = !($value['translate_image'] || empty($this->lang) || $this->lang['tab'] == $this->identity()->lang);
+                        $arrs['thumbnail'] = $value['value'][0]['thumbnail'];
+                        $arrs['label'] = $this->translate($value['label']).' ('.explode(',',$value['size'])[0].')';
+                        $arrs['input'] = array(
+                            'name' => '<input type="'.($value['note'] ? 'text' : 'hidden').'" name="'.$value['name'].'[name][]" value="'.$value['value'][0]['name'].'" class="form-control margin-right-5" placeholder="'.$value['note'].'" />',
+                            'file' => array(
+                                '<input type="file" name="'.$value['name'].'[thumbnail][]" onchange="_HTUpload.image(this, \'upload\');" /> ',
+                                '<input type="hidden" disabled name="'.$value['name'].'[delete][]" value="'.$value['value'][0]['thumbnail'].'" />',
+                                '<input type="hidden" name="'.$value['name'].'[hide][]" value="'.$value['value'][0]['thumbnail'].'" />'
+                            )
+                        );
+                        if ($value['desc_short']) {
+                            $arrs['input']['desc_short'] = '<textarea name="'.$value['name'].'[desc_short][]" class="form-control margin-right-5" ht-trigger="txtResize" placeholder="'.$value['desc_short'].'">'.$value['value'][0]['desc_short'].'</textarea>';
+                        }
+                        if ($value['link']) {
+                            $arrs['input']['link'] = '<input type="text" name="'.$value['name'].'[link][]" value="'.$value['value'][0]['link'].'" placeholder="'.$value['link'].'" class="form-control margin-right-5" />';
+                        }
+                    }
+
+                    if (($value['note'] && ($value['desc_short'] || $value['link'])) || ($value['desc_short'] && $value['link'])) {
+                        $fieldImages[] = $arrs;
+                    } else {
+                        $xhtml = $htmlField($arrs);
+                    }
+                break;
+                case 'file':
+                    $class = 'fileinput-new';
+                    $filename = $this->translate("Chọn tập tin");
+                    $col = isset($value['title']) ? array('col-md-7', 'col-md-5') : array('col-md-0', 'col-md-12');
+                    if (is_file(ROOT_PUBLIC.'/'.UPLOAD_FILES.date('Y/m',explode('-',$value['value'][0]['file'])[0]).'/'.$value['value'][0]['file'])) {
+                        $class = 'fileinput-exists';
+                        $filename = substr($value['value'][0]['file'], (strpos($value['value'][0]['file'], "-") + 1));
+                    }
+                    $xhtml =
+                    '<div class="col-md-6">
+                        <div class="form-group">
+                            <label>'.$this->translate($value['label']).'</label>
+                            <div class="row ht-file">
+                                <div class="'.$col[0].'">
+                                    <input type="'.(isset($value['title']) ? 'text' : 'hidden').'" name="'.$value['name'].'[name][]" value="'.$value['value'][0]['name'].'" class="form-control" placeholder="'.$this->translate("Tiêu đề tập tin").'">
+                                </div>
+                                <div class="'.$col[1].'">
+                                    <div class="'.$class.'" data-provides="fileinput">
+                                        <div class="input-group">
+                                            <div class="form-control input-fixed" data-trigger="fileinput">
+                                                <i class="fa fa-file-text-o fileinput-exists"></i>
+                                                <span class="fileinput-filename" data-filename="'.$this->translate("Chọn tập tin").'"> '.$filename.' </span>
+                                            </div>
+                                            <span class="input-group-addon btn blue btn-file">
+                                                <span class="fileinput-new"><i class="fa fa-upload" aria-hidden="true"></i></span>
+                                                <span class="fileinput-exists"> <i class="fa fa-upload" aria-hidden="true"></i> </span>
+                                                <input type="file" name="'.$value['name'].'[file][]" onchange="_HTUpload.file(this, \'upload\', \''.$value['extensions'].'\');" />
+                                                <input type="hidden" name="'.$value['name'].'[hide][]" value="'.$value['value'][0]['file'].'" />
+                                            </span>
+                                            <a href="javascript:;" class="input-group-addon btn red fileinput-exists" onclick="_HTUpload.file(this, \'delete\');"><i class="fa fa-close" aria-hidden="true"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>';
+                break;
+                case 'tag':
+                    switch ($value['name']) {
+                        case 'tags':
+                            $xhtml = '<div class="col-md-12"><div class="form-group"><label>'.$this->translate($value['label']).'</label><input type="text" class="ht-tagsinput" name="'.$value['name'].'" value="'.implode(',', $value['value']).'" data-list="'.(htmlspecialchars(json_encode($value['list'], JSON_UNESCAPED_UNICODE))).'"></div></div>';
+                        break;
+                        case 'list_tag_id':
+                            $option = '';
+                            foreach ($value['list'] as $vl_list) {
+                                $option .= '<option value="'.$vl_list['id'].'" '.((in_array($vl_list['id'], explode(',', str_replace(':', '', $value['value'])))) ? 'selected' : '').'>'.$vl_list['name'].'</option>';
+                            }
+                            $xhtml = '<div class="col-md-12"><div class="form-group"><label>'.$this->translate($value['label']).'</label><input type="hidden" name="'.$value['name'].'"><select name="'.$value['name'].'[]" class="form-control select2 select2-multiple" multiple>'.$option.'</select></div></div>';
+                        break;
+                    }
+                break;
+                case 'select':
+                    if (preg_match('/\d+/', $attr_id, $matches)) {
+                        $attr_id = str_replace('['.$matches[0].']', '_'.$matches[0], $attr_id);
+                    }
+
+                    switch ($value['type']) {
+                        case 'checkbox':
+                            $xhtmlContent = '';
+                            foreach ($value['list'] as $item) {
+                                $xhtmlContent .= '<option value="'.$item['id'].'" '.(in_array($item['id'], $value['value']) ? 'selected' : '').'>'.$item['name'].'</option>';
+                            }
+                            $xhtml = '<div class="col-md-6 '.$value['class'].'"><div class="form-group"><label>'.$this->translate($value['label']).'</label>'.($value['input'] ? '<input type="hidden" name="'.$value['name'].'">' : '').'<div '.$attr_id.'><select name="'.$value['name'].'[]" '.$value['attr'].' class="mt-multiselect btn btn-default" multiple="multiple">'.$xhtmlContent.'</select></div></div></div>';
+                        break;
+                        case 'group':
+                            $xhtmlContent = '';
+                            $value['list']['other'] = array('id' => 0,'name' => 'Khác','child' => array());
+                            foreach ($value['list'] as $i => $item) {
+                                if (empty($item['child']) && is_numeric($i)) {
+                                    $value['list']['other']['child'][] = $item;
+                                } else {
+                                    $item['child'] = $item['child'] ? $item['child'] : $value['list']['other']['child'];
+                                    if ($item['child']) {
+                                        $xhtmlContent .= '<optgroup label="'.$item['name'].'" name="'.$value['name'].'[]" value="'.$item['id'].'">';
+                                            foreach ($item['child'] as $vl_child) {
+                                                $xhtmlContent .= '<option value="'.$vl_child['id'].'" '.(in_array($vl_child['id'], $value['value']) ? 'selected' : '').'>'.$vl_child['name'].'</option>';
+                                            }
+                                        $xhtmlContent .= '</optgroup>';
+                                    }
+                                }
+                            }
+                            $xhtml = '<div class="col-md-6"><div class="form-group"><label>'.$this->translate($value['label']).'</label><div '.$attr_id.'>'.($value['input'] ? '<input type="hidden" name="'.$value['name'].'">' : '').'<select name="'.$value['name'].'[]" class="mt-multiselect btn btn-default form-control '.($value['required'] ? 'select2-required' : '').'" multiple="multiple" data-clickable-groups="true">'.$xhtmlContent.'</select></div></div></div>';
+                        break;
+                        case 'multi':
+                            $fieldSelects[] = array_merge($value, array('field' => 'selectMulti'));
+                        break;
+                        case 'mixed':
+                            $xhtmlSelect = '';
+                            $typeSingle = 0;
+                            $typeMulti = 1;
+                            $countSelected = 0;
+
+                            $value['list']['other'] = array('id' => 0, 'type' => $typeMulti,'name' => 'Khác','child' => array());
+                            foreach ($value['list'] as $i => $item) {
+                                if (empty($item['child']) && is_numeric($i)) {
+                                    $value['list']['other']['child'][] = $item;
+                                } else {
+                                    $item['child'] = $item['child'] ? $item['child'] : $value['list']['other']['child'];
+                                    if ($item['child']) {
+                                        $type = $item['type'] ?? $typeMulti;
+                                        $class = $type == $typeSingle ? 'form-control select2 select2-not-search' : 'mt-multiselect btn btn-default';
+                                        $attr = $type == $typeMulti ? 'multiple="multiple" data-filter="false"' : '';
+
+                                        $options = $type == $typeSingle ? '<option></option><option value="0" class="level1 text-uppercase">** '.$this->translate("Bỏ chọn").' **</option>' : '';
+                                        foreach ($item['child'] as $vl_child) {
+                                            $selected = in_array($vl_child['id'], $value['value']) ? 'selected' : '';
+                                            $countSelected = $selected ? $countSelected + 1 : $countSelected;
+                                            $options .= '<option value="'.$vl_child['id'].'" '.$selected.'>'.$vl_child['name'].'</option>';
+                                        }
+
+                                        $xhtmlSelect .= '<div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>'.$item['name'].'</label>
+                                                <select name="'.$value['name'].'[]" class="'.$class.'" '.$attr.'>'.$options.'</select>
+                                            </div>
+                                        </div>';
+                                    }
+                                }
+                            }
+
+                            $xhtml = '<div class="col-md-6">
+                                <div class="form-group">
+                                    <label>'.$this->translate($value['label']).'</label>
+                                    <div '.$attr_id.'>
+                                        <div class="dropdown dropdown--select-mix">
+                                            <button class="dropdown-toggle btn btn-default form-control" data-toggle="dropdown" '.($xhtmlSelect ? '' : 'disabled').'><span class="selected-text">'.($countSelected > 0 ? ' Đã chọn tất cả ('.$countSelected.')' : 'Vui lòng chọn').'</span><b class="caret"></b></button>
+                                            <ul class="dropdown-menu hold-on-click" role="menu">
+                                                <li role="presentation" class="row">'.$xhtmlSelect.'</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>';
+                        break;
+                        default: // radio
+                            $xhtmlSiblings = '';
+                            $xhtmlContent = '<option value="0" class="level1 text-uppercase">** '.$this->translate("Bỏ chọn").' **</option>';
+                            $class = 'form-control select2';
+                            if ($value['required'] || empty($value['list'])) {
+                                $xhtmlContent = '';
+                                $class .= ' select2-required';
+                            }
+                            if ($value['siblings']) {
+                                foreach ($value['siblings']['list'] as $keySiblings => $valueSiblings) {
+                                    $checked = in_array($keySiblings, $value['siblings']['selected']) ? 'checked' : '';
+                                    $xhtmlSiblings .= '<label class="mt-'.$value['siblings']['type'].' mt-'.$value['siblings']['type'].'-outline ">
+                                        <input type="'.$value['siblings']['type'].'" name="'.$value['siblings']['name'].'" value="'.$keySiblings.'" '.$checked.' />
+                                        <span></span> '.$valueSiblings.'
+                                    </label>';
+                                }
+                            }
+                            foreach ($value['list'] as $i => $item) {
+                                $level = ($item['level']) ? 'level'.$item['level'] : '';
+                                $selected = ($item['id'] == $value['value'] || in_array($item['id'], $value['value']) || (empty($value['value']) && $value['required'] && $value['name'] == 'list_select_id[]' && $i == 0)) ? 'selected' : '';
+                                $disabled = ($value['disabled'] && $item['level'] == $value['disabled']) ? 'disabled' : '';
+                                $xhtmlContent .= '<option value="'.$item['id'].'" class="'.$level.'" '.$selected.' '.$disabled.'>'.$item['name'].'</option>';
+                            }
+                            $xhtml = '<div class="col-md-6 '.$value['class'].'">
+                                        <div class="form-group d-flex flex-wrap align-items-center">
+                                            <label class="width-100">'.($this->translate($value['label']) ? $this->translate($value['label']) : 'Danh mục').'</label>
+                                            <div '.$attr_id.' class="flex-auto"><select name="'.$value['name'].'" '.$value['attr'].' class="'.$class.'"><option></option>'.$xhtmlContent.'</select></div>
+                                            '.(!$xhtmlSiblings ? '' : '<div class="margin-left-10" '.($value['siblings']['hidden'] ? 'hidden' : '').'>'.$xhtmlSiblings.'</div>').'
+                                        </div>
+                                    </div>';
+                        break;
+                    }
+                break;
+                case 'editor':
+                    $value['attr'] = $attr_id.' '.$value['attr'];
+                    if ($value['size'] == 'mini') {
+                        $fieldDetailsMini[] = $value;
+                    } else {
+                        $fieldDetails[] = $value;
+                    }
+                break;
+            }
+            if ($value['translate'] || empty($this->lang) || $this->lang['tab'] == $this->identity()->lang) {
+                $currentFields[] = array(
+                    'name' => $value['keySort'] ?? $value['name'],
+                    'html' =>  $xhtml
+                );
+            }
+        }
+    }
+    foreach ($fieldInputs as $value) {
+        if ($value['translate'] || empty($this->lang) || $this->lang['tab'] == $this->identity()->lang) {
+            $currentFields[] = array(
+                'name' => str_replace('[name]', '', $value['name']),
+                'html' =>  $htmlField($value)
+            );
+        }
+    }
+    foreach ($fieldImages as $value) {
+        if ($value['translate'] || empty($this->lang) || $this->lang['tab'] == $this->identity()->lang) {
+            $currentFields[] = array(
+                'name' => $value['name'],
+                'html' =>  $htmlField($value)
+            );
+        }
+    }
+    foreach ($fieldSelects as $value) {
+        if ($value['translate'] || empty($this->lang) || $this->lang['tab'] == $this->identity()->lang) {
+            $currentFields[] = array(
+                'name' => $value['keySort'] ?? $value['name'],
+                'html' =>  $htmlField($value)
+            );
+        }
+    }
+    foreach ($fieldDetailsMini as $value) {
+        if ($value['translate'] || empty($this->lang) || $this->lang['tab'] == $this->identity()->lang) {
+            $currentFields[] = array(
+                'name' => $value['name'],
+                'html' => $htmlField(array_merge($value, array('class' => 'col-md-12', 'class-field' => 'ckeditor-'.$value['size'], 'attr' => 'id="'.$value['name'].'"')))
+            );
+        }
+    }
+    foreach ($multi['input'] as $value) {
+        if ($value['translate'] || empty($this->lang) || $this->lang['tab'] == $this->identity()->lang) {
+            $value['value'] = ($value['value']) ? array_merge(array(array('')), $value['value']) : array('');
+            $hidden = (empty($this->lang) || $this->lang['tab'] == $this->identity()->lang) ? '' : 'hidden';
+
+            $currentFields[] = array(
+                'name' => $value['name'],
+                'html' => '<div class="col-md-12">
+                            <div class="form-group mt-repeater">
+                                <div class="headline-1"><hr><h4 class="headline__title"><span>'.$this->translate($value['label']).'</span></h4></div>
+                                <div class="row" data-repeater-list="'.$value['name'].'">'.$htmlField(array_merge($value, array(
+                                    'field' => 'multi_input',
+                                    'type' => $value['field'],
+                                    'value' => $value['value']
+                                ))).'</div>
+                                <a href="javascript:;" data-repeater-create="input" class="btn blue mt-repeater-add '.$hidden.'"><i class="fa fa-plus"></i> '.$this->translate("Thêm").' '.$this->translate($value['label']).'</a>
+                            </div>
+                        </div>'
+            );
+        }
+    }
+    foreach ($multi['file'] as $value) {
+        if ($value['translate'] || empty($this->lang) || $this->lang['tab'] == $this->identity()->lang) {
+            $html = '';
+            $class = isset($value['title']) ? array('col-md-7', 'col-md-5') : array('col-md-0', 'col-md-12');
+            $value['value'] = ($value['value']) ? array_merge(array(array('')), $value['value']): array('');
+            foreach ($value['value'] as $item) {
+                $filename = is_file(ROOT_PUBLIC.'/'.UPLOAD_FILES.date('Y/m',explode('-',$item['file'])[0]).'/'.$item['file']) ? substr($item['file'], (strpos($item['file'], "-") + 1)) : $this->translate("Chọn tập tin");
+                $html .= '<div data-repeater-item class="col-md-6"><div class="mt-repeater-item"><div class="mt-repeater-cell"><div class="row ht-file">
+                            <div class="'.$class[0].'">
+                                <input type="'.($value['title'] ? 'text' : 'hidden').'" name="name" value="'.$item['name'].'" class="form-control" placeholder="'.$this->translate("Tiêu đề tập tin").'" />
+                            </div>
+                            <div class="'.$class[1].'">
+                                <div class="fileinput-exists" data-provides="fileinput">
+                                    <div class="input-group">
+                                        <div class="form-control input-fixed" data-trigger="fileinput">
+                                            <i class="fa fa-file-text-o fileinput-exists"></i>
+                                            <span class="fileinput-filename" data-filename="'.$this->translate("Chọn tập tin").'"> '.$filename.' </span>
+                                        </div>
+                                        <span class="input-group-addon btn blue btn-file">
+                                            <span class="fileinput-new"><i class="fa fa-upload" aria-hidden="true"></i></span>
+                                            <span class="fileinput-exists"> <i class="fa fa-upload" aria-hidden="true"></i> </span>
+                                            <input type="file" name="file" onchange="_HTUpload.file(this, \'upload\', \''.$value['extensions'].'\');" />
+                                            <input type="hidden" name="hide" value="'.$item['file'].'"; />
+                                        </span>
+                                        <a href="javascript:;" data-repeater-delete class="input-group-addon btn red fileinput-exists"><i class="fa fa-close"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div></div></div></div>';
+            }
+            $currentFields[] = array(
+                'name' => $value['name'],
+                'html' => '<div class="col-md-12">
+                            <div class="form-group mt-repeater">
+                                <div class="headline-1"><hr><h4 class="headline__title"><span>'.$this->translate($value['label']).'</span></h4></div>
+                                <div class="row" data-repeater-list="'.$value['name'].'">'.$html.'</div>
+                                <a href="javascript:;" data-repeater-create="file" class="btn blue mt-repeater-add"><i class="fa fa-plus"></i> '.$this->translate("Thêm").' '.$this->translate($value['label']).'</a>
+                            </div>
+                        </div>'
+            );
+        }
+    }
+    foreach ($multi['image'] as $value) {
+        $hasTranslate = $value['translate'] || $value['translate_image'];
+        if ($hasTranslate || empty($this->lang) || $this->lang['tab'] == $this->identity()->lang) {
+            $value['value'] = ($value['value']) ? array_merge(array(array('')), $value['value']) : array('');
+            $hidden = ($value['translate_image'] || empty($this->lang) || $this->lang['tab'] == $this->identity()->lang) ? '' : 'hidden';
+
+            $currentFields[] = array(
+                'name' => $value['name'],
+                'html' => '<div class="col-md-12">
+                            <div class="form-group mt-repeater">
+                                <div class="headline-1"><hr><h4 class="headline__title"><span>'.$this->translate($value['label']).' <span class="text-lowercase">('.explode(',',$value['size'])[0].')</span></span></h4></div>
+                                <div class="row" data-repeater-list="'.$value['name'].'">'.$htmlField(array_merge($value, array(
+                                    'field' => 'multi_image',
+                                    'filename' => $this->translate("Chọn hình ảnh"),
+                                    'note' => $value['note'] && $value['note'] == 'checked' ? 'Tiêu đề' : $value['note'],
+                                    'desc_short' => $value['desc_short'] && $value['desc_short'] == 'checked' ? 'Mô tả' : $value['desc_short'],
+                                    'translate' => $value['translate_image'],
+                                ))).'</div>
+                                <a href="javascript:;" data-repeater-create="image" class="btn blue mt-repeater-add '.$hidden.'"><i class="fa fa-plus"></i> '.$this->translate("Thêm").' '.$this->translate($value['label']).'</a>
+                            </div>
+                        </div>'
+            );
+        }
+    }
+    foreach ($multi['sub'] as $value) {
+        // TODO update when version up
+        // $fieldsTranslate = array('name', 'desc_short', 'detail', 'thumbnail');
+        $fieldsTranslate = $typeField['translate'];
+        foreach ($value['define'] as $name => $label) {
+            foreach ($typeField as $type => $fields) {
+                if (!empty($label) && in_array($name, $fields)) {
+                    $tmp = array(
+                        'label' => $label,
+                        'field' => $type,
+                        'name' => $name,
+                        'translate' => in_array($name, $fieldsTranslate)
+                    );
+
+                    if ($name == 'detail' && $value['define']['detail_size']) {
+                        $tmp['size'] = $value['define']['detail_size'];
+                        unset($value['define']['detail_size']);
+                    }
+
+                    $value['define'][] = $tmp;
+                    unset($value['define'][$name]);
+                    break;
+                }
+                if (is_array($label)) {
+                    unset($value['define'][$name][0]);
+                    foreach ($value['define'][$name] as $i => $vl_label) {
+                        if (!isset($vl_label['auto'])) {
+                            $tmpName = $name;
+                            $vl_label['field'] = array('multi_image' => 'image')[$name] ? array('multi_image' => 'image')[$name] : $vl_label['field'];
+                            if($name == 'special') {
+                                $vl_label['field'] = $tmpName;
+                                $vl_label['slug'] = $vl_label['name'];
+                                $tmpName = $name.']['.$vl_label['name'];
+                            }
+                            $value['define'][] = array_merge($vl_label, array(
+                                'label' => $vl_label['label'],
+                                'field' => $vl_label['field'],
+                                'name' => in_array($tmpName, array('multi_image','multi_input')) ? array($tmpName, $vl_label['name']) : $tmpName
+                            ));
+                            unset($value['define'][$name][$i]);
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+        $html = '';
+        $value['value'] = ($value['value']) ? array_merge(array(array('')), $value['value']) : array('');
+        foreach ($value['value'] as $vl_value) {
+            if (isset($vl_value['multi_input'])) {
+                $vl_value['multi_input'] = is_array($vl_value['multi_input']) ? $vl_value['multi_input'] : json_decode($vl_value['multi_input'], true);
+            }
+            if (isset($vl_value['multi_image'])) {
+                $vl_value['multi_image'] = is_array($vl_value['multi_image']) ? $vl_value['multi_image'] : json_decode($vl_value['multi_image'], true);
+            }
+
+            $xhtml = '';
+            if (($this->lang['tab'] == $this->identity()->lang)) {
+                $xhtml = '<input type="hidden" name="id" value="'.(($value['copy']) ? '' : $vl_value['id']).'" /><div class="col-md-1"><div class="form-group text-center"><label>STT</label><input type="text" name="sort" value="'.$vl_value['sort'].'" class="form-control text-center"></div></div>';
+            }
+            $sub_detail = array();
+            $hidden = (empty($this->lang) || $this->lang['tab'] == $this->identity()->lang) ? '' : 'hidden';
+            foreach ($value['define'] as $i => $vl_define) {
+                if (($this->lang['tab'] == $this->identity()->lang) || $vl_define['translate']) {
+                    $itemSpecial = '';
+                    if($vl_define['field'] == 'special' && $vl_define['detail'] == 'checked') {
+                        $checkedSpectial = json_decode($vl_value['special'], true);
+                        $itemSpecial .= '<div class="form-group text-center margin-bottom-0" style="margin-top: 8px;"><label class="mt-checkbox mt-checkbox-outline mt-checkbox--detail margin-bottom-0" style="margin-left: 0!important;">
+                            <input type="hidden" name="'.$vl_define['name'].'" value="0"/>
+                            <input type="checkbox" name="'.$vl_define['name'].'" '.($checkedSpectial[$vl_define['slug']] ? 'checked' : '').' value="1"/><span></span> '.$vl_define['label'].'
+                        </label></div>';
+                    }
+
+                    if($itemSpecial != '') {
+                        $xhtml .= '<div class="col-md-2 align-items">'.$itemSpecial.'</div>';
+                    }
+
+                    $vl_define['class'] = $i == 0 ? 'col-md-5' : 'col-md-4';
+                    $vl_define['value'] = $vl_value[$vl_define['name']];
+                    if($i == 0 && in_array($vl_define['name'], array('price_market','price_discount'))) {
+                        $vl_define['class'] = 'col-md-3';
+                    }
+                    if (is_array($vl_define['name'])) {
+                        $vl_define['value'] = $vl_value[$vl_define['name'][0]][$vl_define['name'][1]];
+                        $vl_define['name'] = implode('][', $vl_define['name']);
+                    }
+                    $vl_define['attr'] = 'data-name="'.$vl_define['name'].'"'.($vl_define['translate'] ? ' data-translate="'.$this->lang['tab'].'"' : '');
+                    switch ($vl_define['field']) {
+                        case 'input':
+                            $xhtml .= $htmlField(array('field' => $vl_define['field'], 'class' => $vl_define['class'], 'label' => $this->translate($vl_define['label']), 'name' => $vl_define['name'], 'value' => $vl_define['value'], 'attr' => $vl_define['attr']));
+                        break;
+                        case 'textarea':
+                            $xhtml .= $htmlField(array('field' => $vl_define['field'], 'class' => $vl_define['class'], 'label' => $this->translate($vl_define['label']).' '.$vl_define['note'], 'name' => $vl_define['name'], 'value' => $vl_define['value'], 'attr' => $vl_define['attr']));
+                        break;
+                        case 'number':
+                            $xhtml .= $htmlField(array('field' => $vl_define['field'], 'class' => $vl_define['class'], 'label' => $this->translate($vl_define['label']), 'name' => $vl_define['name'], 'value' => $vl_define['value'], 'attr' => $value['attr']));
+                        break;
+                        case 'date':
+                            $xhtml .= $htmlField(array('field' => $vl_define['field'], 'class' => $vl_define['class'], 'label' => $this->translate($vl_define['label']), 'name' => $vl_define['name'], 'value' => $vl_define['value'], 'attr' => 'placeholder="'.$this->translate("Ngày-Tháng-Năm").'"'));
+                        break;
+                        case 'image':
+                            $vl_define['note'] = $vl_define['note'] && $vl_define['note'] == 'checked' ? 'Tiêu đề' : $vl_define['note'];
+                            $vl_define['desc_short'] = $vl_define['desc_short'] && $vl_define['desc_short'] == 'checked' ? 'Mô tả' : $vl_define['desc_short'];
+                            $arrs = array_merge($vl_define, array(
+                                'sub' => true,
+                                'field' => $vl_define['field'],
+                                'filename' => $this->translate("Chọn hình ảnh"),
+                                'thumbnail' => $vl_define['value'][0]['thumbnail'],
+                                'label' => $this->translate($vl_define['label']).' ('.explode(',',$vl_define['size'])[0].')',
+                                'input' => array(
+                                    'name' => '<input type="'.($vl_define['note'] ? 'text' : 'hidden').'" name="name" data-name="'.$vl_define['name'].'][name][" value="'.$vl_define['value'][0]['name'].'" placeholder="'.$vl_define['note'].'" class="form-control margin-right-5" />',
+                                    'file' => array(
+                                        '<input type="file" name="thumbnail" data-name="'.$vl_define['name'].'][thumbnail]["onchange="_HTUpload.image(this, \'upload\');" '.$vl_define['attr'].' /> ',
+                                        '<input type="hidden" disabled name="delete" data-name="'.$vl_define['name'].'][delete][" value="'.$vl_define['value'][0]['thumbnail'].'" '.$vl_define['attr'].' />',
+                                        '<input type="hidden" name="hide" data-name="'.$vl_define['name'].'][hide][" value="'.$vl_define['value'][0]['thumbnail'].'" '.$vl_define['attr'].' />'
+                                    ),
+                                ),
+                            ));
+                            if ($vl_define['name'] == 'thumbnail') {
+                                $arrs['thumbnail'] = $vl_define['value'];
+                                $arrs['label'] = $this->translate("Ảnh đại diện").' ('.explode(',',$this->translate($vl_define['label']))[0].')';
+                                $arrs['input'] = array(
+                                    'name' => '',
+                                    'file' => array(
+                                        '<input type="file" name="'.$vl_define['name'].'" onchange="_HTUpload.image(this, \'upload\');" '.$vl_define['attr'].' /> ',
+                                        '<input type="hidden" name="'.$vl_define['name'].'" value="'.$vl_define['value'].'" '.$vl_define['attr'].' />',
+                                    )
+                                );
+                            } else {;
+                                $arrs['hiddenThumbnail'] = !($vl_define['translate_image'] || empty($this->lang) || $this->lang['tab'] == $this->identity()->lang);
+                                if ($vl_define['desc_short']) {
+                                    $arrs['input']['desc_short'] = '<textarea name="desc_short" data-name="'.$vl_define['name'].'][desc_short][" class="form-control margin-right-5" ht-trigger="txtResize" placeholder="'.$vl_define['desc_short'].'">'.$vl_define['value'][0]['desc_short'].'</textarea>';
+                                }
+                                if ($vl_define['link']) {
+                                    $arrs['input']['link'] = '<input type="text" name="link" data-name="'.$vl_define['name'].'][link][" value="'.$vl_define['value'][0]['link'].'" placeholder="'.$vl_define['link'].'" class="form-control margin-right-5" />';
+                                }
+                            }
+                            $xhtml .= $htmlField($arrs);
+                        break;
+                        case 'select':
+                            $vl_define['value'] = explode(',', str_replace(':', '', $vl_define['value']));
+                            $vl_define['attr'] = 'data-name="list_select_id]["';
+                            switch ($vl_define['type']) {
+                                case 'checkbox':
+                                    $xhtmlContent = '';
+                                    foreach ($vl_define['list'] as $item) {
+                                        $xhtmlContent .= '<option value="'.$item['id'].'" '.(in_array($item['id'], $vl_define['value']) ? 'selected' : '').'>'.$item['name'].'</option>';
+                                    }
+                                    $xhtml .= '<div class="col-md-4 '.$vl_define['class'].'"><div class="form-group"><label>'.$this->translate($vl_define['label']).'</label><input type="hidden" name="'.$vl_define['name'].'" '.$vl_define['input'].' '.$vl_define['attr'].' ><div><select name="'.$vl_define['name'].'" class="mt-multiselect btn btn-default" multiple="multiple">'.$xhtmlContent.'</select></div></div></div>';
+                                break;
+                                default: // radio
+                                    $xhtmlContent = '<option value="0" class="level1 text-uppercase">** '.$this->translate("Bỏ chọn").' **</option>';
+                                    $class = 'form-control select2';
+                                    if ($vl_define['required'] || empty($vl_define['list'])) {
+                                        $xhtmlContent = '';
+                                        $class .= ' select2-required';
+                                    }
+                                    foreach ($vl_define['list'] as $i => $item) {
+                                        $level = ($item['level']) ? 'level'.$item['level'] : '';
+                                        $selected = ($item['id'] == $vl_define['value'] || in_array($item['id'], $vl_define['value']) || (empty($vl_define['value']) && $vl_define['required'] && $vl_define['name'] == 'list_select_id[]' && $i == 0)) ? 'selected' : '';
+                                        $disabled = ($vl_define['disabled'] && $item['level'] == $vl_define['disabled']) ? 'disabled' : '';
+                                        $xhtmlContent .= '<option value="'.$item['id'].'" class="'.$level.'" '.$selected.' '.$disabled.'>'.$item['name'].'</option>';
+                                    }
+                                    $xhtml .= '<div class="col-md-4 '.$vl_define['class'].'"><div class="form-group"><label>'.($this->translate($vl_define['label']) ? $this->translate($vl_define['label']) : 'Danh mục').'</label><div><select name="'.$vl_define['name'].'" '.$vl_define['attr'].' class="'.$class.'"><option></option>'.$xhtmlContent.'</select></div></div></div>';
+                                break;
+                            }
+                        break;
+                        case 'editor':
+                            $sub_detail[] = $vl_define;
+                        break;
+                    }
+                }
+            }
+            foreach ($value['define']['multi_input'] as $vl_multi) {
+                if (($this->lang['tab'] == $this->identity()->lang) || $vl_multi['translate']) {
+                    $vl_multi['value'] = $vl_value['multi_input'][$vl_multi['name']];
+                    $vl_multi['value'] = ($vl_multi['value']) ? array_merge(array(array('')), $vl_multi['value']): array('');
+                    $vl_multi['name'] = 'multi_input]['.$vl_multi['name'];
+                    $vl_multi['attr'] = 'style="width: 100%;"';
+                    if ($vl_multi['translate']) {
+                        $vl_multi['name'] = 'translate]['.$this->lang['tab'].']['.$vl_multi['name'];
+                    }
+                    $xhtml .=
+                    '<div class="col-md-12">
+                        <div class="form-group inner-repeater mt-repeater">
+                            <div class="headline-1"><hr><h4 class="headline__title"><span>'.$this->translate($vl_multi['label']).'</span></h4></div>
+                            <div class="row" data-repeater-list="'.$vl_multi['name'].'">'.$htmlField(array(
+                                'field' => 'multi_input',
+                                'attr' => $vl_multi['attr'],
+                                'type' => $vl_multi['field'],
+                                'value' => $vl_multi['value'],
+                                'title' => $vl_multi['title'],
+                                'desc_short' => $vl_multi['desc_short'],
+                                'class' => $vl_multi['desc_short'] ? 'col-md-12' : ''
+                            )).'</div>
+                            <a href="javascript:;" data-repeater-create="sub-input" class="btn btn-sm blue mt-repeater-add '.$hidden.'"><i class="fa fa-plus"></i> '.$this->translate("Thêm").' '.$this->translate($vl_multi['label']).'</a>
+                        </div>
+                    </div>';
+                }
+            }
+            foreach ($value['define']['multi_image'] as $vl_multi) {
+                $hasTranslate = $vl_multi['translate'] || $vl_multi['translate_image'];
+                if (($this->lang['tab'] == $this->identity()->lang) || $hasTranslate) {
+                    $vl_multi['value'] = $vl_value['multi_image'][$vl_multi['name']];
+                    $vl_multi['value'] = ($vl_multi['value']) ? array_merge(array(array('')), $vl_multi['value']) : array('');
+                    $vl_multi['name'] = 'multi_image]['.$vl_multi['name'];
+                    if ($hasTranslate) {
+                        $vl_multi['name'] = 'translate]['.$this->lang['tab'].']['.$vl_multi['name'];
+                    }
+                    $hiddenCreateImage = ($vl_multi['translate_image'] || empty($this->lang) || $this->lang['tab'] == $this->identity()->lang) ? '' : 'hidden';
+                    $xhtml .=
+                    '<div class="col-md-12">
+                        <div class="form-group inner-repeater mt-repeater" inner="image">
+                            <div class="headline-1"><hr><h4 class="headline__title"><span>'.$this->translate($vl_multi['label']).' ('.explode(',',$vl_multi['size'])[0].')</span></h4></div>
+                            <div class="row" data-repeater-list="'.$vl_multi['name'].'">'.$htmlField(array_merge($vl_multi, array(
+                                'field' => 'multi_image',
+                                'filename' => $this->translate("Chọn hình ảnh"),
+                                'note' => $vl_multi['note'] && $vl_multi['note'] == 'checked' ? 'Tiêu đề' : $vl_multi['note'],
+                                'desc_short' => $vl_multi['desc_short'] && $vl_multi['desc_short'] == 'checked' ? 'Mô tả' : $vl_multi['desc_short'],
+                                'value' => $vl_multi['value'],
+                                'translate' => $hasTranslate,
+                                'class' => $vl_multi['note'] ? array('col-md-12','col-md-8', 'col-md-4') : array('col-md-4','col-md-0', 'col-md-12')
+                            ))).'</div>
+                            <a href="javascript:;" data-repeater-create="image" class="btn btn-sm blue mt-repeater-add '.$hiddenCreateImage.'"><i class="fa fa-plus"></i> '.$this->translate("Thêm").' '.$this->translate($vl_multi['label']).'</a>
+                        </div>
+                    </div>';
+                }
+            }
+            foreach ($sub_detail as $vl_detail) {
+                if (($this->lang['tab'] == $this->identity()->lang) || $vl_detail['translate']) {
+                    $xhtml .= $htmlField(array_merge($vl_detail, array('class' => 'col-md-'.($vl_detail['size'] == 'mini' ? 6 : 12), 'class-field' => 'ckeditor-sub', 'size' => $vl_detail['size'])));
+                }
+            }
+
+            $html .= '<div data-repeater-item>
+                <div class="mt-repeater-item mt-overflow">
+                    <div class="mt-repeater-cell">
+                        <div class="row-flex">'.$xhtml.'</div>
+                        <a href="javascript:;" data-repeater-delete class="btn red mt-repeater-delete mt-repeater-del-right mt-repeater-btn-inline '.$hidden.'"><i class="fa fa-close"></i></a>
+                    </div>
+                </div>
+            </div>';
+        }
+
+        if ($xhtml) {
+            $currentFields[] = array(
+                'name' => $value['key'],
+                'html' => '<div class="col-md-12">
+                            <div class="form-group mt-repeater" style="display: block;">
+                                <div class="headline-1"><hr><h4 class="headline__title"><span>'.$this->translate($value['label']).'</span></h4></div>
+                                <div class="mt-repeater__list-croll" data-repeater-list="'.$value['key'].'" style="max-height: 486px;">'.$html.'</div>
+                                <a href="javascript:;" data-repeater-create="sub" data-name="'.$value['key'].'" class="btn blue mt-repeater-add '.$hidden.'"><i class="fa fa-plus"></i> '.$this->translate("Thêm").' '.$this->translate($value['label']).'</a>
+                            </div>
+                        </div>'
+            );
+        }
+    }
+    if ($this->default['embed']) {
+        $value = $this->default['embed'];
+        if ($value['translate'] || empty($this->lang) || $this->lang['tab'] == $this->identity()->lang) {
+            $html = '';
+            $value['value'] = ($value['value']) ? array_merge(array(array('')), $value['value']): array('');
+            foreach ($value['value'] as $item) {
+                $html .= '<div data-repeater-item><div class="mt-repeater-item mt-overflow"><div class="mt-repeater-cell">
+                            <div class="clearfix margin-bottom-10" style="display: flex; align-items: center;">
+                                <label class="col-md-2 control-label">'.$this->translate("Tiêu đề").'</label>
+                                <div class="col-md-3"><input type="text" name="name" value="'.$item['name'].'" class="form-control" /></div>
+                                <div class="col-md-6">';
+                                    foreach ($value['position'] as $position => $text) {
+                                        $html .= '<label class="mt-radio mt-radio-outline"><input type="radio" name="position" value="'.$position.'" '.(($position == $item['position'] || empty($item['position'])) ? 'checked error-checked-repeater' : '').' /><span></span>'.htmlspecialchars($text).'</label>';
+                                    }
+                                $html .= '</div>
+                                <div class="col-md-1"><a href="javascript:;" data-repeater-delete class="btn red mt-repeater-delete mt-repeater-del-right mt-repeater-btn-inline"><i class="fa fa-close"></i></a></div>
+                            </div>
+                            <div class="clearfix margin-bottom-10">
+                                <label class="col-md-2">'.$this->translate("Mã nhúng").'</label>
+                                <div class="col-md-10"><textarea class="form-control" ht-trigger="txtResize" name="embed" rows="1">'.$item['embed'].'</textarea></div>
+                            </div>
+                        </div></div></div>';
+            }
+            $currentFields[] = array(
+                'name' => $value['name'],
+                'html' => '<div class="col-md-12">
+                            <div class="form-group mt-repeater" style="display: block;">
+                                <div class="headline-1"><hr><h4 class="headline__title"><span>'.$this->translate($value['label']).'</span></h4></div>
+                                <div data-repeater-list="'.$value['name'].'">'.$html.'</div>
+                                <a href="javascript:;" data-repeater-create="ht-embed" data-name="'.$value['name'].'" class="btn blue mt-repeater-add"><i class="fa fa-plus"></i> '.$this->translate("Thêm").' '.$this->translate($value['label']).'</a>
+                            </div>
+                        </div>'
+            );
+        }
+    }
+    foreach ($multi['detail'] as $value) {
+        if ($value['translate'] || empty($this->lang) || $this->lang['tab'] == $this->identity()->lang) {
+            $html = '';
+            $value['value'] = ($value['value']) ? array_merge(array(array('')), $value['value']): array('');
+            foreach ($value['value'] as $item) {
+                $html .= '<div data-repeater-item class="col-md-'.($value['size'] == 'mini' ? '6' : '12').'"><div class="mt-repeater-item mt-overflow"><div class="mt-repeater-cell">
+                            <div class="clearfix form-group">
+                                <label>'.$this->translate("Tiêu đề").'</label>
+                                <div class="d-flex">
+                                    <input type="text" name="name" value="'.$item['name'].'" class="form-control" />
+                                    <a href="javascript:;" data-repeater-delete class="btn red margin-left-5"><i class="fa fa-close"></i></a>
+                                </div>
+                            </div>
+                            <div class="clearfix form-group">
+                                <label>'.$this->translate("Chi tiết").'</label>
+                                <textarea class="ckeditor'.($value['size'] ? '-'.$value['size'] : '').'" name="detail" data-size="'.$value['size'].'">'.$item['detail'].'</textarea>
+                            </div>
+                        </div></div></div>';
+            }
+
+            $currentFields[] = array(
+                'name' => $value['name'],
+                'html' => '<div class="col-md-12">
+                            <div class="form-group mt-repeater">
+                                <div class="headline-1"><hr><h4 class="headline__title"><span>'.$this->translate($value['label']).'</span></h4></div>
+                                <div data-repeater-list="'.$value['name'].'" class="row">'.$html.'</div>
+                                <a href="javascript:;" data-repeater-create="ht-editor" data-name="'.$value['name'].'" class="btn blue mt-repeater-add"><i class="fa fa-plus"></i> '.$this->translate("Thêm").' '.$this->translate($value['label']).'</a>
+                            </div>
+                        </div>'
+            );
+        }
+    }
+    foreach ($fieldDetails as $value) {
+        if ($value['translate'] || empty($this->lang) || $this->lang['tab'] == $this->identity()->lang) {
+            $currentFields[] = array(
+                'name' => $value['name'],
+                'html' => $htmlField($value)
+            );
+        }
+    }
+
+    if ($this->sortFields) {
+        $configSortFields = array_column($this->sortFields, 'name');
+        $currentFields = array_map(function ($field) use ($configSortFields) {
+            preg_match('#translate(\[(.*)\]){2}\[(.+)\]#s', $field['name'], $matches);
+            if ($matches) {
+                $name = $matches[2].'['.$matches[3].']';
+            } else {
+                preg_match('#translate\[.*\]\[(.+)\]#s', $field['name'], $matches);
+                $name = $matches[1] ?? $field['name'];
+            }
+            $index = array_search($name, $configSortFields);
+            $field['name'] = $name;
+            $field['sort'] = $index > -1 ? $this->sortFields[$index]['sort'] : '';
+            return $field;
+        }, $currentFields);
+
+        $fieldsSorting = array_filter($currentFields, function($field) { return $field['name'] && $field['sort'] != ''; });
+        if ($fieldsSorting) {
+            $currentFields = array_merge(
+                \Backend\View\Helper\Sort::sortByKey($fieldsSorting),
+                array_filter($currentFields, function($field) { return $field['sort'] == ''; })
+            );
+        }
+    }
+
+    if ($fieldCheckboxes) {
+        $checkboxItems = '';
+        foreach ($fieldCheckboxes as $value) {
+            if ($value['translate'] || empty($this->lang) || $this->lang['tab'] == $this->identity()->lang) {
+                $checkboxItems .= $htmlField($value);
+            }
+        }
+        echo '<div>'.$checkboxItems.'</div>';
+    }
+
+    foreach ($currentFields as $i => $field) {
+        switch ($field['name']) {
+            case 'cat_id':
+                if ($i > 0) {
+                    $field['html'] = str_replace('col-md-offset-6 col-md-pull-6', '', $field['html']);
+                }
+            break;
+            case 'title':
+            case 'description':
+            case 'keyword':
+                if ($fieldsSorting) {
+                    $field['html'] = str_replace('pull-right', '', $field['html']);
+                }
+            break;
+        }
+
+        echo $field['html'];
+    }
+?>

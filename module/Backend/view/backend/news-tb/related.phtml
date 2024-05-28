@@ -1,0 +1,10 @@
+<input type="hidden" name="list_news_id">
+<select multiple="multiple" class="multi-select" name="list_news_id[]">
+    <?php
+        foreach ($this->list as $value) {
+            $selected = (in_array($value['id'], $this->selected)) ? 'selected' : '';
+            echo '<option value="'.$value['id'].'" '.$selected.'>'.$value['name'].'</option>';
+        }
+    ?>
+</select>
+<script> $(document).ready(function() { MultiSelect.init(); }); </script>

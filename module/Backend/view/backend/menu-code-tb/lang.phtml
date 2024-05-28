@@ -1,0 +1,69 @@
+<div class="page-content">
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li><a href="<?php echo $this->url('admincp'); ?>"><?php echo $this->translate("Trang chủ"); ?></a><i class="fa fa-circle"></i></li>
+            <li><span><?php echo $this->_params['title']; ?></span></li>
+        </ul>
+    </div>
+    <form id="form-add" action="" method="POST" enctype="multipart/form-data">
+        <div class="portlet box blue margin-bottom-0">
+            <div class="portlet-title">
+                <div class="caption">Thông tin cấu hình</div>
+                <div class="actions">
+                    <button type="submit" onclick="_HTSend.form(this)" class="btn green-jungle"><i class="fa fa-check-square-o"></i> <?php echo $this->translate("Lưu"); ?></button>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-body">
+                    <?php if ($this->success) { ?>
+                        <div class="alert bg-green-jungle display-block">
+                            <button class="close" data-close="alert"></button>
+                            <p> <?php echo $this->success; ?> </p>
+                        </div>
+                    <?php } ?>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Ngôn ngữ nhập liệu mặc định</label>
+                                <select name="define[]" class="form-control select2 select2-not-search">
+                                    <?php foreach ($this->langs as $lang => $name) {
+                                        echo '<option value="'.$lang.'" '.((in_array(explode('-', $lang)[0], $this->item[0])) ? 'selected' : '').'>'.$name.'</option>';
+                                    } ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Danh sách ngôn ngữ nhập liệu</label>
+                                <select name="define[]" class="mt-multiselect btn btn-default" multiple="multiple" data-filter="false" data-select-all="false">
+                                    <?php foreach ($this->langs as $lang => $name) {
+                                        $selected = '';
+                                        foreach ($this->item as $value) {
+                                            if (in_array(explode('-', $lang)[0], $value)) {
+                                                $selected = 'selected';
+                                                break;
+                                            }
+                                        }
+                                        echo '<option value="'.$lang.'" '.$selected.'>'.$name.'</option>';
+                                    } ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Slug cho ngôn ngữ tượng hình</label>
+                                <select name="define[slug]" class="form-control select2 select2-not-search">
+                                    <?php foreach ($this->langs as $lang => $name) {
+                                        if (in_array(explode('-', $lang)[0], array('vi','vn','en'))) {
+                                            echo '<option value="'.$lang.'" '.((explode('-', $lang)[0] == $this->item['slug']) ? 'selected' : '').'>'.$name.'</option>';
+                                        }
+                                    } ?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

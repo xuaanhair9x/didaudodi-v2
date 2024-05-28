@@ -1,0 +1,72 @@
+<div class="page-content">
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li><a href="<?php echo $this->url('admincp'); ?>"><?php echo $this->translate("Trang chủ"); ?></a><i class="fa fa-circle"></i></li>
+            <li><a href="<?php echo $this->url('admincp',array('controller' => $this->_params['__CONTROLLER__'],'action' => 'list')); ?>"><?php echo explode('/', $this->_params['title'])[0]; ?></a><i class="fa fa-circle"></i></li>
+            <li><span><?php echo explode('/', $this->_params['title'])[1]; ?></span></li>
+        </ul>
+    </div>
+    <form id="form-add" action="" method="POST" enctype="multipart/form-data">
+        <div class="portlet box blue margin-bottom-0">
+            <div class="portlet-title"><div class="caption">Thông tin chi tiết</div></div>
+            <div class="portlet-body form">
+                <div class="form-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Menu</label>
+                                <select name="parent" class="form-control select2">
+                                    <option></option>
+                                    <?php foreach ($this->menu as $value) { ?>
+                                        <option value="<?php echo $value['id']; ?>" class="level1" <?php echo ($value['id'] == $this->item['parent']) ? 'selected' : ''; ?>><?php echo $value['name']; ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row row-flex">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Tên menu</label>
+                                <input type="text" name="name" value="<?php echo $this->item['name']; ?>" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Active <a href="javascript:;" class="mt-sweetalert-note" data-message="Nhập active khi đã tạo menu (có id), cú pháp: <controller>-<id>"><i class="fa fa-question-circle" aria-hidden="true"></i></a></label>
+                                <input type="text" name="active" value="<?php echo $this->item['active']; ?>" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Link <a href="javascript:;" class="mt-sweetalert-note" data-message="Nhập link khi đã tạo menu, cú pháp: /<controller>/list/root_id=<id>"><i class="fa fa-question-circle" aria-hidden="true"></i></a></label>
+                                <input type="text" name="link" value="<?php echo $this->item['link']; ?>" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Icon</label>
+                                <input type="text" name="icon" value="<?php echo $this->item['icon']; ?>" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions right">
+                    <button type="submit" onclick="_HTSend.form(this)" class="btn btn-sm green-jungle"><i class="fa fa-check-square-o"></i> <?php echo $this->translate("Lưu"); ?></button>
+                    <a href="<?php echo $this->url('admincp',array('controller' => $this->_params['__CONTROLLER__'],'action' => 'list')); ?>" class="btn btn-sm red"><i class="fa fa-share"></i> <?php echo $this->translate("Thoát"); ?></a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    $(document).ready(function() {
+        FormValidation.submit('#form-add', {
+            rules: {
+                name: {
+                    required: true
+                },
+            }
+        });
+    });
+</script>

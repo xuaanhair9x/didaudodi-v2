@@ -1,0 +1,165 @@
+<div class="page-container-bg-solid">
+    <div class="page-content">
+        <div class="page-bar">
+            <ul class="page-breadcrumb">
+                <li><a href="<?php echo $this->url('admincp'); ?>"><?php echo $this->translate("Trang chủ"); ?></a><i class="fa fa-circle"></i></li>
+                <li><a href="<?php echo $this->linkList; ?>"><?php echo explode('/', $this->_params['title'])[0]; ?></a><i class="fa fa-circle"></i></li>
+                <li><span><?php echo explode('/', $this->_params['title'])[1]; ?></span></li>
+            </ul>
+            <div class="pull-right">
+                <a href="javascript:;" class="btn btn-sm blue" data-target="#activate" data-toggle="modal"><i class="fa fa-unlock-alt"></i> <?php echo ($this->item['status'] == 0) ? $this->translate("Kích hoạt") : $this->translate("Vô hiệu hóa tài khoản"); ?></a>
+                <a href="<?php echo $this->linkList; ?>" class="btn btn-sm red pull-right"> <?php echo $this->translate("Thoát"); ?></a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="portlet mt-element-ribbon light portlet-fit bordered margin-bottom-10">
+                    <div class="ribbon ribbon-left ribbon-clip ribbon-shadow ribbon-border-dash-hor ribbon-color-success uppercase"><div class="ribbon-sub ribbon-clip ribbon-left"></div> <?php echo $this->translate("Thông tin thành viên"); ?></div>
+                    <div class="portlet-title">
+                        <div class="caption caption-profile">
+                            <span class="caption-subject font-green bold uppercase"><?php echo $this->item['fullname']; ?></span>
+                        </div>
+                    </div>
+                    <div class="portlet-userpic">
+                        <ul class="nav">
+                            <?php if ($this->item['address']) { ?>
+                                <li><span><i class="fa fa-home" aria-hidden="true"></i> <?php echo $this->item['address']; ?></span></li>
+                            <?php } ?>
+                            <?php if ($this->item['phone']) { ?>
+                                <li><span><i class="fa fa-mobile" aria-hidden="true"></i> <?php echo $this->item['phone']; ?></span></li>
+                            <?php } ?>
+                            <li><span><i class="fa fa-envelope" aria-hidden="true"></i> <?php echo $this->item['email']; ?> </span></li>
+                            <li><span><i class="fa fa-info-circle" aria-hidden="true"></i> <?php echo ($this->item['status'] == 0) ? $this->translate("Chưa kích hoạt") : $this->translate("Đã kích hoạt"); ?></span></li>
+                        </ul>
+                    </div>
+                    <div class="btn-group btn-group-solid" style="width: 100%;">
+                        <a href="<?php echo $this->url('admincp',array('controller' => $this->_params['__CONTROLLER__'],'action' => 'field','id' => $this->_params['id'],'root_id' => $this->_params['root_id'])); ?>" class="btn yellow" style="width: 50%; border-top-left-radius: 0;"><?php echo $this->translate("Chỉnh sửa"); ?></a>
+                        <a href="javascript:;" class="btn blue" data-target="#change" data-toggle="modal" style="width: 50%; border-top-right-radius: 0;"></i> <?php echo $this->translate("Đổi mật khẩu"); ?></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="profile-content">
+                    <div class="portlet light ">
+                        <div class="portlet-title tabbable-line">
+                            <div class="caption caption-md">
+                                <i class="icon-globe theme-font hide"></i>
+                                <span class="caption-subject font-blue-madison bold uppercase"><?php echo $this->translate("Đơn hàng"); ?></span>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <table class="table table-striped table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th width="106"> <?php echo $this->translate("Mã đơn hàng"); ?> </th>
+                                        <th class="text-center"> <?php echo $this->translate("Ngày tạo"); ?> </th>
+                                        <th class="text-center"> <?php echo $this->translate("Trạng thái"); ?> </th>
+                                        <th class="text-right"> <?php echo $this->translate("Thành tiền"); ?> </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php if ($this->list) { ?>
+                                        <?php foreach ($this->list as $value) { ?>
+                                            <tr>
+                                                <td> <a href="<?php echo $this->url('admincp',array('controller' => 'order_tb','action' => 'view-all','id' => $value['id'],'root_id' => 3)); ?>">#<?php echo $value['orderCode'] ?></a></td>
+                                                <td class="text-center"> <?php echo date('d/m/Y', strtotime($value['date_created'])); ?> </td>
+                                                <td class="text-center"> <?php echo ($value['status'] == 0) ? $this->translate("Chưa duyệt") : $this->translate("Đã duyệt"); ?></td>
+                                                <td class="text-right text-bold"> <?php echo ($value['total_price']) ? $this->formatCurrency($value['total_price']).'đ' : '-'; ?></td>
+                                            </tr>
+                                        <?php } ?>
+                                    <?php } else { ?>
+                                        <tr><td colspan="4" class="text-center"> <?php echo $this->translate("Chưa có đơn hàng"); ?></td></tr>
+                                    <?php } ?>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="portlet-title tabbable-line">
+                            <div class="caption caption-md">
+                                <i class="icon-globe theme-font hide"></i>
+                                <span class="caption-subject font-blue-madison bold uppercase"><?php echo $this->translate("Ghi chú"); ?></span>
+                            </div>
+                        </div>
+                        <div class="portlet-body clearfix">
+                            <textarea class="form-control margin-bottom-10" rows="3" placeholder="<?php echo $this->translate("Nhập ghi chú về thành viên"); ?>" disabled><?php echo $this->item['note']; ?></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="change" class="modal fade" tabindex="-1" role="basic" data-backdrop="static" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="form-change" action="" method="post" accept-charset="utf-8">
+                <div class="modal-header"><h4 class="modal-title text-center text-uppcaser"><strong><?php echo $this->translate("Đổi mật khẩu"); ?></strong></h4></div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-8 col-md-offset-1 text-right">
+                            <div class="form-group margin-bottom-0">
+                                <label class="control-label"><?php echo $this->translate("Mật khẩu"); ?>: <input type="password" class="form-control input-inline" name="password" id="password"></label>
+                            </div>
+                            <div class="form-group margin-bottom-0">
+                                <label class="control-label"><?php echo $this->translate("Nhập lại mật khẩu"); ?>: <input type="password" class="form-control input-inline" name="password_confirm"></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="text-center">
+                        <label class="mt-checkbox mt-checkbox-outline mt-checkbox-right" style="margin-right: 10px;">
+                            <input type="checkbox" name="send" value="1"/>
+                            <span></span><?php echo $this->translate("Gửi email thông báo tới thành viên"); ?>
+                        </label>
+                        <button href="submit" class="btn blue"> <?php echo $this->translate("Đổi mật khẩu"); ?></button>
+                        <button type="button" class="btn red" data-dismiss="modal"><i class="fa fa-ban"></i> <?php echo $this->translate("Hủy"); ?></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="activate" class="modal fade" tabindex="-1" role="basic" data-backdrop="static" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="" method="post" accept-charset="utf-8">
+                <div class="modal-header"><h4 class="modal-title text-center text-uppcaser"><strong><?php echo ($this->item['status'] == 0) ? $this->translate("Kích hoạt tài khoản") : $this->translate("Vô hiệu hóa tài khoản"); ?></strong></h4></div>
+                <div class="modal-body text-center">
+                    <?php if ($this->item['status'] == 0) { ?>
+                        <input type="hidden" name="status" value="1">
+                        <p><?php echo $this->translate("Bạn có chắc muốn kích hoạt tài khoản khách hàng"); ?> <strong><?php echo $this->item['fullname']; ?></strong>?</p>
+                    <?php } else { ?>
+                        <input type="hidden" name="status" value="0">
+                        <p><?php echo $this->translate("Bạn có chắc muốn vô hiệu hóa tài khoản khách hàng"); ?> <strong><?php echo $this->item['fullname']; ?></strong>?</p>
+                        <p><?php echo $this->translate("Thành viên sẽ không thể đăng nhập vào tài khoản của họ nữa!"); ?></p>
+                    <?php } ?>
+                </div>
+                <div class="modal-footer">
+                    <div class="text-center">
+                        <label class="mt-checkbox mt-checkbox-outline mt-checkbox-right" style="margin-right: 10px;">
+                            <input type="checkbox" name="send" value="1"/>
+                            <span></span><?php echo $this->translate("Gửi email thông báo tới thành viên"); ?>
+                        </label>
+                        <button href="submit" class="btn blue"> <?php echo ($this->item['status'] == 0) ? $this->translate("Kích hoạt") : $this->translate("Vô hiệu hóa"); ?></button>
+                        <button type="button" class="btn red" data-dismiss="modal"><i class="fa fa-ban"></i> <?php echo $this->translate("Hủy"); ?></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function() {
+        FormValidation.submit('#form-change', {
+            rules: {
+                password: { required: true },
+                password_confirm: { equalTo: '#password' }
+            }
+        });
+    });
+</script>
+<?php if ($this->success) { ?>
+    <script>
+        _HTTemplate.reload('<?php echo $this->success; ?>', '<?php echo $this->linkList; ?>');
+    </script>
+<?php } ?>

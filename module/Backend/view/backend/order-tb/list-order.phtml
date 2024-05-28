@@ -1,0 +1,228 @@
+<div class="page-content">
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li><a href="<?php echo $this->url('admincp'); ?>"><?php echo $this->translate("Trang chủ"); ?></a><i class="fa fa-circle"></i></li>
+            <li><span><?php echo $this->_params['title']; ?></span></li>
+        </ul>
+        <?php if ($this->identity()->supper) { ?>
+            <div class="pull-right">
+                <a href="<?php echo $this->url('admincp',array('controller' => $this->_params['__CONTROLLER__'],'action' => 'codefield','root_id' => $this->_params['root_id'])); ?>" class="btn green"><i class="fa fa-cogs"></i> Cấu hình dữ liệu</a>
+            </div>
+        <?php } ?>
+    </div>
+    <div class="portlet box blue margin-bottom-0">
+        <div class="portlet-title">
+            <div class="caption"><?php echo $this->translate("Danh sách"); ?> </div>
+            <div class="actions">
+                <a href="javascript:;" class="btn grey-salsa" onclick="_HTChange.status(this, 'check');"><i class="fa fa-exchange"></i> <?php echo $this->translate("Chuyển trạng thái"); ?></a>
+                <a href="javascript:;" class="btn red" onclick="_HTDelete.rows('<?php echo $this->url('admincp',array('controller' => $this->_params['__CONTROLLER__'],'action' => 'delete')); ?>','/root_id=<?php echo $this->_params['root_id']; ?>');"><i class="fa fa-trash-o"></i> <?php echo $this->translate("Xóa nhiều"); ?></a>
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="ht-filter">
+                <form id="form-filter" action="" method="post" accept-charset="utf-8">
+                    <div class="ht-filter__status">
+                        <div class="input-group input-group-sm select2-bootstrap-prepend">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" data-select2-open="ht-open-status"><?php echo $this->translate("Trạng thái"); ?></button>
+                            </span>
+                            <select id="ht-open-status" name="status" class="form-control select2 select2-not-search" onchange="_HTHelper.submit(this);">
+                                <option value="all"><?php echo $this->translate("Tất cả"); ?></option>
+                                <?php foreach ($this->status as $value) { ?>
+                                    <option value="<?php echo $value['value']; ?>" <?php echo ($value['value'] == $this->query['status']) ? 'selected' : ''; ?>><?php echo $value['text']; ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="ht-filter__date">
+                        <div class="input-group input-group-sm">
+                            <input type="text" class="form-control text-center date-picker" name="from" value="<?php echo $this->query['from'] ?>" placeholder="<?php echo $this->translate("Ngày bắt đầu"); ?>" autocomplete="off">
+                            <span class="input-group-addon"> <?php echo $this->translate("đến"); ?> </span>
+                            <input type="text" class="form-control text-center date-picker" name="to" value="<?php echo $this->query['to'] ?>" placeholder="<?php echo $this->translate("Ngày kết thúc"); ?>" autocomplete="off">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-sm blue pull-right"><i class="fa fa-filter" aria-hidden="true"></i> <?php echo $this->translate("Lọc"); ?></button>
+                </form>
+            </div>
+            <table id="datatable-order" class="table table-striped table-bordered table-hover table-checkable colvis-column">
+                <thead>
+                    <tr>
+                        <th class="nosort noexcel table-checkall"><label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" class="group-checkable" data-set=".ht-checkall-rows" /><span></span></label></th>
+                        <?php
+                            foreach ($this->headers as $value) {
+                                if ($value['display'] && $value['colvis'] != true) {
+                                    echo '<th class="'.$value['class'].'">'.$value['title'].'</th>';
+                                }
+                            }
+                        ?>
+                        <th class="table-show noexcel"> <?php echo $this->translate("Trạng thái"); ?> </th>
+                        <th class="nosort nosearch noexcel table-func"> <?php echo $this->translate("Chức năng"); ?> </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($this->list as $value) { ?>
+                        <?php
+                            $linkView = $this->url('admincp',array('controller' => $this->_params['__CONTROLLER__'],'action' => 'view','id' => $value['id'],'root_id' => $this->_params['root_id']));
+                            $linkDelete = $this->url('admincp',array('controller' => $this->_params['__CONTROLLER__'],'action' => 'delete','id' => $value['id'], 'root_id' => $this->_params['root_id']));
+                        ?>
+                        <tr id="<?php echo $value['id']; ?>">
+                            <td><label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" class="ht-checkall-rows" value="<?php echo $value['id']; ?>" /><span></span></label></td>
+                            <td><a href="<?php echo $linkView; ?>">#<?php echo $value['id']; ?></a></td>
+                            <?php if ($this->_field['total']) { ?>
+                                <td class="text-center"><?php echo $value['total_price'] ? $this->formatCurrency($value['total_price']) : '-'; ?></td>
+                            <?php } ?>
+                            <?php if ($this->_field['discount']) { ?>
+                                <td class="text-center"><?php echo $value['sku'] ?? '-'; ?></td>
+                            <?php } ?>
+                            <td><?php echo $value['fullname']; ?></td>
+                            <td><?php echo $value['phone']; ?></td>
+                            <td><?php echo $value['address']; ?></td>
+                            <td><?php echo $value['email']; ?></td>
+                            <td class="text-center"><?php echo date('d/m/Y H:i', strtotime($value['date_created'])); ?></td>
+                            <td class="text-center"><?php echo ($value['status'] == 0) ? $this->translate("Chưa duyệt") : $this->translate("Đã duyệt"); ?></td>
+                            <td>
+                                <div class="text-center">
+                                    <div class="btn-group btn-group-sm btn-group-solid">
+                                        <a href="<?php echo $linkView; ?>" class="btn blue"><?php echo $this->translate("Xem"); ?></a>
+                                        <a href="javascript:;" class="btn red" onclick="_HTDelete.item('<?php echo $linkDelete; ?>');"><?php echo $this->translate("Xóa"); ?></a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="change-status" class="modal fade" tabindex="-1" role="basic" data-backdrop="static" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header"><h4 class="modal-title text-center text-uppercase"><?php echo $this->translate("Chuyển trạng thái"); ?></h4></div>
+                <div class="modal-body">
+                    <div class="input-group select2-bootstrap-prepend">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" data-select2-open="ht-open-changeStatus"><?php echo $this->translate("Trạng thái"); ?></button>
+                        </span>
+                        <select id="ht-open-changeStatus" name="status" class="form-control select2 select2-not-search">
+                            <option></option>
+                            <?php foreach ($this->status as $value) { ?>
+                                <option value="<?php echo $value['value']; ?>"><?php echo $value['text']; ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="text-center">
+                        <button type="button" class="btn salsa" onclick="_HTChange.status(this, 'multi', <?php echo htmlspecialchars(json_encode(array('url' => $this->url('admincp',array('controller' => $this->_params['__CONTROLLER__'],'action' => 'change'))),JSON_UNESCAPED_SLASHES)); ?>);"><i class="fa fa-exchange"></i> <?php echo $this->translate("Chuyển trạng thái"); ?></button>
+                        <button type="button" class="btn red" data-dismiss="modal"><i class="fa fa-ban"></i> <?php echo $this->translate("Hủy"); ?></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        var allHeaders = <?php echo json_encode($this->headers); ?>;
+        var data = <?php echo json_encode($this->list); ?>;
+        var unit = '<?php echo $this->_field['unit']; ?>';
+
+        function formatExcel(headers, rows) {
+            function addRow(index, cells) {
+                var columns = [];
+                var strong = index === 1 ? 's="2"' : '';
+                for(i = 0; i < cells.length; i++){
+                    columns.push('<c t="'+(cells[i].type ?? 'str')+'" r="' + index + '" '+strong+'>'+'<v>'+cells[i].value+'</v>'+'</c>');
+                }
+                return  '<row r="'+index+'">'+columns.join()+'</row>';
+            }
+
+            var onTable = new $.fn.dataTable.Api( '#datatable-order' );
+            var ids = onTable.rows( { selected: true } ).ids();
+            var contents = ids.reduce((acc, id) => {
+                var order = rows.find((item) => +item.id === +id);
+                var orders = order.products.map((product) => {
+                    var productMeta = $.parseJSON(product.product_meta);
+                    var meta = {
+                        ...order,
+                        ...productMeta,
+                        orderId: `#${order.id}`,
+                        discount: order.sku,
+                        date: _HTFormat.date(order.date_created),
+                        total: order.total_price,
+                        price: productMeta.price,
+                        quantity: productMeta.quantity,
+                        sum: productMeta.price * productMeta.quantity,
+                    };
+                    const fieldNumbers = ['total', 'price', 'quantity', 'sum'];
+                    return headers.map((header) => ({ value: meta[header.name], type: fieldNumbers.includes(header.name) ? 'n' : 'str' }))
+                });
+
+                return [...acc, ...orders];
+            }, [headers.map((header) => ({value: header.title}))]);
+
+            var unique = [... new Set(contents.map(item => JSON.stringify(item)))];
+
+            return unique.map((item, index) => addRow(index + 1, $.parseJSON(item)));
+        }
+
+        function customize(xlsx, headers, rows) {
+            var innerHTMLs = formatExcel(headers, rows);
+            var sheet = xlsx.xl.worksheets['sheet1.xml'];
+            sheet.childNodes[0].childNodes[1].innerHTML = innerHTMLs.join();
+        }
+
+        TableDatatables.init({
+            tableId: '#datatable-order',
+            buttons: [{
+                extend: 'collection',
+                className: 'btn yellow ',
+                text: _HTTranslator("Xuất excel"),
+                buttons: [
+                    {
+                        extend: 'excel',
+                        title: '',
+                        className: 'excel-item',
+                        text: _HTTranslator("Theo cột hiển thị"),
+                        exportOptions: { columns: ':visible:not(.noexcel)', modifier: { selected: true } },
+                        action: function ( e, dt, node, config ) {
+                            if (dt.rows( { selected: true } ).count() > 0) {
+                                $.fn.dataTable.ext.buttons.excelHtml5.action.call(this, e, dt, node, config);
+                            } else {
+                                _HTTemplate.yesno('Vui lòng chọn danh sách để xuất file');
+                            }
+                        },
+                        customize: function(xlsx){
+                            var headers = allHeaders.filter((header) => header.display && header.colvis !== true);
+                            customize (xlsx, headers, data);
+                        }
+                    },
+                    {
+                        extend: 'excel',
+                        title: '',
+                        className: 'excel-item',
+                        text: _HTTranslator("Tất cả trường dữ liệu"),
+                        exportOptions: { columns: ':not(.noexcel)', modifier: { selected: true } },
+                        action: function ( e, dt, node, config ) {
+                            if (dt.rows( { selected: true } ).count() > 0) {
+                                $.fn.dataTable.ext.buttons.excelHtml5.action.call(this, e, dt, node, config);
+                            } else {
+                                _HTTemplate.yesno('Vui lòng chọn danh sách để xuất file');
+                            }
+                        },
+                        customize: function(xlsx){
+                            var headers = allHeaders.filter((header) => header.display);
+                            customize (xlsx, headers, data);
+                        }
+                    },
+                ]
+            }],
+            fnRowCallback: function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                FormEditable.group('editable-status', {
+                    name: 'status',
+                    responseText: $.parseJSON('<?php echo json_encode($this->status, true); ?>'),
+                });
+            }
+        });
+    });
+</script>

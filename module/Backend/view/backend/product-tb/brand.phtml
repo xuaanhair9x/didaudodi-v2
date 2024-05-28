@@ -1,0 +1,15 @@
+<select name="brand_id" class="form-control select2">
+    <option></option><option value="0" class="level1">** BỎ CHỌN **</option>
+    <?php foreach ($this->list as $value) { ?>
+        <option value="<?php echo $value['id']; ?>" <?php echo ($value['id'] == $this->brand_id ? 'selected' : ''); ?>><?php echo $value['name']; ?></option>
+    <?php } ?>
+</select>
+<script>
+    $(document).ready(function() {
+        $('select[name="brand_id"]').select2({
+            placeholder: _HTTranslator('Vui lòng chọn'),
+            theme: 'bootstrap',
+            width: null
+        });
+    });
+</script>

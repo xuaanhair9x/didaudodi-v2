@@ -1,0 +1,162 @@
+<div class="page-content">
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li><a href="<?php echo $this->url('admincp'); ?>"><?php echo $this->translate("Trang chủ"); ?></a><i class="fa fa-circle"></i></li>
+            <li><span><?php echo $this->_params['title']; ?></span></li>
+        </ul>
+        <?php if ($this->identity()->supper) { ?>
+            <div class="pull-right">
+                <a href="<?php echo $this->url('admincp',array('controller' => 'menu_code_tb','action' => 'mailer','id' => $this->_params['id'],'root_id' => $this->_params['root_id'])); ?>" class="btn green pull-right"><i class="fa fa-cogs"></i> Cấu hình dữ liệu</a>
+            </div>
+        <?php } ?>
+    </div>
+    <form id="form-add" action="" method="POST" enctype="multipart/form-data" autocomplete="off" onchange="setIsChangeValue();" onkeydown="setIsChangeValue();">
+        <div class="portlet box blue margin-bottom-0">
+            <div class="portlet-title">
+                <div class="caption"><?php echo $this->_params['title']; ?> </div>
+            </div>
+            <div class="portlet-body form form-help-freeze">
+                <div class="form-body">
+                    <?php if ($this->error) { ?>
+                        <div class="alert alert-danger display-block">
+                            <button class="close" data-close="alert"></button>
+                            <?php foreach ($this->error as $error) { echo '<p>'.$error.'</p>'; } ?>
+                        </div>
+                    <?php } ?>
+                    <?php if ($this->success) { ?>
+                        <div class="alert bg-green-jungle display-block">
+                            <button class="close" data-close="alert"></button>
+                            <p> <?php echo $this->success; ?> </p>
+                        </div>
+                    <?php } ?>
+                    <div class="row row-flex">
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label class="control-label">Email server</label>
+                                <select name="service" class="form-control select2 select2-not-search">
+                                    <?php foreach ($this->services as $value) {
+                                        echo '<option value="'.$value['service'].'" '.($value['service'] == $this->item['mailer']['service'] ? 'selected' : '').'>'.$value['name'].'</option>';
+                                    } ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label class="control-label">Port <span class="font-red">(*)</span></label>
+                                <input type="text" name="port" value="<?php echo $this->item['mailer']['port']; ?>" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="control-label">SMTP host <span class="font-red">(*)</span></label>
+                                <input type="text" name="host" value="<?php echo $this->item['mailer']['host']; ?>" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="control-label">Username <span class="font-red">(*)</span></label>
+                                <input type="text" name="auth[user]" value="<?php echo $this->item['mailer']['auth']['user']; ?>" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="control-label">Password <span class="font-red">(*)</span></label>
+                                <input type="password" name="auth[pass]" value="<?php echo $this->item['mailer']['auth']['pass']; ?>" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-3 hidden">
+                            <div class="form-group">
+                                <label class="control-label">Gửi từ email <span class="font-red">(*)</span></label>
+                                <input type="text" name="emailFrom" value="" class="form-control" <?php echo $this->identity()->supper ? '' : 'readonly'; ?>>
+                            </div>
+                        </div>
+                        <div class="col-md-12 hidden" id="link">Vui lòng cấu hình mail trước khi dùng: <a href="" target="_blank">Xem hướng dẫn</a></div>
+                    </div>
+                </div>
+                <div class="form-actions right">
+                	<button type="submit" onclick="_HTSend.form(this)" class="btn btn-sm green-jungle"><i class="fa fa-check-square-o"></i> <?php echo $this->translate("Lưu"); ?></button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<a class="btn blue btn-outline sbold hidden" data-toggle="modal" href="#emailTo"></a>
+<div class="modal fade bs-modal-sm" id="emailTo" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header"><h4 class="modal-title text-center"><?php echo $this->translate("Nhập email nhận thông báo"); ?></h4></div>
+            <div class="modal-body"> <input type="text" name="emailTo" class="form-control" value="<?php echo $this->item['email']; ?>" placeholder="Email"></div>
+            <div class="modal-footer">
+                <div class="text-center">
+                    <button type="button" class="btn btn-sm red" data-dismiss="modal"><i class="fa fa-share"></i> <?php echo $this->translate("Thoát"); ?></button>
+                    <button type="button" class="btn btn-sm green" data-dismiss="modal" onclick="checkemail();"><i class="fa fa-cog"></i> <?php echo $this->translate("Kiểm tra"); ?></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<a class="btn blue btn-outline sbold hidden" data-toggle="modal" href="#result"></a>
+<div class="modal fade bs-modal-sm" id="result" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header"><h4 class="modal-title text-center"><?php echo $this->translate("Kết quả kiểm tra"); ?></h4></div>
+            <div class="modal-body text-center"></div>
+            <div class="modal-footer"><div class="text-center"><button type="button" class="btn btn-sm red" data-dismiss="modal"><i class="fa fa-share"></i> <?php echo $this->translate("Thoát"); ?></button></div></div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function() {
+        var rules = {port: {required: true},host: {required: true},'auth[user]': {required: true},'auth[pass]': {required: true},'emailFrom': {required: true}};
+
+        FormValidation.submit('#form-add', {rules: rules});
+
+        var services = $.parseJSON('<?php echo json_encode($this->services); ?>');
+        input($('select[name="service"]').val(), $('select[name="service"]').find('option:selected').index());
+
+        $('select[name="service"]').change(function(event) {
+            input($(this).val(), $(this).find('option:selected').index());
+        });
+
+        $('#form-add').submit(function(event) {
+            if ($(this).find('input[type="submit"]:focus').val() != undefined) {
+                $('a[href="#emailTo"]').click();
+                return false;
+            }
+        });
+
+        function input(service, index) {
+            $('#link').addClass('hidden');
+            if (services[index].link) {
+                $('#link').find('a').attr('href', services[index].link);
+                $('#link').removeClass('hidden');
+            }
+
+            $('#form-add').validate().resetForm();
+            FormValidation.submit('#form-add', {rules: rules});
+            $('#form-add input').attr('disabled', false).closest('.form-group').parent().removeClass('hidden');
+            $('#form-add input[name="emailFrom"]').val('<?php echo $this->item["mailer"]["emailFrom"]; ?>').attr('disabled', true).closest('.form-group').parent().addClass('hidden');
+            $('#form-add input[name="port"]').val(services[index].port).attr('readonly', true);
+            $('#form-add input[name="host"]').val(services[index].host).attr('readonly', true);
+            $('#form-add input[name="auth[user]"]').val(services[index].auth.user);
+            $('#form-add input[name="auth[pass]"]').val(services[index].auth.pass);
+
+            switch(service) {
+                case 'notifyit369':
+                    $('#form-add').validate().resetForm();
+                    $('#form-add input[name="emailFrom"]').val('notify.it369@gmail.com').attr('readonly', true);
+                    $('#form-add input:not([type="submit"]):not([name="emailFrom"])').attr('disabled', true).closest('.form-group').parent().addClass('hidden');
+                    $('#form-add input[name="emailFrom"]').attr({'disabled': false}).closest('.form-group').parent().removeClass('hidden');
+                break;
+                case 'amazon':
+                    var supper = '<?php echo $this->identity()->supper; ?>';
+                    $('#form-add input:not([type="submit"]):not([name="emailFrom"])').attr('disabled', true).closest('.form-group').parent().addClass('hidden');
+                    $('#form-add input[name="emailFrom"]').attr({'disabled': false, 'readonly': supper ? false : true}).closest('.form-group').parent().removeClass('hidden');
+                break;
+                case 'other':
+                    $('#form-add input:not([type="submit"]):not([name="emailFrom"])').attr({'disabled': false, 'readonly': false});
+                break;
+            }
+        }
+    });
+</script>

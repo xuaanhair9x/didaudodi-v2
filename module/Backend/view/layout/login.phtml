@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content=""  />
+    <meta name="author" content="" />
+    <?php echo $this->headTitle() ?>
+    <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="<?php echo BE_TEMPLATE.'/layouts/layout/img/favicon.png'; ?>" />
+    <?php echo $this->headLink()
+        ->appendStylesheet($this->basePath().'/template/backend/fonts/custom-fonts.css')
+        ->appendStylesheet($this->basePath().'/template/backend/fonts/font-awesome/css/font-awesome.min.css')
+        ->appendStylesheet($this->basePath().'/template/backend/fonts/simple-line-icons/simple-line-icons.min.css')
+        ->appendStylesheet(BE_TEMPLATE.'/global/plugins/bootstrap/css/bootstrap.min.css')
+        ->appendStylesheet(BE_TEMPLATE.'/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css')
+        ->appendStylesheet(BE_TEMPLATE.'/global/css/components-rounded.min.css')
+        ->appendStylesheet(BE_TEMPLATE.'/global/css/plugins.min.css')
+        ->appendStylesheet(BE_TEMPLATE.'/pages/css/login.min.css');
+    ?>
+    <?php
+        $loader = new \Zend\I18n\Translator\Loader\PhpArray();
+        $this->headScript()->appendScript(
+            'var BE_LANG = \''.BE_LANG.'\';
+            var TRANSLATOR = '.json_encode($loader->load('default',ROOT.'/module/Backend/language/'.BE_LANG.'.php'), JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE).';
+            var _HTTranslator = function($messages) {
+                if (TRANSLATOR[\'JS_\'+$messages] == undefined) {
+                    return $messages;
+                }
+                return TRANSLATOR[\'JS_\'+$messages];
+            };',
+            'text/javascript',
+            array('noescape' => true)
+        );
+
+        echo $this->headScript()
+            ->appendFile(BE_TEMPLATE.'/global/plugins/jquery.min.js')
+            ->appendFile(BE_TEMPLATE.'/global/plugins/bootstrap/js/bootstrap.min.js')
+            ->appendFile(BE_TEMPLATE.'/global/plugins/js.cookie.min.js')
+            ->appendFile(BE_TEMPLATE.'/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js')
+            ->appendFile(BE_TEMPLATE.'/global/plugins/jquery.blockui.min.js')
+            ->appendFile(BE_TEMPLATE.'/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js')
+            ->appendFile(BE_TEMPLATE.'/global/plugins/jquery-validation/js/jquery.validate.min.js')
+            ->appendFile(BE_TEMPLATE.'/global/scripts/app.min.js')
+            // update sitemap.xml when closing the tab
+            ->appendFile(BE_TEMPLATE.'/layouts/layout/scripts/beforeunload.js')
+
+            // ckeditor
+            ->appendFile($this->basePath() . '/template/backend/plugins/ckeditor/ckeditor.js');
+    ?>
+    <!--[if lt IE 9]>
+    <script src="<?php echo BE_TEMPLATE.'/global/plugins/respond.min.js'; ?>"></script>
+    <script src="<?php echo BE_TEMPLATE.'/global/plugins/excanvas.min.js'; ?>"></script>
+    <script src="<?php echo BE_TEMPLATE.'/global/plugins/ie8.fix.min.js'; ?>"></script>
+    <![endif]-->
+</head>
+<body class="login">
+    <?php echo $this->content; ?>
+</body>
+</html>

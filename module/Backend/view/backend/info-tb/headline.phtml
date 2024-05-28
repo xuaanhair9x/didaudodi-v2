@@ -1,0 +1,65 @@
+<div class="page-content">
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li><a href="<?php echo $this->url('admincp'); ?>"><?php echo $this->translate("Trang chủ"); ?></a><i class="fa fa-circle"></i></li>
+            <li><span><?php echo $this->_params['title']; ?></span></li>
+        </ul>
+    </div>
+    <form id="form-add" action="" method="POST" enctype="multipart/form-data" onchange="setIsChangeValue();" onkeydown="setIsChangeValue();">
+        <div class="portlet box blue margin-bottom-0">
+            <div class="portlet-title">
+                <div class="caption"><?php echo $this->translate("Danh sách"); ?></div>
+                <div class="actions">
+                    <button type="submit" onclick="_HTSend.form(this)" class="btn btn-sm green-jungle"><i class="fa fa-check-square-o"></i> <?php echo $this->translate("Lưu"); ?></button>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-body">
+                    <?php if ($this->success) { ?>
+                        <div class="alert bg-green-jungle display-block">
+                            <button class="close" data-close="alert"></button>
+                            <p> <?php echo $this->success; ?> </p>
+                        </div>
+                    <?php } ?>
+                    <div class="form-group mt-repeater">
+                        <div class="mt-repeater__title" style="width: calc(99% - 36.62px);margin-bottom: 10px;">
+                            <div class="row">
+                                <?php foreach ($this->_field as $value) { ?>
+                                    <div class="<?php echo $this->class; ?>"><label><?php echo ($this->identity()->lang ? $value[0].' - ' : '').$this->translate($value[1]); ?></label></div>
+                                <?php } ?>
+                                <div class="<?php echo $this->class.' '.(($this->identity()->supper) ? '' : 'hidden'); ?>"><label>Slug</label></div>
+                            </div>
+                        </div>
+                        <div data-repeater-list="headline">
+                            <?php foreach ($this->item['slug'] as $i => $slug) { ?>
+                                <div data-repeater-item>
+                                    <div class="mt-repeater-item mt-overflow">
+                                        <div class="mt-repeater-cell">
+                                            <div class="mt-repeater-box">
+                                                <div class="row toslug" <?php echo ($this->identity()->supper) ? '' : 'style="width: 99.5%;"'; ?>>
+                                                    <?php foreach ($this->_field as $j => $value) { ?>
+                                                        <div class="<?php echo $this->class; ?>">
+                                                            <textarea class="form-control" name="<?php echo $value[0]; ?>" rows="1" ht-trigger="txtResize"><?php echo $this->item[$value[0]][$i]; ?></textarea>
+                                                        </div>
+                                                    <?php } ?>
+                                                    <div class="<?php echo $this->class.' '.(($this->identity()->supper) ? '' : 'hidden'); ?>">
+                                                        <textarea class="form-control" name="slug" rows="1" ht-trigger="txtResize" readonly="true"><?php echo $slug; ?></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <a href="javascript:;" data-repeater-delete class="btn red mt-repeater-delete mt-repeater-del-right mt-repeater-btn-inline <?php echo ($this->identity()->supper) ? '' : 'hide'; ?>"><i class="fa fa-close"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php } ?>
+                        </div>
+                        <a href="javascript:;" data-repeater-create="headline" class="btn blue mt-repeater-add <?php echo ($this->identity()->supper) ? '' : 'hide'; ?>"><i class="fa fa-plus"></i></a>
+                    </div>
+                </div>
+                <div class="form-actions right">
+                    <button type="submit" onclick="_HTSend.form(this)" class="btn btn-sm green-jungle"><i class="fa fa-check-square-o"></i> <?php echo $this->translate("Lưu"); ?></button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

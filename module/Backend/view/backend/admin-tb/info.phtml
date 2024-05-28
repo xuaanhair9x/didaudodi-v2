@@ -1,0 +1,71 @@
+<div class="page-content">
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li><a href="<?php echo $this->url('admincp'); ?>"><?php echo $this->translate("Trang chủ"); ?></a><i class="fa fa-circle"></i></li>
+            <li><span><?php echo $this->_params['title']; ?></span></li>
+        </ul>
+    </div>
+    <form id="form-add" action="" method="POST" enctype="multipart/form-data">
+        <div class="portlet box blue margin-bottom-0">
+            <div class="portlet-title">
+                <div class="caption"><?php echo $this->translate("Thông tin chi tiết"); ?> </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-body">
+                    <?php if ($this->error) { ?>
+                        <div class="alert alert-danger display-block">
+                            <button class="close" data-close="alert"></button>
+                            <?php foreach ($this->error as $error) { ?>
+                                <p> <?php echo $error; ?> </p>
+                            <?php } ?>
+                        </div>
+                    <?php } ?>
+                    <div class="row row-flex">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label"><?php echo $this->translate("Tài khoản"); ?></label>
+                                <input type="text" name="username" value="<?php echo $this->item['username'] ?>" class="form-control" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label"><?php echo $this->translate("Họ và tên"); ?> <span class="font-red">(*)</span></label>
+                                <input type="text" name="fullname" value="<?php echo $this->item['fullname'] ?>" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label">Email <span class="font-red">(*)</span></label>
+                                <input type="text" name="email" value="<?php echo $this->item['email'] ?>" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions right">
+                    <button type="submit" class="btn btn-sm green-jungle"><i class="fa fa-check-square-o"></i> <?php echo $this->translate("Lưu"); ?></button>
+                    <a href="<?php echo $this->url('admincp'); ?>" class="btn btn-sm red"><i class="fa fa-share"></i> <?php echo $this->translate("Thoát"); ?></a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    $(document).ready(function() {
+        FormValidation.submit('#form-add', {
+            rules: {
+                fullname: {
+                    required: true
+                },
+                email: {
+                    required: true,
+                    email: true
+                }
+            }
+        });
+    });
+</script>
+<?php if ($this->success) { ?>
+    <script>
+        _HTTemplate.reload('<?php echo $this->success; ?>');
+    </script>
+<?php } ?>

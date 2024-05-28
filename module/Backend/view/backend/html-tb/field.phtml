@@ -1,0 +1,225 @@
+<div class="page-content">
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li><a href="<?php echo $this->url('admincp'); ?>"><?php echo $this->translate("Trang chủ"); ?></a><i class="fa fa-circle"></i></li>
+            <li><span><?php echo $this->_params['title']; ?></span></li>
+        </ul>
+        <?php if ($this->identity()->supper) { ?>
+            <div class="pull-right">
+                <a href="<?php echo $this->url('admincp',array('controller' => $this->_params['__CONTROLLER__'],'action' => 'codefield','id' => $this->_params['id'],'root_id' => $this->_params['root_id'])); ?>" class="btn green pull-right"><i class="fa fa-cogs"></i> Cấu hình dữ liệu</a>
+                <a href="<?php echo $this->url('admincp',array('controller' => $this->_params['__CONTROLLER__'],'action' => 'codevalidate','id' => $this->_params['id'],'root_id' => $this->_params['root_id'])); ?>" class="btn green pull-right"><i class="fa fa-cogs"></i> Định nghĩa dữ liệu</a>
+                <a href="<?php echo $this->url('admincp',array('controller' => $this->_params['__CONTROLLER__'],'action' => 'sortfield','id' => $this->_params['id'],'root_id' => $this->_params['root_id'])); ?>" class="btn green pull-right"><i class="fa fa-cogs"></i> Sắp xếp dữ liệu</a>
+            </div>
+        <?php } ?>
+    </div>
+    <form id="form-add" action="" method="POST" enctype="multipart/form-data" onchange="setIsChangeValue();" onkeydown="setIsChangeValue();">
+        <div class="portlet box blue margin-bottom-0">
+            <div class="portlet-title">
+                <div class="caption"><?php echo $this->translate("Thông tin chi tiết"); ?> </div>
+                <div class="actions">
+                    <button type="submit" onclick="_HTSend.form(this)" class="btn btn-sm green-jungle"><i class="fa fa-check-square-o"></i> <?php echo $this->translate("Lưu"); ?></button>
+                    <a href="<?php echo $this->url('admincp'); ?>" class="btn btn-sm red"><i class="fa fa-share"></i> <?php echo $this->translate("Thoát"); ?></a>
+                </div>
+            </div>
+            <div class="portlet-body form form-help-freeze">
+                <div class="form-body">
+                    <?php if ($this->error) { ?>
+                        <div class="alert alert-danger display-block">
+                            <button class="close" data-close="alert"></button>
+                            <?php foreach ($this->error as $error) { echo '<p>'.$error.'</p>'; } ?>
+                        </div>
+                    <?php } ?>
+                    <?php if ($this->success) { ?>
+                        <div class="alert bg-green-jungle display-block">
+                            <button class="close" data-close="alert"></button>
+                            <p> <?php echo $this->success; ?> </p>
+                        </div>
+                    <?php } ?>
+                    <div class="tabbable-custom">
+                        <?php if (count($this->identity()->langlist) > 1) { ?>
+                            <ul class="nav nav-tabs">
+                                <?php foreach ($this->identity()->langlist as $i => $lang) { ?>
+                                    <li <?php echo ($i == 0) ? 'class="active"' : ''; ?>>
+                                        <a href="#tab_<?php echo $lang[0]; ?>" data-toggle="tab"> <?php echo $lang[0].' - '.$this->translate($lang[1]); ?> </a>
+                                    </li>
+                                <?php } ?>
+                            </ul>
+                        <?php } ?>
+                        <div <?php echo (count($this->identity()->langlist) > 1) ? 'class="tab-content"' : ''; ?>>
+                            <?php foreach ($this->identity()->langlist as $i => $lang) { ?>
+                                <?php if ($this->identity()->lang) {
+                                    $arrsLang = array('tab' => $lang[0], 'data' => $this->item['translate'][$lang[0]], 'field' => $this->_field['validate']['translate']);
+                                } ?>
+                                <div class="tab-pane <?php echo ($i == 0) ? 'active' : ''; ?>" id="tab_<?php echo $lang[0]; ?>">
+                                    <div class="row">
+                                        <?php echo $this->partialLoop('partials/form-addedit.phtml', array(array('default' => $this->elements, 'lang' => $arrsLang, 'sortFields' => $this->sortFields))); ?>
+                                    </div>
+                                </div>
+                            <?php } ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions right">
+                    <button type="submit" onclick="_HTSend.form(this)" class="btn btn-sm green-jungle"><i class="fa fa-check-square-o"></i> <?php echo $this->translate("Lưu"); ?></button>
+                    <a href="<?php echo $this->url('admincp'); ?>" class="btn btn-sm red"><i class="fa fa-share"></i> <?php echo $this->translate("Thoát"); ?></a>
+                </div>
+            </div>
+        </div>
+    </form>
+    <?php if ($this->_field['comment']) { ?>
+        <div class="profile-content">
+            <div class="app-ticket app-ticket-details">
+                <div class="portlet light ">
+                    <div class="portlet-body">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="ticket-msg">
+                                    <h3><i class="icon-note"></i> <?php echo $this->_field['comment']; ?></h3>
+                                </div>
+                                <div class="ticket-line"></div>
+                                <form id="form-reply" class="form-group" action="" method="POST" enctype="multipart/form-data">
+                                    <textarea name="comment" class="ticket-reply-msg" row="10"></textarea>
+                                    <div class="text-right"><button class="btn uppercase btn-sm green-jungle" type="submit"><i class="icon-action-redo"></i> Bình luận</button></div>
+                                </form>
+                                <?php if($this->comment['list']) { ?>
+                                    <div class="portlet light portlet-fit ht-portlet">
+                                        <div class="portlet-body">
+                                            <div class="timeline">
+                                                <?php foreach ($this->comment['list'] as $x =>$value) {
+                                                    $labelMain = $this->comment['status'][$value['status']];
+                                                    $commentMain = '<span class="font-grey-cascade">'.$value['comment'].'</span>';
+                                                    $icon = '';
+                                                    if ($value['admin_id']) {
+                                                        $icon = '<i class="icon-users font-green-haze"></i>';
+                                                        if((file_exists(ROOT_PUBLIC.'/'.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/100x100-'.$value['thumbnail'].WEBP_EXT) && is_file(ROOT_PUBLIC.'/'.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/100x100-'.$value['thumbnail'].WEBP_EXT))) {
+                                                            $icon = '<img src="'.PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/100x100-'.$value['thumbnail'].'" alt="avatar">';
+                                                        }
+
+                                                        if($value['username'] == $this->_params['user']) {
+                                                            $commentMain = '<span class="font-grey-cascade"><a href="javascript:;" ht-trigger="editable-comment" data-pk="'.$this->url('admincp',array('controller' => 'comment_tb','action' => 'change','id' => $value['id'])).'" data-original-title="Chỉnh sửa phản hồi">'.$value['comment'].'</a></span>';
+                                                        }
+                                                        $labelMain = '<span class="label label-sm label-info">Quản trị viên</span>';
+                                                    }
+                                                ?>
+                                                    <div class="timeline-item">
+                                                        <div class="timeline-body">
+                                                            <div class="timeline-body-head clearfix">
+                                                                <div class="timeline-body-head-caption">
+                                                                    <span class="timeline-body-avatar">
+                                                                        <?php echo $icon; ?>
+                                                                    </span>
+                                                                    <span class="timeline-body-title">
+                                                                        <?php echo $value['fullname']; ?>
+                                                                        <?php echo $labelMain; ?>
+                                                                    </span>
+                                                                    <span class="timeline-body-time font-grey-cascade"><?php echo date('H:i d/m/Y', strtotime($value['date_created'])); ?></span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="timeline-body-content">
+                                                                <?php echo $commentMain; ?>
+                                                            </div>
+                                                            <div class="timeline-body-close">
+                                                                <a href="javascript:;" class="btn red" onclick="_HTDelete.item('<?php echo $this->url('admincp',array('controller' => 'comment_tb','action' => 'delete','id' => $value['id'])); ?>');"><i class="fa fa-close"></i></a>
+                                                            </div>
+                                                            <?php if ($value['multi_image']) { ?>
+                                                                <div class="timeline-body-image">
+                                                                    <?php
+                                                                        $value['multi_image'] = json_decode($value['multi_image'], true);
+                                                                        $totalImg = count($value['multi_image']);
+                                                                        foreach ($value['multi_image'] as $i => $vl_img) {
+                                                                            $img = PUBLIC_PATH.UPLOAD_FILES.$vl_img;
+                                                                            if ($i <= 2 || $totalImg <= 4) {
+                                                                                echo '<a href="'.$img.'" class="fancybox-button" data-rel="fancybox-button-'.$x.'"><img src="'.$img.'" width="80"> </a>';
+                                                                            } else if ($i == 3) {
+                                                                                echo '<a href="'.$img.'" class="fancybox-button" data-rel="fancybox-button-'.$x.'"><img src="'.$img.'" width="80"><span>+'.($totalImg - 3).'</span></a>';
+                                                                            }
+                                                                        }
+                                                                    ?>
+                                                                </div>
+                                                            <?php } ?>
+                                                        </div>
+                                                    </div>
+                                                    <?php foreach ($value['child'] as $vl_child) { ?>
+                                                        <?php
+                                                            $icon = '<i class="icon-emoticon-smile font-green-haze"></i>';
+                                                            $label = $vl_child['status'] != 1 ? '<span class="label label-sm label-danger">'.$this->comment['status'][$vl_child['status']].'</span>' : '';
+                                                            $comment = '<span class="font-grey-cascade">'.$vl_child['comment'].'</span>';
+                                                            if ($vl_child['admin_id']) {
+                                                                $icon = '<i class="icon-users font-green-haze"></i>';
+
+                                                                if((file_exists(ROOT_PUBLIC.'/'.UPLOAD_IMAGES.date('Y/m',explode('-',$vl_child['thumbnail'])[0]).'/100x100-'.$vl_child['thumbnail'].WEBP_EXT) && is_file(ROOT_PUBLIC.'/'.UPLOAD_IMAGES.date('Y/m',explode('-',$vl_child['thumbnail'])[0]).'/100x100-'.$vl_child['thumbnail'].WEBP_EXT))) {
+                                                                    $icon = '<img src="'.PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$vl_child['thumbnail'])[0]).'/100x100-'.$vl_child['thumbnail'].'" alt="avatar">';
+                                                                }
+
+                                                                if($vl_child['username'] == $this->_params['user']) {
+                                                                    $comment = '<span class="font-grey-cascade"><a href="javascript:;" ht-trigger="editable-comment" data-pk="'.$this->url('admincp',array('controller' => 'comment_tb','action' => 'change','id' => $vl_child['id'])).'" data-original-title="Chỉnh sửa phản hồi">'.$vl_child['comment'].'</a></span>';
+                                                                }
+                                                                $label = '<span class="label label-sm label-info">Quản trị viên</span>';
+                                                            }
+                                                        ?>
+                                                        <div class="timeline-item">
+                                                            <div class="timeline-badge">
+                                                                <div class="timeline-icon"><?php echo $icon; ?></div>
+                                                            </div>
+                                                            <div class="timeline-body">
+                                                                <div class="timeline-body-arrow"></div>
+                                                                <div class="timeline-body-head clearfix">
+                                                                    <div class="timeline-body-head-caption">
+                                                                        <span class="timeline-body-title"><?php echo $vl_child['fullname']; ?> <?php echo $label; ?></span>
+                                                                        <span class="timeline-body-time font-grey-cascade"><?php echo date('H:i d/m/Y', strtotime($vl_child['date_created'])); ?></span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="timeline-body-content"><?php echo $comment; ?></div>
+                                                                <div class="timeline-body-close">
+                                                                    <a href="javascript:;" class="btn red" onclick="_HTDelete.item('<?php echo $this->url('admincp',array('controller' => 'comment_tb','action' => 'delete','id' => $vl_child['id'])); ?>');"><i class="fa fa-close"></i></a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    <?php } ?>
+                                                <?php } ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php } ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <?php } ?>
+</div>
+<script>
+    $(document).ready(function() {
+        var rules = {}, checkForm = $.parseJSON('<?php echo json_encode($this->_params["checkForm"]); ?>');
+
+        if (checkForm.required) {
+            var field_required = Object.keys(checkForm.required);
+            for (var i = 0; i < field_required.length; i++) {
+                if (field_required[i].indexOf("thumbnail") > -1) continue;
+
+                rules[field_required[i].replace(/\{(.*?)\}/g, "[$1]")] = {required: true};
+            }
+        }
+
+        FormValidation.submit('#form-add', {rules: rules});
+
+        FormValidation.submit('#form-reply', {rules: {
+            comment: {required: true}
+        }});
+
+        FormEditable.textarea('editable-comment', {
+            name: 'comment',
+            mode: 'inline',
+            inputclass: 'width-100',
+            innerCss: '.sdsd',
+            containerClass: 'sdsdsdsd',
+            rows: 3,
+        });
+        $('.editable-click').click(function() {
+            if ($(this).hasClass('editable-open')) {
+                $(this).next().css('display', 'block').find('form > .form-group').css('display', 'block');
+            }
+        });
+    });
+</script>

@@ -1,0 +1,114 @@
+<div class="page-content">
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li><a href="<?php echo $this->url('admincp'); ?>"><?php echo $this->translate("Trang chủ"); ?></a><i class="fa fa-circle"></i></li>
+            <li><a href="<?php echo $this->linkList; ?>"><?php echo explode('/', $this->_params['title'])[0]; ?></a><i class="fa fa-circle"></i></li>
+            <li><span><?php echo explode('/', $this->_params['title'])[1]; ?></span></li>
+        </ul>
+        <?php if ($this->_params['id']) { ?>
+            <div class="pull-right">
+                <a href="javascript:;" class="btn btn-sm blue" data-target="#activate" data-toggle="modal"><i class="fa fa-unlock-alt"></i> <?php echo ($this->item['status'] == 0) ? $this->translate("Kích hoạt") : $this->translate("Vô hiệu hóa tài khoản"); ?></a>
+            </div>
+        <?php } ?>
+    </div>
+    <form id="form-add" action="" method="POST" enctype="multipart/form-data" onchange="setIsChangeValue();" onkeydown="setIsChangeValue();">
+        <div class="portlet box blue margin-bottom-0">
+            <div class="portlet-title">
+                <div class="caption"><?php echo $this->translate("Thông tin chi tiết"); ?> </div>
+            </div>
+            <div class="portlet-body form form-help-freeze">
+                <div class="form-body">
+                    <?php if ($this->error) { ?>
+                        <div class="alert alert-danger display-block">
+                            <button class="close" data-close="alert"></button>
+                            <?php foreach ($this->error as $error) { ?>
+                                <p> <?php echo $error; ?> </p>
+                            <?php } ?>
+                        </div>
+                    <?php } ?>
+                    <div class="row">
+                        <?php echo $this->partialLoop('partials/form-addedit.phtml', array(array('default' => $this->elements))); ?>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="control-label"><?php echo $this->translate($this->_params['id'] &&  $this->item['password'] ? 'Nhập mật khẩu mới' : 'Nhập mật khẩu'); ?></label>
+                                <div class="d-flex align-items-center">
+                                    <input type="text" name="password" value="<?php echo ($this->error && $this->item['password']) ? $this->item['password'] : ''; ?>" id="password" class="form-control" maxlength="20">
+                                    <button type="button" class="btn green-jungle" style="margin: 0 10px;" id="rand_pw">Random</button>
+                                    <label class="mt-checkbox mt-checkbox-outline flex-none">
+                                        <input type="checkbox" name="send" value="1" disabled/>
+                                        <span></span><?php echo $this->_params['id'] ? 'Gửi email thông báo' : 'Kích hoạt ngay'; ?>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="control-label">Ghi chú</label>
+                                <textarea name="note" class="form-control" rows="2"><?php echo $this->item['note']; ?></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions right">
+                    <button type="submit" onclick="_HTSend.form(this)" class="btn btn-sm green-jungle"><i class="fa fa-check-square-o"></i> <?php echo $this->translate("Lưu"); ?></button>
+                    <a href="<?php echo $this->linkList; ?>" class="btn btn-sm red"><i class="fa fa-share"></i> <?php echo $this->translate("Thoát"); ?></a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div id="activate" class="modal fade" tabindex="-1" role="basic" data-backdrop="static" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="" method="post" accept-charset="utf-8">
+                <div class="modal-header"><h4 class="modal-title text-center text-uppcaser"><strong><?php echo ($this->item['status'] == 0) ? $this->translate("Kích hoạt tài khoản") : $this->translate("Vô hiệu hóa tài khoản"); ?></strong></h4></div>
+                <div class="modal-body text-center">
+                    <?php if ($this->item['status'] == 0) { ?>
+                        <input type="hidden" name="status" value="1">
+                        <p><?php echo $this->translate("Bạn có chắc muốn kích hoạt tài khoản thành viên"); ?> <strong><?php echo $this->item['fullname']; ?></strong>?</p>
+                    <?php } else { ?>
+                        <input type="hidden" name="status" value="0">
+                        <p><?php echo $this->translate("Bạn có chắc muốn vô hiệu hóa tài khoản thành viên"); ?> <strong><?php echo $this->item['fullname']; ?></strong>?</p>
+                        <p><?php echo $this->translate("Thành viên sẽ không thể đăng nhập vào tài khoản của họ nữa!"); ?></p>
+                    <?php } ?>
+                </div>
+                <div class="modal-footer">
+                    <div class="text-center">
+                        <label class="mt-checkbox mt-checkbox-outline mt-checkbox-right" style="margin-right: 10px;">
+                            <input type="checkbox" name="send" value="1"/>
+                            <span></span><?php echo $this->translate("Gửi email thông báo tới thành viên"); ?>
+                        </label>
+                        <button href="submit" class="btn blue"> <?php echo ($this->item['status'] == 0) ? $this->translate("Kích hoạt") : $this->translate("Vô hiệu hóa"); ?></button>
+                        <button type="button" class="btn red" data-dismiss="modal"><i class="fa fa-ban"></i> <?php echo $this->translate("Hủy"); ?></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+<script>
+    $(document).ready(function() {
+        $('#rand_pw').click(function() {
+            var str = _HTHelper.randString();
+            $('input[name=password]').val(str);
+            $('input[name=send]').removeAttr('disabled');
+        });
+        $('input[name=password]').change(function() {
+            if ($(this).val()) {
+                $('input[name=send]').removeAttr('disabled');
+            } else {
+                $('input[name=send]').attr('disabled', true);
+                if($('input[name=send]').is(':checked')) {
+                    $('input[name=send]').prop('checked', false).removeAttr('checked');
+                }
+            }
+        });
+        var field = $.parseJSON('<?php echo json_encode($this->_params["checkForm"]["required"]); ?>');
+        FormValidation.submit('#form-add', {
+            rules: {
+                fullname: { required: true },
+                email: { required: true, email: true },
+                password: { pw: true },
+            }
+        });
+    });
+</script>

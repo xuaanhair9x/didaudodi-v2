@@ -1,0 +1,6 @@
+<select name="list_brand_id[]" class="mt-multiselect btn btn-default" multiple="multiple">
+    <?php foreach ($this->list as $value) { ?>
+        <option value="<?php echo $value['id']; ?>" <?php echo (in_array($value['id'], $this->selected) ? 'selected' : '') ?>><?php echo $value['name']; ?></option>
+    <?php } ?>
+</select>
+<script>BootstrapMultiselect.init();</script>

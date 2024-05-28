@@ -1,0 +1,90 @@
+<div class="logo"><img src="<?php echo BE_TEMPLATE.'/layouts/layout/img/logo.png'; ?>" alt="logo.png" /></div>
+<div class="content">
+    <form id="login-form" class="login-form" action="" method="post">
+        <h3 class="form-title font-green text-uppercase"><?php echo $this->_params['title']; ?></h3>
+        <h5 class="form-title text-center text-uppercase">Cho lần đăng nhập đầu tiên</h5>
+        <?php if ($this->error_login) { ?>
+            <div class="alert alert-danger">
+                <button class="close" data-close="alert"></button>
+                <span> <?php echo $this->error_login; ?> </span>
+            </div>
+        <?php } ?>
+        <div class="form-group <?php echo ($this->error_input['password']) ? 'has-error' : ''; ?>">
+            <label class="control-label">Mật khẩu</label>
+            <input class="form-control form-control-solid placeholder-no-fix" id="password" type="password" name="password" autocomplete="off" placeholder="Mật khẩu" />
+            <?php if ($this->error_input['password']) { ?>
+                <cite id="password-error" class="h6 help-block">Thông tin bắt buộc.</cite>
+            <?php } ?>
+        </div>
+        <div class="form-group <?php echo ($this->error_input['password_confirm']) ? 'has-error' : ''; ?>">
+            <label class="control-label">Nhập lại mật khẩu</label>
+            <input class="form-control form-control-solid placeholder-no-fix" type="password" name="password_confirm" autocomplete="off" placeholder="Nhập lại mật khẩu" />
+            <?php if ($this->error_input['password_confirm']) { ?>
+                <cite id="password_confirm-error" class="h6 help-block">Thông tin bắt buộc.</cite>
+            <?php } ?>
+        </div>
+        <div class="form-actions">
+            <div class="text-center">
+                <input type="hidden" name="force_reset" value="0" />
+                <button type="submit" class="btn btn-sm green uppercase">Đổi mật khẩu</button>
+            </div>
+        </div>
+        <div class="create-account"></div>
+    </form>
+</div>
+<script>
+    $(document).ready(function() {
+        var regex = /^(?=.*[!@#$&*]).{8,20}$/;
+        $.validator.addMethod("pw", function (value, element) {
+            if (regex.test(value) || !value) {
+                return true;
+            } else {
+                return false;
+            }
+        }, "Mật khẩu phải có từ 8 - 20 ký tự, ít nhất có 1 ký tự đặc biệt !@#$&*");
+        $('#login-form').validate({
+            rules: {
+                password: {
+                    required: true,
+                    pw: true,
+                },
+                password_confirm: {
+                    required: true,
+                    equalTo: '#password',
+                }
+            },
+            errorClass: "h6 help-block", // error
+            highlight: function (element) {
+                $(element).closest('.form-group').addClass('has-error');
+                if ($(element)[0].tagName == 'SELECT') {
+                    if ($(element).next()[0].tagName == 'CITE') {
+                        $(element).closest('.form-group').append($(element).next()[0].outerHTML);
+                        $(element).next().remove();
+                    }
+                }
+            },
+            unhighlight: function (element) {
+                $(element).closest('.form-group').removeClass('has-error');
+            },
+            success: function (label) {
+                label.closest('.form-group').removeClass('has-error');
+            },
+        });
+    });
+</script>
+<?php if ($this->success) { ?>
+    <a href="javascript:;" class="btn btn-sm blue hide" data-target="#ht-template-reload" data-toggle="modal"><i class="fa fa-unlock-alt"></a>
+    <div id="ht-template-reload" class="modal fade in" tabindex="-1" role="basic" data-backdrop="static" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <h4 class="modal-body text-center"><?php echo $this->success; ?></h4>
+                <div class="modal-footer"><div class="text-center"><button type="button" class="btn btn-sm green-jungle" data-dismiss="modal" onclick="window.location.href = '<?php echo $this->url('admincp'); ?>'"><i class="fa fa-check-square-o"></i> OK</button></div></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function() {
+            $('[data-target="#ht-template-reload"]').click();
+        });
+    </script>
+<?php } ?>

@@ -1,0 +1,129 @@
+<div class="page-content">
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li><a href="<?php echo $this->url('admincp'); ?>"><?php echo $this->translate("Trang chủ"); ?></a><i class="fa fa-circle"></i></li>
+            <li><span><?php echo $this->_params['title']; ?></span></li>
+        </ul>
+    </div>
+    <div class="portlet box blue margin-bottom-0">
+        <div class="portlet-title">
+            <div class="caption"><?php echo $this->translate("Danh sách"); ?> </div>
+            <div class="actions">
+                <a href="<?php echo $this->url('admincp',array('controller' => $this->_params['__CONTROLLER__'],'action' => 'field','root_id' => $this->_params['root_id'])); ?>" class="btn yellow"><i class="fa fa-plus-square-o"></i> <?php echo $this->translate("Thêm mới"); ?></a>
+                <a href="javascript:;" class="btn red" onclick="_HTDelete.rows('<?php echo $this->url('admincp',array('controller' => $this->_params['__CONTROLLER__'],'action' => 'delete')); ?>','/root_id=<?php echo $this->_params['root_id']; ?>');"><i class="fa fa-trash-o"></i> <?php echo $this->translate("Xóa nhiều"); ?></a>
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="ht-filter">
+                <form id="form-filter" action="" method="post" accept-charset="utf-8">
+                    <div class="ht-filter__status">
+                        <div class="input-group input-group-sm select2-bootstrap-prepend">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" data-select2-open="ht-open-status"><?php echo $this->translate("Trạng thái"); ?></button>
+                            </span>
+                            <select id="ht-open-status" name="status" class="form-control select2 select2-not-search" onchange="_HTHelper.submit(this);">
+                                <option value="all"><?php echo $this->translate("Tất cả"); ?></option>
+                                <?php foreach ($this->status as $value) { ?>
+                                    <option value="<?php echo $value['value']; ?>" <?php echo ($value['value'] == $this->query['status']) ? 'selected' : ''; ?>><?php echo $value['text']; ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <table id="datatable-admin" class="table table-striped table-bordered table-hover table-checkable">
+                <thead>
+                    <tr>
+                        <th class="nosort table-checkall"><label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" class="group-checkable" data-set=".ht-checkall-rows" /><span></span>
+                            </label></th>
+                        <th class="table-checkall"> ID </th>
+                        <th> <?php echo $this->translate("Tài khoản"); ?> </th>
+                        <th> <?php echo $this->translate("Họ và tên"); ?> </th>
+                        <th> Email </th>
+                        <?php if ($this->_field['role']) { ?>
+                            <th class="text-center"> <?php echo $this->translate("Nhóm quyền"); ?> </th>
+                        <?php } ?>
+                        <th class="text-center"> <?php echo $this->translate("Trạng thái"); ?> </th>
+                        <th class="nosort nosearch table-func"> <?php echo $this->translate("Chức năng"); ?> </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($this->list as $value) { ?>
+                        <tr class="odd gradeX">
+                            <td>
+                                <?php if ($value['id'] != 1) { ?>
+                                    <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" class="ht-checkall-rows" value="<?php echo $value['id']; ?>" /><span></span></label>
+                                <?php } ?>
+                            </td>
+                            <td><?php echo $value['id']; ?></td>
+                            <td><a href="<?php echo $this->url('admincp',array('controller' => $this->_params['__CONTROLLER__'],'action' => 'field','id' => $value['id'],'root_id' => $this->_params['root_id'])); ?>"><?php echo $value['username']; ?></a></td>
+                            <td><?php echo $value['fullname']; ?></td>
+                            <td><?php echo $value['email']; ?></td>
+                            <?php if ($this->_field['role']) { ?>
+                                <td class="text-center">
+                                    <a href="javascript:;" ht-trigger="editable-role_id" data-pk="<?php echo $this->url('admincp', array('controller' => $this->_params['__CONTROLLER__'],'action' => 'change','id' => $value['id'],'root_id' => $this->_params['root_id'])); ?>" data-value="<?php echo $value['role_id']; ?>"><?php echo $value['role_name']; ?></a>
+                                </td>
+                            <?php } ?>
+                            <td class="text-center">
+                                <a href="javascript:;" ht-trigger="editable-status" data-pk="<?php echo $this->url('admincp',array('controller' => $this->_params['__CONTROLLER__'],'action' => 'change','id' => $value['id'],'root_id' => $this->_params['root_id'])); ?>" data-value="<?php echo $value['status']; ?>"><?php echo ($value['status'] == 0) ? $this->translate("Chưa kích hoạt") : $this->translate("Đã kích hoạt"); ?></a>
+                            </td>
+                            <td>
+                                <div class="text-center">
+                                    <div class="btn-group btn-group-sm btn-group-solid">
+                                        <a href="<?php echo $this->url('admincp',array('controller' => $this->_params['__CONTROLLER__'],'action' => 'field','id' => $value['id'],'root_id' => $this->_params['root_id'])); ?>" class="btn blue"><?php echo $this->translate("Sửa"); ?></a>
+                                        <?php if ($value['id'] != 1) { ?>
+                                            <a href="javascript:;" class="btn red" onclick="_HTDelete.item('<?php echo $this->url('admincp',array('controller' => $this->_params['__CONTROLLER__'],'action' => 'delete','id' => $value['id'])); ?>');"><?php echo $this->translate("Xóa"); ?></a>
+                                        <?php } ?>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        var role_id = $.parseJSON('<?php echo json_encode($this->role, true); ?>');
+        for (var i = 0; i < role_id.length; i++) {
+            role_id[i] = {value: role_id[i].id, text: role_id[i].name};
+        }
+        TableDatatables.init({
+            tableId: '#datatable-admin',
+            fnRowCallback: function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                FormEditable.group('editable-role_id', {
+                    name: 'role_id',
+                    title: '<?php echo $this->translate("Nhóm quyền"); ?>',
+                    responseText: role_id
+                });
+                FormEditable.group('editable-status', {
+                    name: 'status',
+                    responseText: $.parseJSON('<?php echo json_encode($this->status, true); ?>'),
+                });
+            }
+        });
+
+        $('body').on('click', '.editable-click', function() {
+            if ($(this).hasClass('editable-open')) {
+                $("#datatable-admin .editable-open").not(this).click();
+                var tagARect = this.getBoundingClientRect();
+                var $this = $(this);
+                setTimeout(function() {
+                    var domRect = $this.siblings('.popover')[0].getBoundingClientRect();
+                    console.log(tagARect,domRect );
+                    $this.siblings('.popover').css({
+                        position: 'fixed',
+                        top: (domRect.top + tagARect.height  - (tagARect.height/2)) + 'px',
+                        left: domRect.left + 'px',
+                    });
+                }, 100);
+            }
+        });
+
+        document.addEventListener("scroll", function(){
+            $("#datatable-admin .editable-open").click();
+        });
+    });
+</script>

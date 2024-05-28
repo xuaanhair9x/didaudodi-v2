@@ -1,0 +1,63 @@
+<div class="logo"><img src="<?php echo BE_TEMPLATE.'/layouts/layout/img/logo.png'; ?>" alt="logo.png" /></div>
+<div class="content">
+    <form id="forget-form" class="forget-form" action="" method="post">
+        <h3 class="font-green"><?php echo $this->translate("Quên mật khẩu"); ?>?</h3>
+        <p class="text-center"> <?php echo $this->translate("Nhập email đã đăng ký để nhận mật khẩu mới."); ?> </p>
+        <?php if ($this->error) { ?>
+            <div class="alert alert-danger">
+                <button class="close" data-close="alert"></button>
+                <span> <?php echo $this->error; ?> </span>
+            </div>
+        <?php } ?>
+        <div class="form-group">
+            <input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="Email" name="email" value="<?php echo $this->_params['post']['email']; ?>" /> </div>
+        <div class="form-actions">
+            <a href="<?php echo $this->linkLogin; ?>" class="btn btn-sm green btn-outline"><?php echo $this->translate("Trở về"); ?></a>
+            <button type="submit" class="btn btn-sm btn-success uppercase pull-right"><?php echo $this->translate("Gửi"); ?></button>
+        </div>
+    </form>
+</div>
+<script>
+    $(document).ready(function() {
+        $('#forget-form').validate({
+            rules: {
+                email: {
+                    required: true,
+                    email: true
+                }
+            },
+            errorClass: "h6 help-block", // error
+            highlight: function (element) {
+                $(element).closest('.form-group').addClass('has-error');
+                if ($(element)[0].tagName == 'SELECT') {
+                    if ($(element).next()[0].tagName == 'CITE') {
+                        $(element).closest('.form-group').append($(element).next()[0].outerHTML);
+                        $(element).next().remove();
+                    }
+                }
+            },
+            unhighlight: function (element) {
+                $(element).closest('.form-group').removeClass('has-error');
+            },
+            success: function (label) {
+                label.closest('.form-group').removeClass('has-error');
+            },
+        });
+    });
+</script>
+<?php if ($this->success) { ?>
+    <a href="javascript:;" class="btn btn-sm blue hide" data-target="#ht-template-reload" data-toggle="modal"><i class="fa fa-unlock-alt"></a>
+    <div id="ht-template-reload" class="modal fade in" tabindex="-1" role="basic" data-backdrop="static" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <h4 class="modal-body text-center"><?php echo $this->success; ?></h4>
+                <div class="modal-footer"><div class="text-center"><button type="button" class="btn btn-sm green-jungle" data-dismiss="modal" onclick="window.location.href = '<?php echo $this->linkLogin; ?>'"><i class="fa fa-check-square-o"></i> OK</button></div></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function() {
+            $('[data-target="#ht-template-reload"]').click();
+        });
+    </script>
+<?php } ?>

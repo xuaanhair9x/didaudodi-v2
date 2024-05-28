@@ -1,0 +1,68 @@
+<div class="page-content">
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li><a href="<?php echo $this->url('admincp'); ?>"><?php echo $this->translate("Trang chủ"); ?></a><i class="fa fa-circle"></i></li>
+            <li><span><?php echo $this->_params['title']; ?></span></li>
+        </ul>
+    </div>
+    <div class="portlet box blue margin-bottom-0">
+        <div class="portlet-title">
+            <div class="caption"><?php echo $this->translate("Danh sách"); ?> </div>
+            <div class="actions">
+                <a href="javascript:;" class="btn red" onclick="_HTDelete.rows('<?php echo $this->url('admincp',array('controller' => $this->_params['__CONTROLLER__'],'action' => 'delete')); ?>','/root_id=<?php echo $this->_params['root_id']; ?>');"><i class="fa fa-trash-o"></i> <?php echo $this->translate("Xóa nhiều"); ?></a>
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="ht-filter">
+                <form id="form-filter" action="" method="post" accept-charset="utf-8">
+                    <div class="ht-filter__date">
+                        <div class="input-group input-group-sm">
+                            <input type="text" class="form-control text-center date-picker" name="from" value="<?php echo $this->query['from'] ?>" placeholder="<?php echo $this->translate("Ngày bắt đầu"); ?>" autocomplete="off">
+                            <span class="input-group-addon"> <?php echo $this->translate("đến"); ?> </span>
+                            <input type="text" class="form-control text-center date-picker" name="to" value="<?php echo $this->query['to'] ?>" placeholder="<?php echo $this->translate("Ngày kết thúc"); ?>" autocomplete="off">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-sm blue pull-right"><i class="fa fa-filter" aria-hidden="true"></i> <?php echo $this->translate("Lọc"); ?></button>
+                </form>
+            </div>
+            <table id="datatable-default" class="table table-striped table-bordered table-hover table-checkable excel-column">
+                <thead>
+                    <tr>
+                        <th class="nosort nosearch noexcel table-checkall">
+                            <label class="mt-checkbox mt-checkbox-outline">
+                                <input type="checkbox" class="group-checkable" data-set=".ht-checkall-rows" />
+                                <span></span>
+                            </label>
+                        </th>
+                        <th class="table-checkall"> ID </th>
+                        <th> Email </th>
+                        <th class="text-center"> <?php echo $this->translate("Ngày tạo"); ?> </th>
+                        <th class="nosort nosearch noexcel table-func"> <?php echo $this->translate("Chức năng"); ?> </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($this->list as $value) { ?>
+                        <tr class="odd gradeX">
+                            <td>
+                                <label class="mt-checkbox mt-checkbox-outline">
+                                    <input type="checkbox" class="ht-checkall-rows" value="<?php echo $value['id']; ?>" />
+                                    <span></span>
+                                </label>
+                            </td>
+                            <td> <?php echo $value['id']; ?> </td>
+                            <td> <?php echo $value['email']; ?> </td>
+                            <td class="text-center"> <?php echo date('d/m/Y', strtotime($value['date_created'])); ?> </td>
+                            <td>
+                                <div class="text-center">
+                                    <div class="btn-group btn-group-sm btn-group-solid">
+                                        <a href="javascript:;" class="btn red" onclick="_HTDelete.item('<?php echo $this->url('admincp',array('controller' => $this->_params['__CONTROLLER__'],'action' => 'delete','id' => $value['id'])); ?>');"><?php echo $this->translate("Xóa"); ?></a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

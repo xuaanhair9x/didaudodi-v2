@@ -1,0 +1,10 @@
+<input type="hidden" name="allowed_value">
+<select multiple="multiple" class="multi-select" name="allowed_value[]">
+    <?php
+        foreach ($this->list as $value) {
+            $selected = (in_array($value['id'], $this->selected)) ? 'selected' : '';
+            echo '<option value="'.$value['id'].'" '.$selected.'>'.$value['name'].'</option>';
+        }
+    ?>
+</select>
+<script> $(document).ready(function() { MultiSelect.init(); }); </script>

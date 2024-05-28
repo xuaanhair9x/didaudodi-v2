@@ -1,0 +1,95 @@
+<input type="hidden" name="list_product_id">
+<select multiple="multiple" class="multi-select" name="list_product_id[]">
+    <?php
+        foreach ($this->list as $value) {
+            $selected = (in_array($value['id'], $this->selected)) ? 'selected' : '';
+            echo '<option value="'.$value['id'].'" '.$selected.' data-id=\''.$value['id'].'\' data-info=\''.json_encode($value, JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE).'\'>'.$value['name'].'</option>';
+        }
+    ?>
+</select>
+<script>
+	$(document).ready(function() {
+		MultiSelect.init();
+
+		<?php if($this->_params['root_id'] == 16) { ?>
+			// List
+	        var el_package = $('#list_product_id .ms-container');
+	        el_package.prepend('<div class="ms-selection table-scrollable"><table class="table table-striped table-hover"><thead><tr><th width="35%">Tên SP</th><th width="20%" class="text-center">Giá gốc</th><th class="text-center">Sắp xếp <a href="javascript:;" class="mt-sweetalert-note" data-html="false" data-message="Nhập số thứ tự để sắp xếp theo đúng vị trí. Vd: 1 - 2 - 3"><i class="fa fa-question-circle" aria-hidden="true"></i></a></th><th class="text-center">Top (%) <a href="javascript:;" class="mt-sweetalert-note" data-html="false" data-message="Vị trí của sản phẩm TỪ TRÊN XUỐNG, đơn vị % (phần trăm). Vd: 20%"><i class="fa fa-question-circle" aria-hidden="true"></i></a></th><th class="text-center">Left (%) <a href="javascript:;" class="mt-sweetalert-note" data-html="false" data-message="Vị trí của sản phẩm TỪ TRÁI SANG, đơn vị % (phần trăm). Vd: 20%"><i class="fa fa-question-circle" aria-hidden="true"></i></a></th><th></th></tr></thead><tbody><tr class="notify"><td colspan="6" class="text-center">Vui lòng chọn sản phẩm</td></tr></tbody></table></div>');
+
+	        var list = $('.ms-selectable .ms-list li[selected].ms-selected'),
+	        	listCombo = $.parseJSON('<?php echo $this->item['list_combo_item'] ?? json_encode(array()); ?>'),
+	        	deleteItem = JSON.parse("[" + sessionStorage.getItem('deleteItem') + "]"),
+	        	changeItem = JSON.parse(sessionStorage.getItem('changeItem'));
+
+	    	if(list.length == 0) {
+	    		$('tr.notify').show();
+	    	} else {
+	    		$('tr.notify').hide();
+	    	}
+
+	        for (var i = 0; i < list.length; i++) {
+	            var tempX = $('#list_product_id select option:nth-child('+($(list[i]).index() + 1)+')').data('info');
+	            for (var j = 0; j < listCombo.length; j++) {
+	                if(tempX.id == listCombo[j].id) {
+	                	delete list[i];
+	                }
+	            }
+	        }
+
+	        for (var i = 0; i < list.length; i++) {
+	        	var id = $(list[i]).data('id');
+	        	if(id !== undefined) {
+		        	var dataInfo = $('#list_product_id select option:nth-child('+($(list[i]).index() + 1)+')').data('info');
+		        	listCombo.push(dataInfo);
+		        }
+	        }
+
+	        for (var i = 0; i < listCombo.length; i++) {
+	        	if(jQuery.inArray(listCombo[i].id, deleteItem) == -1) {
+		            var info = listCombo[i],
+		                htmlPrice = '<span class="discount">0</span>',
+		                item = $('select option[value="'+ info.id +'"]').data('info');
+
+		            info.name = item.name;
+		            info.price_discount = item.price_discount;
+		            info.price_market = item.price_market;
+
+		            if(info.price_market > 0 && info.price_discount == 0) {
+		                htmlPrice = '<span class="discount">'+ _HTFormat.money(info.price_market) +'</span>';
+		            } else if (info.price_discount < info.price_market) {
+		                htmlPrice = '<span class="discount">'+ _HTFormat.money(info.price_discount) +'</span>';
+		                if(info.price_discount > 0) {
+		                    htmlPrice += '<span class="market">'+ _HTFormat.money(info.price_market) +'</span>';
+		                }
+		            }
+
+		            var itemChangeTop = changeItem[`potitionTop[`+ info.id +`]`],
+		            	itemChangeLeft = changeItem[`potitionLeft[`+ info.id +`]`],
+		            	itemChangeSort = changeItem[`sortItem[`+ info.id +`]`],
+		            	potitionTop = info.potitionTop,
+		            	potitionLeft = info.potitionLeft,
+		            	sortItem = info.sort;
+
+		           	if(itemChangeTop !== undefined) {
+		           		potitionTop = itemChangeTop.inputValue;
+		           	} if(itemChangeLeft !== undefined) {
+		           		potitionLeft = itemChangeLeft.inputValue;
+		           	}  if(itemChangeSort !== undefined) {
+		           		sortItem = itemChangeSort.inputValue;
+		           	}
+
+		            el_package.find('.ms-selection:first tbody').append(
+		                '<tr id="'+ info.id +'">'+
+		                    '<td>'+info.name+'</td>'+
+		                    '<td class="price text-center">'+htmlPrice+'</td>'+
+		                    '<td><input type="text" name="sortItem['+info.id+']" value="'+ (sortItem ? sortItem : '') +'" class="form-control"/></td>'+
+		                    '<td class="text-center"><input type="text" name="potitionTop['+info.id+']" value="'+ (potitionTop ? potitionTop : '') +'" class="form-control"/></td>'+
+		                    '<td class="text-center"><input type="text" name="potitionLeft['+info.id+']" value="'+(potitionLeft ? potitionLeft : '')+'" class="form-control"/></td>'+
+		                    '<td><button type="button" class="btn btn-sm red">Bỏ chọn</button></td>'+
+		                '</tr>'
+		            );
+		        }
+	        }
+        <?php } ?>
+	});
+</script>

@@ -1,0 +1,224 @@
+<div class="page-content">
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li><a href="<?php echo $this->url('admincp'); ?>"><?php echo $this->translate("Trang chủ"); ?></a><i class="fa fa-circle"></i></li>
+            <li><span><?php echo $this->_params['title']; ?></span></li>
+        </ul>
+        <?php if ($this->identity()->supper) { ?>
+            <div class="pull-right">
+                <a href="<?php echo $this->url('admincp',array('controller' => $this->_params['__CONTROLLER__'],'action' => 'codefield','root_id' => $this->_params['root_id'])); ?>" class="btn green"><i class="fa fa-cogs"></i> Cấu hình dữ liệu</a>
+            </div>
+        <?php } ?>
+    </div>
+    <div class="portlet box blue margin-bottom-0">
+        <div class="portlet-title">
+            <div class="caption"><?php echo $this->translate("Danh sách"); ?> </div>
+            <div class="actions">
+                <a href="javascript:;" class="btn grey-salsa" onclick="_HTChange.status(this, 'check');"><i class="fa fa-exchange"></i> <?php echo $this->translate("Chuyển trạng thái"); ?></a>
+                <a href="javascript:;" class="btn red" onclick="_HTDelete.rows('<?php echo $this->url('admincp',array('controller' => $this->_params['__CONTROLLER__'],'action' => 'delete')); ?>','/root_id=<?php echo $this->_params['root_id']; ?>');"><i class="fa fa-trash-o"></i> <?php echo $this->translate("Xóa nhiều"); ?></a>
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="ht-filter">
+                <form id="form-filter" action="" method="post" accept-charset="utf-8">
+                    <div class="ht-filter__status">
+                        <div class="input-group input-group-sm select2-bootstrap-prepend">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" data-select2-open="ht-open-status"><?php echo $this->translate("Trạng thái"); ?></button>
+                            </span>
+                            <select id="ht-open-status" name="status" class="form-control select2 select2-not-search" onchange="_HTHelper.submit(this);">
+                                <option value="all"><?php echo $this->translate("Tất cả"); ?></option>
+                                <?php foreach ($this->status as $value) { ?>
+                                    <option value="<?php echo $value['value']; ?>" <?php echo ($value['value'] == $this->query['status']) ? 'selected' : ''; ?>><?php echo $value['text']; ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="ht-filter__date">
+                        <div class="input-group input-group-sm">
+                            <input type="text" class="form-control text-center date-picker" name="from" value="<?php echo $this->query['from'] ?>" placeholder="<?php echo $this->translate("Ngày bắt đầu"); ?>" autocomplete="off">
+                            <span class="input-group-addon"> <?php echo $this->translate("đến"); ?> </span>
+                            <input type="text" class="form-control text-center date-picker" name="to" value="<?php echo $this->query['to'] ?>" placeholder="<?php echo $this->translate("Ngày kết thúc"); ?>" autocomplete="off">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-sm blue pull-right"><i class="fa fa-filter" aria-hidden="true"></i> <?php echo $this->translate("Lọc"); ?></button>
+                </form>
+            </div>
+            <table id="datatable-contact" class="table table-striped table-bordered table-hover table-checkable action-column">
+                <thead>
+                    <tr>
+                        <th class="nosort noexcel table-checkall"><label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" class="group-checkable" data-set=".ht-checkall-rows" /><span></span></label></th>
+                        <?php
+                            foreach ($this->headers as $header) {
+                                if ($header['display'] && $header['colvis'] != true) {
+                                    echo '<th class="'.$header['class'].'">'.$header['title'].'</th>';
+                                }
+                            }
+                        ?>
+                        <th class="table-show min-width-100"><?php echo $this->translate("Trạng thái"); ?></th>
+                        <th class="nosort nosearch noexcel table-func"><?php echo $this->translate("Chức năng"); ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($this->list as $value) { ?>
+                        <?php
+                            $linkChange = $this->url('admincp',array('controller' => $this->_params['__CONTROLLER__'],'action' => 'change','id' => $value['id']));
+                            $linkView = $this->url('admincp',array('controller' => $this->_params['__CONTROLLER__'],'action' => 'view','id' => $value['id'],'root_id' => $this->_params['root_id']));
+                            $linkDelete = $this->url('admincp',array('controller' => $this->_params['__CONTROLLER__'],'action' => 'delete','id' => $value['id']));
+
+                            if ($this->_field['multi_field'])  {
+                                $multiField = json_decode($value['multi_field'], true);
+                                foreach ($this->_field['multi_field'] as $field) {
+                                    $value[$field['name']] = $multiField[$field['name']];
+                                }
+                            }
+                        ?>
+                       <tr id="<?php echo $value['id']; ?>">
+                            <td><label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" class="ht-checkall-rows" value="<?php echo $value['id']; ?>" /><span></span></label></td>
+                            <?php
+                                foreach ($this->headers as $header) {
+                                    if ($header['display'] && $header['colvis'] != true) {
+                                        $val = $value[$header['name']];
+                                        switch ($header['name']) {
+                                            case 'date_created':
+                                                echo '<td class="' . $header['class'] . '">' . date('d/m/Y H:i', strtotime($val)) . '</td>';
+                                                break;
+                                            default:
+                                                echo '<td class="' . $header['class'] . '">' . $val . '</td>';
+                                                break;
+                                        }
+                                    }
+                                }
+                            ?>
+                            <td class="text-center min-width-100">
+                                <a href="javascript:;" ht-trigger="editable-status" data-placement="bottom" data-pk="<?php echo $linkChange; ?>" data-value="<?php echo $value['status']; ?>"><?php echo ($value['status'] == 0) ? $this->translate("Chưa duyệt") : $this->translate("Đã duyệt"); ?></a>
+                            </td>
+                            <td class="table-func">
+                                <div class="text-center">
+                                    <div class="btn-group btn-group-sm btn-group-solid">
+                                        <a href="<?php echo $linkView; ?>" class="btn blue"><?php echo $this->translate("Xem"); ?></a>
+                                        <a href="javascript:;" class="btn red" onclick="_HTDelete.item('<?php echo $linkDelete; ?>');"><?php echo $this->translate("Xóa"); ?></a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="change-status" class="modal fade" tabindex="-1" role="basic" data-backdrop="static" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header"><h4 class="modal-title text-center text-uppercase"><?php echo $this->translate("Chuyển trạng thái"); ?></h4></div>
+                <div class="modal-body">
+                    <div class="input-group select2-bootstrap-prepend">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" data-select2-open="ht-open-changeStatus"><?php echo $this->translate("Trạng thái"); ?></button>
+                        </span>
+                        <select id="ht-open-changeStatus" name="status" class="form-control select2 select2-not-search">
+                            <option></option>
+                            <?php foreach ($this->status as $value) { ?>
+                                <option value="<?php echo $value['value']; ?>"><?php echo $value['text']; ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="text-center">
+                        <button type="button" class="btn salsa" onclick="_HTChange.status(this, 'multi', <?php echo htmlspecialchars(json_encode(array('url' => $this->url('admincp',array('controller' => $this->_params['__CONTROLLER__'],'action' => 'change'))),JSON_UNESCAPED_SLASHES)); ?>);"><i class="fa fa-exchange"></i> <?php echo $this->translate("Chuyển trạng thái"); ?></button>
+                        <button type="button" class="btn red" data-dismiss="modal"><i class="fa fa-ban"></i> <?php echo $this->translate("Hủy"); ?></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        var tableId = '#datatable-contact';
+        var allHeaders = <?php echo json_encode($this->headers); ?>;
+        var rows = <?php echo json_encode($this->list); ?>;
+        var linkSettingColumns = '<?php echo $this->url('admincp',array('controller' => $this->_params['__CONTROLLER__'],'action' => 'setting-columns','root_id' => $this->_params['root_id'])); ?>';
+
+        TableDatatables.init({
+            tableId: tableId,
+            buttons: [
+                {
+                    className: 'btn grey-salsa',
+                    text: 'Tùy chỉnh cột',
+                    action: function ( e, dt, button, config ) {
+                        window.location = linkSettingColumns;
+                    }
+                },
+                {
+                    extend: 'collection',
+                    className: 'btn yellow ',
+                    text: _HTTranslator("Xuất excel"),
+                    buttons: [
+                        {
+                            extend: 'excel',
+                            title: '',
+                            className: 'excel-item',
+                            text: _HTTranslator("Theo cột hiển thị"),
+                            exportOptions: { columns: ':visible:not(.noexcel)', modifier: { selected: true } },
+                            action: function ( e, dt, node, config ) {
+                                if (dt.rows( { selected: true } ).count() > 0) {
+                                    $.fn.dataTable.ext.buttons.excelHtml5.action.call(this, e, dt, node, config);
+                                } else {
+                                    _HTTemplate.yesno('Vui lòng chọn danh sách để xuất file');
+                                }
+                            },
+                            customize: function(xlsx){
+                                var headers = allHeaders.filter((header) => header.display && header.colvis !== true);
+                                _HTExport.excel(xlsx, _HTExport.formatExcel(tableId, headers, rows));
+                            }
+                        },
+                        {
+                            extend: 'excel',
+                            title: '',
+                            className: 'excel-item',
+                            text: _HTTranslator("Tất cả trường dữ liệu"),
+                            exportOptions: { columns: ':not(.noexcel)', modifier: { selected: true } },
+                            action: function ( e, dt, node, config ) {
+                                if (dt.rows( { selected: true } ).count() > 0) {
+                                    $.fn.dataTable.ext.buttons.excelHtml5.action.call(this, e, dt, node, config);
+                                } else {
+                                    _HTTemplate.yesno('Vui lòng chọn danh sách để xuất file');
+                                }
+                            },
+                            customize: function(xlsx){
+                                var headers = allHeaders.filter((header) => header.display && header.excel);
+                                _HTExport.excel(xlsx, _HTExport.formatExcel(tableId, headers, rows));
+                            }
+                        },
+                    ]
+                }
+            ],
+            drawCallback: function( settings ) {
+                FormEditable.group('editable-status', {
+                    name: 'status',
+                    responseText: $.parseJSON('<?php echo json_encode($this->status, true); ?>'),
+                });
+            }
+        });
+
+        $('body').on('click', '.editable-click', function() {
+            if ($(this).hasClass('editable-open')) {
+                $("#datatable-contact .editable-open").not(this).click();
+                var domRect = this.getBoundingClientRect();
+                $(this).siblings('.popover').removeClass('top');
+                $(this).siblings('.popover').addClass('bottom');
+                $(this).siblings('.popover').css({
+                    position: 'fixed',
+                    top: (domRect.top + domRect.height) + 'px',
+                    left: (domRect.left - (domRect.width / 2)) + 'px',
+                });
+            }
+        });
+
+        document.addEventListener("scroll", function(){
+            $("#datatable-contact .editable-open").click();
+        });
+    });
+</script>

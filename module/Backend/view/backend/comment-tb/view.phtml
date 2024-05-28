@@ -1,0 +1,281 @@
+<div class="page-container-bg-solid">
+    <div class="page-content">
+        <div class="page-bar">
+            <ul class="page-breadcrumb">
+                <li><a href="<?php echo $this->url('admincp'); ?>"><?php echo $this->translate("Trang chủ"); ?></a><i class="fa fa-circle"></i></li>
+                <li><a href="<?php echo $this->linkList; ?>"><?php echo explode('/', $this->_params['title'])[0]; ?></a><i class="fa fa-circle"></i></li>
+                <li><span><?php echo explode('/', $this->_params['title'])[1]; ?></span></li>
+            </ul>
+            <div class="pull-right">
+                <div class="actions">
+                    <?php
+                        if ($this->_field['status']) {
+                            $arrStatus = array('url' => $this->linkChange, 'redirect' => $this->linkList, 'status' => 1);
+                            echo '<div class="btn-group btn-status">';
+                                if ($this->item['status'] == 0) {
+                                    echo '<a href="javascript:;" class="btn btn-sm blue" onclick="_HTTemplate.yesno(\''.$this->translate("Bạn có chắc muốn duyệt thông tin này không?").'\', \'_HTChange.status(this, \\\'button\\\', '.str_replace('"', "\'", json_encode($arrStatus, JSON_UNESCAPED_SLASHES)).')\');"><i class="fa fa-check-square-o"></i> '.$this->translate("Duyệt").'</a>';
+
+                                    $arrStatus['status'] = -1;
+                                    echo '<a href="javascript:;" class="btn btn-sm grey-salsa" onclick="_HTTemplate.yesno(\''.$this->translate("Bạn có chắc không muốn duyệt thông tin này không?").'\', \'_HTChange.status(this, \\\'button\\\', '.str_replace('"', "\'", json_encode($arrStatus, JSON_UNESCAPED_SLASHES)).')\');"><i class="fa fa-ban"></i> '.$this->translate("Không duyệt").'</a>';
+                                }
+
+                                if ($this->item['status'] == -1) {
+                                    echo '<a href="javascript:;" class="btn btn-sm blue" onclick="_HTTemplate.yesno(\''.$this->translate("Bạn có chắc muốn duyệt thông tin này không?").'\', \'_HTChange.status(this, \\\'button\\\', '.str_replace('"', "\'", json_encode($arrStatus, JSON_UNESCAPED_SLASHES)).')\');"><i class="fa fa-check-square-o"></i> '.$this->translate("Duyệt").'</a>';
+                                }
+                            echo '</div>';
+                        }
+                    ?>
+                    <a href="<?php echo $this->linkList; ?>" class="btn btn-sm red"><i class="fa fa-share"></i> <?php echo $this->translate("Thoát"); ?></a>
+                </div>
+            </div>
+        </div>
+        <div class="profile-content">
+            <div class="app-ticket app-ticket-details">
+                <div class="portlet light ">
+                    <?php if ($this->_field['status']) { ?>
+                        <div class="portlet-title tabbable-line">
+                            <div class="caption caption-md">
+                                <i class="icon-globe theme-font hide"></i>
+                                <span class="caption-subject font-blue-madison bold uppercase"><?php echo $this->translate("Trạng thái"); ?></span> - <span class="caption-subject uppercase"><?php echo $this->translate($this->status[$this->item['status']]) ; ?></span>
+                            </div>
+                        </div>
+                    <?php } ?>
+                    <div class="portlet-body">
+                        <div class="row" style="margin-bottom: 18px;">
+                            <div class="col-xs-12">
+                                <div class="ticket-id bold"><?php echo $this->item['type'] == 'product_tb' ? 'Sản phẩm':'Bài viết'; ?></div>
+                                <div class="ticket-title bold uppercase font-blue"><a href="<?php echo $this->url('admincp',array('controller' => $this->item['type'],'action' => 'field','root_id' => $this->item['root_id'],'id' => $this->item['article_id'])); ?>"><?php echo $this->item['article_name'] ?></a></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <!-- <div class="ticket-msg">
+                                    <h3><i class="icon-note"></i> <?php echo $this->_field['comment']; ?></h3>
+                                </div> -->
+                                <div class="portlet light portlet-fit ht-portlet">
+                                    <div class="portlet-body">
+                                        <div class="timeline">
+                                            <div class="timeline-item">
+                                                <div class="timeline-body">
+                                                    <div class="timeline-body-head clearfix">
+                                                        <div class="timeline-body-head-caption d-flex align-items-center" style="float: none">
+                                                            <span class="timeline-body-title"><?php echo $this->item['fullname']; ?></span>
+                                                            <?php if ($this->_field['email'] && $this->item['email']) { ?>
+                                                                <span class="timeline-body-time">(<?php echo $this->item['email']; ?>)</span>
+                                                            <?php } ?>
+                                                            <?php
+                                                                $datetime = '<span class="timeline-body-time font-grey-cascade change-date"><a href="javascript:;" ht-trigger="editable-date" id="'.$this->item['id'].'" data-pk="'.$this->url('admincp',array('controller' => $this->_params['__CONTROLLER__'],'action' => 'change','id' => $this->item['id'])).'" data-original-title="Chỉnh sửa thời gian">'.date('H:i d/m/Y', strtotime($this->item['date_created'])).'</a></span>';
+                                                            ?>
+                                                            <?php echo $datetime; ?>
+                                                            <!-- <span class="timeline-body-time font-grey-cascade"><?php echo date('H:i d/m/Y', strtotime($this->item['date_created'])); ?></span> -->
+                                                        </div>
+                                                        <?php
+                                                            if ($this->item['star']) {
+                                                                $star = '';
+                                                                for ($i=1; $i <= 5; $i++) {
+                                                                    $star .= '<i class="fa font-yellow-lemon '.($i <= $this->item['star'] ? 'fa-star' : 'fa-star-o').'" aria-hidden="true"></i>';
+                                                                }
+                                                                echo '<div class="font-lg">'.$star.'</div>';
+                                                            }
+                                                        ?>
+                                                    </div>
+                                                    <?php echo $this->item['title'] ? '<div class="timeline-body-content-title font-grey-cascade"><a href="javascript:;" ht-trigger="editable-title" data-pk="'.$this->url('admincp',array('controller' => $this->_params['__CONTROLLER__'],'action' => 'change','id' => $this->item['id'])).'" data-original-title="Chỉnh sửa tiêu đề">'.$this->item['title'].'</a></div>':''; ?>
+                                                    <div class="timeline-body-content" style="margin-top: 0;">
+                                                        <span class="font-grey-cascade"><a href="javascript:;" ht-trigger="editable-comment" data-pk="<?php echo $this->url('admincp',array('controller' => $this->_params['__CONTROLLER__'],'action' => 'change','id' => $this->item['id'])); ?>" data-original-title="Chỉnh sửa phản hồi"><?php echo $this->item['comment']; ?></a></span>
+                                                    </div>
+                                                    <?php if ($this->item['multi_image'] || $this->item['video']) { ?>
+                                                        <div class="timeline-body-image">
+                                                            <?php
+                                                                $totalImg = count($this->item['multi_image']);
+                                                                foreach ($this->item['multi_image'] as $i => $vl_img) {
+                                                                    $img = PUBLIC_PATH.UPLOAD_FILES.$vl_img;
+                                                                    if ($i <= 2 || $totalImg <= 4) {
+                                                                        echo '<a href="'.$img.'" class="fancybox-item" data-fancybox="group-cmt"><img src="'.$img.'" width="80"> </a>';
+                                                                    } else if ($i == 3) {
+                                                                        echo '<a href="'.$img.'" class="fancybox-item" data-fancybox="group-cmt"><img src="'.$img.'" width="80"><span>+'.($totalImg - 3).'</span></a>';
+                                                                    }
+                                                                }
+                                                            ?>
+                                                            <?php if($this->item['video']) { ?>
+                                                                <a href="<?php echo PUBLIC_PATH.UPLOAD_FILES.$this->item['video'];?>" class="fancybox-item" data-type="video" data-fancybox="group-cmt">
+                                                                    <video src="<?php echo PUBLIC_PATH.UPLOAD_FILES.$this->item['video'];?>" width="80"></video>
+                                                                    <div class="overlay"><i class="fa fa-play-circle-o" aria-hidden="true"></i></div>
+                                                                </a>
+                                                            <?php } ?>
+                                                        </div>
+                                                    <?php } ?>
+                                                    <?php
+                                                        echo $this->item['used'] ? '<div class="timeline-body-used">'.$this->item['used'].'</div><div class="timeline-body-check"><i class="fa fa-check-circle" aria-hidden="true"></i> Đã mua hàng</div>':'';
+                                                    ?>
+                                                    <?php if($this->item['status'] == 1) { ?>
+                                                        <div class="s-like">
+                                                            <div>
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="19.931" height="21.592" viewBox="0 0 19.931 21.592"><path fill="#424453" class="a" d="M8.057,22.1H4.83A.83.83,0,0,1,4,21.27v-8.3a.83.83,0,0,1,.83-.83H10.2l1.384-2.08Q12.6,7.973,13.115,6.9q.256-.537.382-.814c.027-.06.049-.11.066-.149a.261.261,0,0,0-.016.135,3.507,3.507,0,0,1,.137-1.5A2.2,2.2,0,0,1,15.85,3a2.9,2.9,0,0,1,1.758.607c1.046.725,1.341,1.91,1.341,3.545a10.117,10.117,0,0,1-.44,2.274,10.908,10.908,0,0,0-.39,1.876c0,.134.3.445,1.026.83,2.016-.025,3.268.191,3.909.8a3.814,3.814,0,0,1,.879,2.675,2.318,2.318,0,0,1-.5,1.569,3.306,3.306,0,0,1-1.115,2.647,3,3,0,0,1-.357,1.34,3.215,3.215,0,0,1-1.124,1.226,3.226,3.226,0,0,1-2.715,2.2,23.153,23.153,0,0,1-5.4-.942A16.649,16.649,0,0,1,10.949,22.4a2.966,2.966,0,0,0-.5-.3h-2.3A.839.839,0,0,1,8.057,22.1Zm.926-1.655h1.661a.83.83,0,0,1,.364.084,4.516,4.516,0,0,1,1.08.665,17.22,17.22,0,0,0,1.462,1.018,28.19,28.19,0,0,0,4.568.719,1.632,1.632,0,0,0,1.137-1.089.83.83,0,0,1,.526-.772,1.457,1.457,0,0,0,.707-.68,1.2,1.2,0,0,0,.149-.777.83.83,0,0,1,.358-.862,1.621,1.621,0,0,0,.741-1.672.83.83,0,0,1,.333-.9c.149-.1.2-.218.2-.573a2.536,2.536,0,0,0-.375-1.483,6.4,6.4,0,0,0-2.93-.33.83.83,0,0,1-.388-.088c-1.36-.681-2.116-1.438-2.119-2.4A10.034,10.034,0,0,1,16.9,9.027a11,11,0,0,0,.391-1.874c0-1.113-.191-1.878-.672-2.214a1.287,1.287,0,0,0-.766-.277.553.553,0,0,0-.588.435,2.431,2.431,0,0,0-.05.987c.013.312-.1.552-2.161,4.752L13,10.93l-1.661,2.5a.83.83,0,0,1-.691.37H8.983ZM5.661,13.8v6.644H7.322V13.8Z" transform="translate(-4 -3)"></path></svg>
+                                                                <span><?php echo $this->item['like']; ?></span>
+                                                            </div>
+                                                            <div>
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="19.931" height="21.592" viewBox="0 0 19.931 21.592"><path class="a" d="M8.152,15.457H4.83a.83.83,0,0,1-.83-.83v-8.3a.83.83,0,0,1,.83-.83H8.057a.839.839,0,0,1,.1-.005h2.3a2.966,2.966,0,0,0,.5-.3A16.649,16.649,0,0,1,12.72,3.942,23.153,23.153,0,0,1,18.118,3a3.226,3.226,0,0,1,2.715,2.2,3.215,3.215,0,0,1,1.124,1.226,3,3,0,0,1,.357,1.34,3.306,3.306,0,0,1,1.115,2.647,2.318,2.318,0,0,1,.5,1.569,3.814,3.814,0,0,1-.879,2.675c-.641.611-1.892.827-3.909.8-.723.385-1.025.7-1.026.83a10.908,10.908,0,0,0,.39,1.876,10.117,10.117,0,0,1,.44,2.274c0,1.635-.3,2.82-1.341,3.545a2.9,2.9,0,0,1-1.758.607,2.2,2.2,0,0,1-2.166-1.577,3.507,3.507,0,0,1-.137-1.5.261.261,0,0,0,.016.135c-.017-.039-.039-.088-.066-.149q-.125-.276-.382-.814-.511-1.071-1.532-3.153L10.2,15.457Zm.83-8.31V13.8h1.661a.83.83,0,0,1,.691.37L13,16.662l.054.094c2.059,4.2,2.174,4.44,2.161,4.752a2.431,2.431,0,0,0,.05.987.553.553,0,0,0,.588.435,1.287,1.287,0,0,0,.766-.277c.481-.336.672-1.1.672-2.214a11,11,0,0,0-.391-1.874,10.034,10.034,0,0,1-.439-2.281c0-.963.76-1.72,2.119-2.4a.83.83,0,0,1,.388-.088,6.4,6.4,0,0,0,2.93-.33,2.536,2.536,0,0,0,.375-1.483c0-.355-.052-.47-.2-.573a.83.83,0,0,1-.333-.9,1.621,1.621,0,0,0-.741-1.672.83.83,0,0,1-.358-.862,1.2,1.2,0,0,0-.149-.777,1.457,1.457,0,0,0-.707-.68.83.83,0,0,1-.526-.772,1.632,1.632,0,0,0-1.137-1.089,28.19,28.19,0,0,0-4.568.719A17.22,17.22,0,0,0,12.088,6.4a4.516,4.516,0,0,1-1.08.665.83.83,0,0,1-.364.084Zm-3.322.005V13.8H7.322V7.152Z" transform="translate(-4 -3)"></path></svg>
+                                                                <span><?php echo $this->item['dislike']; ?></span>
+                                                            </div>
+                                                        </div>
+                                                    <?php } ?>
+                                                </div>
+                                            </div>
+                                            <?php if ($this->_field['reply'] && $this->item['status'] == 1) { ?>
+                                                <?php foreach ($this->reply as $value) { ?>
+                                                    <?php
+                                                        $icon = '<i class="icon-emoticon-smile font-green-haze"></i>';
+                                                        $label = $value['status'] != 1 ? '<span class="label label-sm label-danger">'.$this->status[$value['status']].'</span>' : '';
+                                                        $comment = '<div class="ht-format-detail">'.$value['comment'].'</div>';
+                                                        if ($value['admin_id']) {
+                                                            $icon = '<i class="icon-users font-green-haze"></i>';
+                                                            $label = '<span class="label label-sm label-info">Quản trị viên</span>';
+
+                                                            if((file_exists(ROOT_PUBLIC.'/'.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/100x100-'.$value['thumbnail'].WEBP_EXT) && is_file(ROOT_PUBLIC.'/'.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/100x100-'.$value['thumbnail'].WEBP_EXT))) {
+                                                                $icon = '<img src="'.PUBLIC_PATH.UPLOAD_IMAGES.date('Y/m',explode('-',$value['thumbnail'])[0]).'/100x100-'.$value['thumbnail'].'" alt="avatar">';
+                                                            }
+
+                                                            if($value['username'] == $this->_params['user']) {
+                                                                // $comment = '<span class="font-grey-cascade"><a href="javascript:;" ht-trigger="editable-comment" data-pk="'.$this->url('admincp',array('controller' => $this->_params['__CONTROLLER__'],'action' => 'change','id' => $value['id'])).'" data-original-title="Chỉnh sửa phản hồi">'.$value['comment'].'</a></span>';
+                                                            }
+                                                        }
+                                                    ?>
+                                                    <div class="timeline-item">
+                                                        <div class="timeline-badge">
+                                                            <div class="timeline-icon"><?php echo $icon; ?></div>
+                                                        </div>
+                                                        <div class="timeline-body">
+                                                            <div class="timeline-body-arrow"></div>
+                                                            <div class="timeline-body-head clearfix">
+                                                                <div class="timeline-body-head-caption">
+                                                                    <span class="timeline-body-title"><?php echo $value['fullname']; ?> <?php echo $label; ?></span>
+                                                                    <span class="timeline-body-time font-grey-cascade"><?php echo date('H:i d/m/Y', strtotime($value['date_created'])); ?></span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="timeline-body-content" style="margin-top: 0;"><?php echo $comment; ?></div>
+                                                            <div class="timeline-body-close">
+                                                                <a href="javascript:;" class="btn red" onclick="_HTDelete.item('<?php echo $this->url('admincp',array('controller' => $this->_params['__CONTROLLER__'],'action' => 'delete','id' => $value['id'])); ?>');"><i class="fa fa-close"></i></a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                <?php } ?>
+                                            <?php } ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <?php if ($this->_field['reply'] && $this->item['status'] == 1) { ?>
+                            <div class="ticket-line"></div>
+                            <form id="form-reply" class="form-group" action="" method="POST" enctype="multipart/form-data">
+                                <h3><i class="icon-action-redo"></i> Nhập phản hồi</h3>
+                                <textarea name="comment" data-size="mini" id="comment" data-size="" id="detail" class="ckeditor-mini ticket-reply-msg" row="10"></textarea>
+                                <div class="text-right" style="margin-top: 15px;"><button class="btn uppercase btn-sm green-jungle" type="submit"><i class="icon-action-redo"></i> Phản hồi</button></div>
+                            </form>
+                        <?php } ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style type="text/css">
+    .portlet.light.portlet-fit>.portlet-body {
+        padding: 0;
+    }
+    .datetimepicker-inline {
+        width: 100%;
+    }
+    .datetimepicker thead tr:first-child th:hover, .datetimepicker tfoot th:hover,
+    .datetimepicker table tr td.day:hover, .datetimepicker table tr td span:hover {
+        background: #e5e5e5!important;
+    }
+    .editable-container textarea {
+        padding: 10px;
+        color: #000;
+    }
+    .profile-content, .app-ticket {
+        overflow: unset;
+    }
+    .change-date {
+        position: relative;
+    }
+    .change-date .editable-container.editable-inline {
+        position: absolute;
+        top: -10px;
+        left: 0;
+        padding: 10px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 5px #ccc;
+        z-index: 1111;
+    }
+    @media (max-width: 767px) {
+        .change-date {
+            position: unset;
+        }
+        .change-date .editable-container.editable-inline {
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+    }
+    @media (max-width: 575px) {
+        .timeline .timeline-body-title {
+            margin-right: 10px;
+        }
+        .timeline .timeline-body-time {
+            margin-left: 0;
+            margin-right: 10px;
+        }
+        .timeline .timeline-body-head-caption {
+            display: block;
+        }
+        .change-date {
+            display: block;
+            margin-right: 0;
+        }
+        .change-date .editable-container.popover {
+            left: 0!important;
+        }
+    }
+</style>
+<script>
+    $(document).ready(function() {
+        FormValidation.submit('#form-reply', {rules: {
+            comment: {required: true}
+        }});
+
+        FormEditable.textarea('editable-comment', {
+            name: 'comment',
+            mode: 'inline',
+            inputclass: 'width-100',
+            innerCss: '.sdsd',
+            containerClass: 'sdsdsdsd',
+            rows: 3,
+        });
+
+        FormEditable.textarea('editable-title', {
+            name: 'title',
+            mode: 'inline',
+            inputclass: 'width-100',
+            innerCss: '.sdsd',
+            containerClass: 'sdsdsdsd',
+            rows: 1,
+        });
+
+        FormEditable.datetime('editable-date', {
+            name: 'date_updated',
+            mode: 'inline',
+            innerCss: '.sdsd',
+            containerClass: 'sdsdsdsd',
+            rows: 1,
+        });
+
+        $('.editable-click').click(function() {
+            if ($(this).hasClass('editable-open')) {
+                $(this).next().css('display', 'block').find('form > .form-group').css('display', 'block');
+            }
+        });
+    });
+</script>
