@@ -18,7 +18,7 @@
     border: 2px solid #d9d9d9
 }
 .btn.btn-primary {
-    background-color: #057682;
+    background-color: #00513F;
     border: none;
     margin-bottom: 30px;
 }
@@ -41,7 +41,7 @@
 
 .table thead>tr th {
     color: #fff;
-    background-color: #057682;
+    background-color: #00513F;
     font-weight: 500
 }
 
@@ -207,7 +207,7 @@
 }
 
 .thank-box .ending-text {
-    color: #057682;
+    color: #00513F;
     font-size: 30px;
     margin: 3rem 0 0
 }

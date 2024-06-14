@@ -2,7 +2,7 @@
     background-color: #fff;
 }
 .c-checkbox.is-active .c_tick .check::before {
-    color: #057682;
+    color: #00513F;
 }
 .s-breadcrumb-1 {
     margin-bottom: 10px;
@@ -47,7 +47,7 @@
     transition: all 0.5s;
 }
 .p-list-7 .p_link .item:hover .title, .p-list-7 .p_link .item.is-active .title {
-    color: #057682;
+    color: #00513F;
 }
 .p-list-7 .p_link .slick-slider .item {
     position: relative;
@@ -78,7 +78,7 @@
     transition: all 0.5s;
 }
 .p-list-7 .p_list_2 li:hover a {
-    color: #057682;
+    color: #00513F;
 }
 .p-detail-3 .p_box {
     padding: 30px;
@@ -177,7 +177,7 @@
     transition: 0.3s color ease-in-out;
 }
 .b-card-1:hover .b_title {
-    color: #057682;
+    color: #00513F;
 }
 .b-card-1 .b_bot {
     display: flex;
@@ -266,7 +266,7 @@
     margin-right: 10px;
 }
 .b-card-23:hover .b_title {
-    color: #057682;
+    color: #00513F;
 }
 
 /* END b-card-23 */
@@ -281,11 +281,11 @@
     font-size: 14px;
     line-height: 2.429em;
     padding: 0 20px;
-    color: #057682;
+    color: #00513F;
     background-color: #fff;
     font-weight: bold;
     text-align: center;
-    border: 2px solid #057682;
+    border: 2px solid #00513F;
     border-radius: 10px;
 }
 .c-button-4 span {
@@ -332,7 +332,7 @@
 
 .s_filter .filter-list li {
     margin-top: 10px;
-    color: #057682;
+    color: #00513F;
     font-weight: 500;
 
 }

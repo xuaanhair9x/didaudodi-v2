@@ -148,7 +148,7 @@ span.fa-abs-top::before {
     color: #111;
 }
 .text--primary {
-    color: #057682;
+    color: #00513F;
 }
 .text--secondary {
     color: #f60;
@@ -192,7 +192,7 @@ span.fa-abs-top::before {
     background-color: #111;
 }
 .bg--primary {
-    background-color: #057682;
+    background-color: #00513F;
 }
 .bg--secondary {
     background-color: #f60;
@@ -208,7 +208,7 @@ span.fa-abs-top::before {
     border-color: #111;
 }
 .border--primary {
-    border-color: #057682;
+    border-color: #00513F;
 }
 .border--secondary {
     border-color: #f60;
@@ -830,7 +830,7 @@ button:active, .c-btn:active, [class*="c-btn-"]:active, button:hover, .c-btn:hov
     background-color: #111;
 }
 .c-btn--primary {
-    background-color: #057682;
+    background-color: #00513F;
 }
 .c-btn--secondary {
     background-color: #f60;
@@ -875,7 +875,7 @@ button:active, .c-btn:active, [class*="c-btn-"]:active, button:hover, .c-btn:hov
     color: #111;
 }
 .c-btn-border--primary {
-    color: #057682;
+    color: #00513F;
 }
 .c-btn-border--secondary {
     color: #f60;
@@ -890,7 +890,7 @@ button:active, .c-btn:active, [class*="c-btn-"]:active, button:hover, .c-btn:hov
     border-color: #111;
 }
 .c-btn-border--primary {
-    border-color: #057682;
+    border-color: #00513F;
 }
 .c-btn-border--secondary {
     border-color: #f60;
@@ -973,7 +973,7 @@ button:active, .c-btn:active, [class*="c-btn-"]:active, button:hover, .c-btn:hov
     line-height: 1.42857143;
 }
 .c-checkbox>label:hover {
-    color: #057682;
+    color: #00513F;
 }
 .c-checkbox .c_tick {
     padding-right: 0.4em;
@@ -1015,7 +1015,7 @@ button:active, .c-btn:active, [class*="c-btn-"]:active, button:hover, .c-btn:hov
     opacity: 0.2;
 }
 .c-checkbox input[type=checkbox]:checked+.c_tick .check, .c-checkbox.is-active .c_tick .check {
-    background-color: #057682;
+    background-color: #00513F;
 }
 .c-checkbox input[type=checkbox]:checked+.c_tick .check::before, .c-checkbox.is-active .c_tick .check::before {
     color: #fff;
@@ -1029,7 +1029,7 @@ button:active, .c-btn:active, [class*="c-btn-"]:active, button:hover, .c-btn:hov
     opacity: 0.5;
 }
 .c-checkbox input[type=checkbox][disabled]~.c_tick .check::after {
-    background-color: #057682;
+    background-color: #00513F;
     -webkit-transform: rotate(-45deg);
     transform: rotate(-45deg);
 }
@@ -1099,8 +1099,8 @@ button:active, .c-btn:active, [class*="c-btn-"]:active, button:hover, .c-btn:hov
 
 .c-form .c_input {
     padding: 1.286em 0 1.286em 0;
-    background-image: -webkit-gradient(linear, left top, left bottom, from(#057682), to(#057682)), -webkit-gradient(linear, left top, left bottom, from(#ccc), to(#ccc));
-    background-image: linear-gradient(#057682, #057682), linear-gradient(#ccc, #ccc);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#00513F), to(#00513F)), -webkit-gradient(linear, left top, left bottom, from(#ccc), to(#ccc));
+    background-image: linear-gradient(#00513F, #00513F), linear-gradient(#ccc, #ccc);
     background-size: 0 0.143em, 100% 0.072em;
     background-repeat: no-repeat;
     background-position: center bottom, center calc(100% - 0.072em);
@@ -1124,7 +1124,7 @@ button:active, .c-btn:active, [class*="c-btn-"]:active, button:hover, .c-btn:hov
 }
 .c-form--label:not(.is-empty) .c_label, .c-form--label.is-focused .c_label {
     font-size: 0.786em;
-    color: #057682;
+    color: #00513F;
     z-index: 9;
     position: absolute;
     top: 0;
@@ -1230,7 +1230,7 @@ small, .small {
     color: #f60;
 }
 [class*="c-headline-"] i {
-    color: #057682;
+    color: #00513F;
 }
 @media screen and (max-width: 479px) {
     [class*="c-headline-"] {
@@ -1389,7 +1389,7 @@ small, .small {
     color: #fff;
 }
 .c-icon--primary {
-    color: #057682;
+    color: #00513F;
 }
 .c-icon--secondary {
     color: #f60;
@@ -1428,7 +1428,7 @@ small, .small {
     border-color: #fff;
 }
 .c-icon-border--primary {
-    border-color: #057682;
+    border-color: #00513F;
 }
 .c-icon-border--secondary {
     border-color: #f60;
@@ -1464,7 +1464,7 @@ small, .small {
     color: #fff;
 }
 .c-icon-border--primary {
-    color: #057682;
+    color: #00513F;
 }
 .c-icon-border--secondary {
     color: #f60;
@@ -1500,7 +1500,7 @@ small, .small {
     background-color: #fff;
 }
 .c-icon-bg--primary {
-    background-color: #057682;
+    background-color: #00513F;
 }
 .c-icon-bg--secondary {
     background-color: #f60;
@@ -1536,7 +1536,7 @@ small, .small {
     background-color: #fff;
 }
 .c-icon-img--primary {
-    background-color: #057682;
+    background-color: #00513F;
 }
 .c-icon-img--secondary {
     background-color: #f60;
@@ -1572,7 +1572,7 @@ small, .small {
     border-color: #fff;
 }
 .c-icon-img--primary {
-    border-color: #057682;
+    border-color: #00513F;
 }
 .c-icon-img--secondary {
     border-color: #f60;
@@ -1651,7 +1651,7 @@ small, .small {
 }
 .c-modal .c_close:hover {
     color: #fff;
-    background-color: #057682;
+    background-color: #00513F;
     border-radius: 0 0.429em 0 0.429em;
 }
 .c-modal .c_header {
@@ -1660,7 +1660,7 @@ small, .small {
     padding: 0.556em 0 0.278em 0;
     margin-bottom: 0.834em;
     text-align: center;
-    background-color: #057682;
+    background-color: #00513F;
 }
 .c-modal .c_body {
     padding: 15px 20px;

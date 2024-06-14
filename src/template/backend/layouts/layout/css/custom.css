@@ -1229,7 +1229,7 @@ table.dataTable .editable-container th, table.dataTable .editable-container td {
     font-weight: 600;
 }
 .table>tbody>tr>td .name, .table>tbody>tr>td .name > a {
-    color: #057682;
+    color: #00513F;
     font-weight: 600;
 }
 .table>tbody>tr>td .option, .table>tbody>tr>td .price {
@@ -1241,17 +1241,17 @@ table.dataTable .editable-container th, table.dataTable .editable-container td {
     font-weight: 600;
 }
 .table>tbody>tr>td .price span {
-    color: #057682;
+    color: #00513F;
     font-weight: 600;
 }
 .memberInfo .portlet-userpic li {
     color: #555;
 }
 .memberInfo .portlet-userpic li i, .memberInfo .caption-subject {
-    color: #057682!important;
+    color: #00513F!important;
 }
 .memberInfo .mt-element-ribbon .ribbon.ribbon-color-success>.ribbon-sub {
-    background-color: #057682;
+    background-color: #00513F;
 }
 .portlet.light>.portlet-title.orderInfo {
     border: none;

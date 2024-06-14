@@ -150,7 +150,7 @@
     transform: translate(-50%, -50%);
 }
 [class*="b-sslide-"] .slick-arrow:hover:before {
-    color: #057682;
+    color: #00513F;
 }
 [class*="b-sslide-"] .slick-prev::before {
     content: "\f104";

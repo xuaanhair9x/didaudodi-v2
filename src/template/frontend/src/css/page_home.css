@@ -64,7 +64,7 @@
 .s-quote-1 .title {
     font-family: 'Dancing Script';
     font-weight: bold;
-    color: #057682;
+    color: #00513F;
     text-align: center;
     font-size: 48px;
     line-height: 32px;
@@ -140,7 +140,7 @@
     position: relative;
     font-size: 30px;
     font-weight: bold;
-    color: #057682;
+    color: #00513F;
     margin-bottom: 10px;
 }
 .s-product-1 {
@@ -288,20 +288,20 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    color: #057682;
+    color: #00513F;
     font-weight: 600;
     padding: 10px;
     transition: all 0.5s;
 }
 .s-commit-2 .s_more:hover {
-    background-color: #057682;
+    background-color: #00513F;
     color: #fff;
 }
 .s-commit-2 img {
     border-radius: 10px;
 }
 .s-commit-2 .s_box {
-    background-color: #057682;
+    background-color: #00513F;
     border-radius: 10px;
 }
 .s-commit-2 .s_title {

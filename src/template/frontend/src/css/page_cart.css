@@ -84,7 +84,7 @@
 .cart-item .item_content .content_top .info .discount {
     font-weight: 600;
     font-size: 16px;
-    color: #057682;
+    color: #00513F;
 }
 .cart-item .item_content .content_top .info .market {
     color: #aeaeae;
@@ -206,7 +206,7 @@
     margin-bottom: 10px;
     font-weight: 600;
     font-size: 16px;
-    color: #057682;
+    color: #00513F;
 }
 .s_recommend .recommend a {
     width: 100%;
@@ -278,7 +278,7 @@
     color: #f60;
 }
 .s-cart-1 .s_button {
-    background: linear-gradient(107deg, #057682 0%, #059aa9 100%);
+    background: linear-gradient(107deg, #00513F 0%, #059aa9 100%);
     color: #ffffff;
     width: 100%;
     text-align: center;
@@ -354,7 +354,7 @@
     transition: all 0.5s;
 }
 .s-form-2 .s_pay .c-radio:hover {
-    border-color: #057682;
+    border-color: #00513F;
 }
 .s-form-2 .s_pay .c-radio img {
     width: 35px;
@@ -431,7 +431,7 @@
 }
 .s-form-2 .discount-box button.active {
     cursor: pointer;
-    background-color: #057682;
+    background-color: #00513F;
 }
 .s-form-2 .s-cart-1 {
     padding: 20px 0;

@@ -5,7 +5,7 @@
 }
 
 .s-commit-3 .s_block .s_content {
-    border: 1px solid #057682;
+    border: 1px solid #00513F;
     border-radius: 10px;
     width: 50%;
     position: relative;
@@ -16,7 +16,7 @@
 .s-commit-3 .s_block .s_content .info {
     display: flex;
     align-items: center;
-    background-color: #057682;
+    background-color: #00513F;
     color: #fff;
     padding: 10px 20px;
     border-radius: 10px;
