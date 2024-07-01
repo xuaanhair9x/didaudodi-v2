@@ -276,7 +276,6 @@ class OrderController extends AbstractActionController
 
             $orderCode = $data['member']['id'].$time = strtotime(date('Y-m-d H:i:s'));
             $paymentType = array('cod' => 'Thanh toán khi nhận hàng', 'momo' => 'Thanh toán qua ví điện tử MoMo', 'vnpay' => 'Thanh toán qua ví điện tử VNPay');
-
             $orderPost['post'] = array(
                 'orderCode' => $orderCode,
                 'member_id' => $data['member']['id'],
@@ -532,7 +531,7 @@ class OrderController extends AbstractActionController
             $WriteLog->Write($logOrder);
 
             // Gửi mail thông báo xác nhận đặt hàng
-            if($data['member']['email'] && $templateConfirm) {
+            if($data['member']['email'] && $templateConfirm && false) {
                 $SendMail = new \Backend\View\Helper\Api\SendMail(array(
                     'emailTo' => $data['member']['email'],
                     'subject' => str_replace($templateConfirm['key'], $templateConfirm['value'], $templateConfirm['subject']),
@@ -541,7 +540,7 @@ class OrderController extends AbstractActionController
             }
 
             // Gửi mail thông báo đặt hàng cho admin
-            if ($data['info']['email'] && $template) {
+            if ($data['info']['email'] && $template && false) {
                 $SendMail = new \Backend\View\Helper\Api\SendMail(array(
                     'emailTo' => $data['info']['email'],
                     'subject' => str_replace($template['key'], $template['value'], $template['subject']),
@@ -550,6 +549,7 @@ class OrderController extends AbstractActionController
             }
 
             // Xóa session và xuất thông báo
+
             if ($url == $translator->translate('dat-hang-62.html')) {
                 $session->offsetSet('cart', '');
                 echo json_encode(array('redirect' => URL_LANG.'checkout-66.html'));
