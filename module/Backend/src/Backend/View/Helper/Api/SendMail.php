@@ -24,13 +24,13 @@ class SendMail
             'port' => 465
         );
 
-        if ($mailer) {
-            $config['from'] = $mailer['auth']['user'];
-            $config['username'] = $mailer['auth']['user'];
-            $config['password'] = $mailer['auth']['pass'];
-            $config['host'] = $mailer['host'];
-            $config['port'] = $mailer['port'];
-        }
+//        if ($mailer) {
+//            $config['from'] = $mailer['auth']['user'];
+//            $config['username'] = $mailer['auth']['user'];
+//            $config['password'] = $mailer['auth']['pass'];
+//            $config['host'] = $mailer['host'];
+//            $config['port'] = $mailer['port'];
+//        }
 
         $content            = new \Zend\Mime\Part($params['body']);
         $content->type      = Mime::TYPE_HTML;
