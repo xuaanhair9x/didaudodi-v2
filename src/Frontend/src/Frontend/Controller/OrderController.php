@@ -531,7 +531,7 @@ class OrderController extends AbstractActionController
             $WriteLog->Write($logOrder);
 
             // Gửi mail thông báo xác nhận đặt hàng
-            if($data['member']['email'] && $templateConfirm && false) {
+            if($data['member']['email'] && $templateConfirm) {
                 $SendMail = new \Backend\View\Helper\Api\SendMail(array(
                     'emailTo' => $data['member']['email'],
                     'subject' => str_replace($templateConfirm['key'], $templateConfirm['value'], $templateConfirm['subject']),
@@ -540,7 +540,7 @@ class OrderController extends AbstractActionController
             }
 
             // Gửi mail thông báo đặt hàng cho admin
-            if ($data['info']['email'] && $template && false) {
+            if ($data['info']['email'] && $template) {
                 $SendMail = new \Backend\View\Helper\Api\SendMail(array(
                     'emailTo' => $data['info']['email'],
                     'subject' => str_replace($template['key'], $template['value'], $template['subject']),

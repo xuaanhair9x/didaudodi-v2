@@ -16,9 +16,9 @@ class SendMail
         $mailer = $InfoTb->getItem(array('id' => $branch[1], 'columns' => array('mailer')))['mailer'];
 
         $config = array(
-            'from' => 'notify.it369@gmail.com',
-            'username' => 'notify.it369@gmail.com',
-            'password' => 'kwcfbxnknvuzbxcl',
+            'from' => 'magento.hainguyen@gmail.com',
+            'username' => 'magento.hainguyen@gmail.com',
+            'password' => 'tdztsecjhaekbqiy',
             'host' => 'smtp.gmail.com',
             'ssl' => 'ssl',
             'port' => 465
